@@ -1,9 +1,5 @@
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 wordlist1.txt wordlist2.txt"
-    exit 1
-fi
-
-
+#!/bin/bash
+# Read files and combine, ensuring no extra output or error messages
 while read -r line1; do
     while read -r line2; do
         echo "${line1}${line2}"
