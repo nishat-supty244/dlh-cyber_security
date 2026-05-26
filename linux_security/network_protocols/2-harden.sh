@@ -1,2 +1,3 @@
 #!/bin/bash
-find "$1" -type d -perm -0002 -print -exec chmod o-w {} +
+SEARCH_PATH="${1:-/}"
+find "$SEARCH_PATH" -type d -perm -0002 -print -exec chmod o-w {} +
