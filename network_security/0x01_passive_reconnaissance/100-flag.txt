@@ -1,0 +1,1 @@
+dig @15.237.107.86:443 passive.hbtn TXT
