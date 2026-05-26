@@ -1,5 +1,2 @@
 #!/bin/bash
-whois "$1" | awk -F': +' '
-$1 == "Registrant Name" { print "Registrant Name," $2 }
-$1 == "Admin Name" { print "Admin Name," $2 }
-' > "$1.csv"
+whois "$1" | grep -E "^Registrant Name:|^Admin Name:" | awk -F': +' '{print $1 "," $2}' > "$1.csv"
