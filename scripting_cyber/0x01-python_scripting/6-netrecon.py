@@ -6,14 +6,12 @@ from bs4 import BeautifulSoup
 
 def dns_recon(domain):
     try:
-        # Resolve IP
         print(f"IP Address: {socket.gethostbyname(domain)}")
-        # Resolve MX
         print("MX Records:")
         for rdata in dns.resolver.resolve(domain, 'MX'):
             print(f"  {rdata.preference} {rdata.exchange}")
-    except Exception:
-        print("  DNS lookup failed")
+    except Exception as e:
+        print(f"DNS lookup failed: {e}")
 
 def web_recon(domain):
     try:
@@ -23,8 +21,8 @@ def web_recon(domain):
         for h in ['Server', 'Content-Type']:
             print(f"  {h}: {r.headers.get(h, 'N/A')}")
         print(f"Total Links Found: {len(BeautifulSoup(r.text, 'html.parser').find_all('a'))}")
-    except Exception:
-        print("  Web reconnaissance failed")
+    except Exception as e:
+        print(f"Web reconnaissance failed: {e}")
 
 def port_scan(domain):
     print(f"Scanning common ports on {domain}...")
