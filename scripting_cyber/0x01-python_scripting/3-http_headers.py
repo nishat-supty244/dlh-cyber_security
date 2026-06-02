@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import requests
 
 def get_http_headers(url):
