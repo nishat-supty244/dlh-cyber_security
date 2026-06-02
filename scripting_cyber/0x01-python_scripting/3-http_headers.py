@@ -23,4 +23,6 @@ print()
 
 for key, value in result['headers'].items():
     print(f"  {key}: {value}")
-
+except requests.exceptions.RequestException:
+        
+        return None
