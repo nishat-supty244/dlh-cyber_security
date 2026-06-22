@@ -163,7 +163,9 @@ Physical access
 ---
 
 
-# 3. OTA Update Security Controls (IoT Smart Thermostat)
+## 2. Design security controls for the OTA (Over-The-Air)
+
+---
 
 ## 1. Code Signing
 - All firmware must be digitally signed by the manufacturer  
