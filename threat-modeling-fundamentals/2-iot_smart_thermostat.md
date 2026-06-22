@@ -159,3 +159,59 @@ Physical access
 → Modify firmware
 → Reflash device
 → Persistent control
+
+---
+
+
+# 3. OTA Update Security Controls (IoT Smart Thermostat)
+
+## 1. Code Signing
+- All firmware must be digitally signed by the manufacturer  
+- Device verifies signature before installation  
+- Prevents malicious or unauthorized firmware  
+
+---
+
+## 2. Secure Boot
+- Device only runs verified firmware  
+- Ensures trusted boot process from hardware root of trust  
+- Prevents persistent malware  
+
+---
+
+## 3. Encrypted Communication (TLS)
+- OTA updates must use TLS 1.2+ or TLS 1.3  
+- Prevents interception and tampering during transfer  
+
+---
+
+## 4. Integrity Verification
+- Use SHA-256 hash validation  
+- Ensures firmware is not modified or corrupted  
+
+---
+
+## 5. Anti-Rollback Protection
+- Blocks installation of older firmware versions  
+- Prevents downgrade attacks  
+
+---
+
+## 6. Secure Update Server
+- Use mutual TLS (mTLS) authentication  
+- Only trusted servers can distribute updates  
+
+---
+
+## 7. Fail-Safe Updates
+- Dual firmware partitions (A/B system)  
+- Automatic rollback if update fails  
+
+---
+
+## Summary
+OTA security must ensure:
+- Authenticity (signed firmware)  
+- Integrity (hash verification)  
+- Confidentiality (TLS encryption)  
+- Availability (rollback support)  
