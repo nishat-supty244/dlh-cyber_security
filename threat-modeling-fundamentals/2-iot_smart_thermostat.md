@@ -1,112 +1,161 @@
 # IoT Smart Thermostat — Threat Analysis
 
-## 1. IoT-Specific Threats (Not typical in web apps)
+---
 
-### 1.1 Physical Debug Interface Abuse
-**Description:** Attackers use exposed debug ports (UART/JTAG/SWD).  
-**Attack Scenario:** Device is opened → attacker connects debugger → extracts firmware and secrets.  
-**Impact:** Full device compromise, key extraction, persistent access.  
+## System Overview
+
+A smart thermostat is an IoT device that:
+- Connects to home Wi-Fi
+- Controls HVAC systems (heating/cooling)
+- Collects temperature and occupancy data
+- Communicates with mobile app + cloud
+- Receives OTA firmware updates
+
+---
+
+## 1. IoT-Specific Threats
+
+---
+
+### 1.1 Physical Tampering
+
+**Description:**  
+Attacker physically accesses and manipulates internal hardware.
+
+**Attack Scenario:**  
+Device is removed → casing opened → debug ports accessed → firmware extracted or modified.
+
+**Impact:**
+- Full device compromise  
+- Key extraction  
+- Persistent backdoor installation  
+
 **Likelihood:** Medium  
 
-**DREAD Score:**  
+**DREAD Score:**
 - Damage: 8  
 - Reproducibility: 7  
 - Exploitability: 7  
 - Affected Users: 6  
 - Discoverability: 8  
-**Risk = (8+7+7+6+8)/5 = 7.2**
+
+**Risk = 7.2**
 
 **Mitigation:**
-- Disable debug interfaces in production
-- Secure boot + hardware root of trust
+- Disable debug interfaces (UART/JTAG)
+- Secure boot enforcement
 - Tamper-resistant casing
 
 ---
 
-### 1.2 Firmware Extraction via Flash Dumping
-**Description:** Direct reading of firmware from flash memory.  
-**Attack Scenario:** Attacker uses hardware programmer to dump firmware chip.  
-**Impact:** Reverse engineering, credential leakage.  
+### 1.2 Firmware Extraction
+
+**Description:**  
+Attacker extracts firmware from flash memory.
+
+**Attack Scenario:**  
+Hardware programmer reads flash chip → firmware dumped → analyzed offline.
+
+**Impact:**
+- Reverse engineering  
+- Credential/key leakage  
+- Vulnerability discovery  
+
 **Likelihood:** Medium  
 
-**DREAD Score:** 7.6  
+**Risk = 7.6**
 
 **Mitigation:**
 - Flash encryption
 - Read-out protection
-- Secure key storage (TPM/Secure Element)
+- Secure element for key storage
 
 ---
 
 ### 1.3 Rogue OTA Firmware Injection
-**Description:** Malicious firmware delivered via update channel.  
-**Attack Scenario:** Compromised OTA server or MITM injects fake firmware.  
-**Impact:** Persistent malware, HVAC manipulation, full takeover.  
+
+**Description:**  
+Malicious firmware injected via update system.
+
+**Attack Scenario:**  
+OTA server compromise or MITM attack → fake firmware delivered to device.
+
+**Impact:**
+- Persistent malware  
+- HVAC manipulation  
+- Full remote takeover  
+
 **Likelihood:** Medium-High  
 
-**DREAD Score:** 8.0  
+**Risk = 8.0**
 
 **Mitigation:**
-- Code signing verification
-- Secure boot enforcement
+- Code signing
+- Secure boot
+- TLS encryption
 - Certificate pinning
 
 ---
 
 ### 1.4 Sensor Spoofing
-**Description:** Fake environmental input manipulation.  
-**Attack Scenario:** Heating/cooling sensor is artificially heated/cooled.  
-**Impact:** Wrong HVAC behavior, energy waste.  
+
+**Description:**  
+Manipulation of temperature or environmental sensors.
+
+**Attack Scenario:**  
+Attacker artificially heats/cools sensor → device misreads environment.
+
+**Impact:**
+- Incorrect HVAC control  
+- Energy waste  
+- Potential safety risks  
+
 **Likelihood:** Medium  
 
 **Mitigation:**
-- Sensor anomaly detection
-- Multi-sensor validation
+- Sensor validation logic
+- Multi-sensor correlation checks
 
 ---
 
-### 1.5 Wi-Fi / RF Disruption
-**Description:** Wireless communication interference.  
-**Attack Scenario:** Deauth attacks or RF jamming.  
-**Impact:** Loss of control, device downtime.  
+### 1.5 Wi-Fi / RF Attacks
+
+**Description:**  
+Wireless disruption or interception attacks.
+
+**Attack Scenario:**  
+Wi-Fi deauth attack or RF jamming blocks communication.
+
+**Impact:**
+- Loss of control  
+- Device downtime  
+
 **Likelihood:** Medium  
 
 **Mitigation:**
-- WPA3 security
-- Anti-deauth protection
-- Channel hopping resilience
+- WPA3 encryption
+- Anti-deauthentication protections
 
 ---
 
 ## 2. Physical Access Attack Chain
 
+---
+
 ### Description
-Physical access enables full device compromise.
 
-### Attack Chain
-```text
-Physical access
-→ Open device casing
-→ Access debug ports / flash chip
-→ Dump firmware
-→ Extract credentials & keys
-→ Modify firmware
-→ Flash malicious image
-→ Persistent control
-
-### Impact
-- Full device compromise
-- Privacy leakage (occupancy patterns)
-- Lateral movement into home network
-
+Physical access allows complete compromise of the device.
 
 ---
 
-## 3. OTA (Over-The-Air) Security Controls
+### Attack Chain
 
-### Description
-Firmware must be digitally signed by manufacturer
-
-### Security Requirement:
 ```text
-Only trusted signatures accepted
+Physical access
+→ Open casing
+→ Access debug ports / flash chip
+→ Dump firmware
+→ Extract keys & credentials
+→ Modify firmware
+→ Reflash device
+→ Persistent control
