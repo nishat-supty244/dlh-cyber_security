@@ -1,219 +1,92 @@
-# IoT Smart Thermostat — Threat Analysis
+IoT Smart Thermostat — Threat Modeling & Security Analysis 
 
----
+1. IoT-Specific Threats (Not typical in web applications) 
 
-## System Overview
+Threat 1: Physical Device Tampering 
 
-A smart thermostat is an IoT device that:
-- Connects to home Wi-Fi
-- Controls HVAC systems (heating/cooling)
-- Collects temperature and occupancy data
-- Communicates with mobile app + cloud
-- Receives OTA firmware updates
+Description: Attacker physically accesses the device and manipulates internal hardware or firmware. 
 
----
+Attack Scenario: Device is removed from wall, opened, and debug ports (UART/JTAG) are used to extract firmware or modify behavior. 
 
-## 1. IoT-Specific Threats
+Impact: Full device compromise, extraction of keys, and possible home network access. Likelihood: Medium 
 
----
+Mitigation: Disable debug interfaces in production, secure boot, tamper-resistant hardware. 
 
-### 1.1 Physical Tampering
+Threat 2: Weak or Default Credentials 
 
-**Description:**  
-Attacker physically accesses and manipulates internal hardware.
+Description: Devices shipped with default credentials that users fail to change. Attack Scenario: Attacker tries default logins and gains administrative access. Impact: Unauthorized control of HVAC system and device takeover. Likelihood: High 
 
-**Attack Scenario:**  
-Device is removed → casing opened → debug ports accessed → firmware extracted or modified.
+Mitigation: Force password change on setup, remove default credentials, enforce strong passwords. 
 
-**Impact:**
-- Full device compromise  
-- Key extraction  
-- Persistent backdoor installation  
+## Threat 3: Unencrypted Communication 
 
-**Likelihood:** Medium  
+Description: Device communicates over insecure channels. Attack Scenario: Attacker intercepts Wi-Fi traffic and reads or modifies commands. Impact: Data leakage and device manipulation. Likelihood: Medium Mitigation: Use TLS 1.2+, certificate pinning, secure protocols. 
 
-**DREAD Score:**
-- Damage: 8  
-- Reproducibility: 7  
-- Exploitability: 7  
-- Affected Users: 6  
-- Discoverability: 8  
+Threat 4: Firmware Vulnerabilities Description: Bugs in embedded firmware. Attack Scenario: Exploiting buffer overflow or insecure parsing to gain remote code execution. 
 
-**Risk = 7.2**
+Impact: Full device takeover and network pivoting. Likelihood: Medium–High 
 
-**Mitigation:**
-- Disable debug interfaces (UART/JTAG)
-- Secure boot enforcement
-- Tamper-resistant casing
+Mitigation: Secure coding practices, static analysis, regular patching. 
 
----
+Threat 5: Supply Chain Attack 
 
-### 1.2 Firmware Extraction
+Description: Malicious firmware inserted during build or OTA pipeline. Attack Scenario: Compromised CI/CD injects backdoor firmware distributed to all devices. Impact: Mass compromise of devices. 
 
-**Description:**  
-Attacker extracts firmware from flash memory.
+Likelihood: Low–Medium 
 
-**Attack Scenario:**  
-Hardware programmer reads flash chip → firmware dumped → analyzed offline.
+Mitigation: Code signing, secure CI/CD, dependency verification. 
 
-**Impact:**
-- Reverse engineering  
-- Credential/key leakage  
-- Vulnerability discovery  
+2. Physical Access Attack Chain 
 
-**Likelihood:** Medium  
+## Attack Chain: 
 
-**Risk = 7.6**
+Physical Access → Device Disassembly → Debug Port Access → Firmware Extraction → Reverse Engineering → Key Extraction → Firmware Modification → Full Control 
 
-**Mitigation:**
-- Flash encryption
-- Read-out protection
-- Secure element for key storage
+Impact: 
 
----
+- Full device compromise 
 
-### 1.3 Rogue OTA Firmware Injection
+- Access to home network 
 
-**Description:**  
-Malicious firmware injected via update system.
+- Privacy leakage (occupancy patterns) 
 
-**Attack Scenario:**  
-OTA server compromise or MITM attack → fake firmware delivered to device.
+- HVAC manipulation (safety risk) 
 
-**Impact:**
-- Persistent malware  
-- HVAC manipulation  
-- Full remote takeover  
+Likelihood: Medium–High 
 
-**Likelihood:** Medium-High  
+Mitigation: Disable debug ports, secure boot, encrypted firmware storage, tamper protection. 
 
-**Risk = 8.0**
+## 3. OTA (Over-The-Air) Security Controls — Requirements 
 
-**Mitigation:**
-- Code signing
-- Secure boot
-- TLS encryption
-- Certificate pinning
+Requirement 1: Code Signing 
 
----
+All firmware must be digitally signed and verified before installation. 
 
-### 1.4 Sensor Spoofing
+## Requirement 2: Secure Boot 
 
-**Description:**  
-Manipulation of temperature or environmental sensors.
+Device only runs firmware validated by hardware root of trust. 
 
-**Attack Scenario:**  
-Attacker artificially heats/cools sensor → device misreads environment.
+Requirement 3: Encrypted Communication 
 
-**Impact:**
-- Incorrect HVAC control  
-- Energy waste  
-- Potential safety risks  
+Use TLS 1.2+ or TLS 1.3 for all OTA transfers. 
 
-**Likelihood:** Medium  
+Requirement 4: Integrity Verification 
 
-**Mitigation:**
-- Sensor validation logic
-- Multi-sensor correlation checks
+Firmware must be validated using SHA-256 hash checks. 
 
----
+Requirement 5: Anti-Rollback Protection 
 
-### 1.5 Wi-Fi / RF Attacks
+Prevent installation of older vulnerable firmware versions. 
 
-**Description:**  
-Wireless disruption or interception attacks.
+Requirement 6: Fail-Safe Update Mechanism 
 
-**Attack Scenario:**  
-Wi-Fi deauth attack or RF jamming blocks communication.
+Use A/B partitions with automatic rollback if update fails. 
 
-**Impact:**
-- Loss of control  
-- Device downtime  
+Requirement 7: Secure Update Server Authentication 
 
-**Likelihood:** Medium  
+Only trusted servers with mutual TLS can deliver updates. 
 
-**Mitigation:**
-- WPA3 encryption
-- Anti-deauthentication protections
+## Summary 
 
----
+IoT smart thermostats face unique risks due to physical access, weak credentials, and firmware-level vulnerabilities. OTA security must ensure authenticity, integrity, encryption, rollback protection, and safe recovery mechanisms to prevent compromise. 
 
-## 2. Physical Access Attack Chain
-
----
-
-### Description
-
-Physical access allows complete compromise of the device.
-
----
-
-### Attack Chain
-
-```text
-Physical access
-→ Open casing
-→ Access debug ports / flash chip
-→ Dump firmware
-→ Extract keys & credentials
-→ Modify firmware
-→ Reflash device
-→ Persistent control
-
----
-
-
-## 2. Design security controls for the OTA (Over-The-Air)
-
----
-
-## 1. Code Signing
-- All firmware must be digitally signed by the manufacturer  
-- Device verifies signature before installation  
-- Prevents malicious or unauthorized firmware  
-
----
-
-## 2. Secure Boot
-- Device only runs verified firmware  
-- Ensures trusted boot process from hardware root of trust  
-- Prevents persistent malware  
-
----
-
-## 3. Encrypted Communication (TLS)
-- OTA updates must use TLS 1.2+ or TLS 1.3  
-- Prevents interception and tampering during transfer  
-
----
-
-## 4. Integrity Verification
-- Use SHA-256 hash validation  
-- Ensures firmware is not modified or corrupted  
-
----
-
-## 5. Anti-Rollback Protection
-- Blocks installation of older firmware versions  
-- Prevents downgrade attacks  
-
----
-
-## 6. Secure Update Server
-- Use mutual TLS (mTLS) authentication  
-- Only trusted servers can distribute updates  
-
----
-
-## 7. Fail-Safe Updates
-- Dual firmware partitions (A/B system)  
-- Automatic rollback if update fails  
-
----
-
-## Summary
-OTA security must ensure:
-- Authenticity (signed firmware)  
-- Integrity (hash verification)  
-- Confidentiality (TLS encryption)  
-- Availability (rollback support)  
