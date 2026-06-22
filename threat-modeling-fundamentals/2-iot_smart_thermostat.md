@@ -94,41 +94,19 @@ Physical access
 → Flash malicious image
 → Persistent control
 
+### Impact
+- Full device compromise
+- Privacy leakage (occupancy patterns)
+- Lateral movement into home network
 
-Impact
-Full system compromise
-Privacy leakage (occupancy patterns)
-HVAC manipulation (safety risk)
-Lateral network movement
-Likelihood
 
-Medium
+---
 
-3. OTA Security Controls
-3.1 Code Signing
-Ensures only manufacturer-approved firmware runs
-3.2 Secure Boot
-Verifies firmware integrity at boot time
-3.3 TLS Communication
-Encrypts firmware transfer (TLS 1.2/1.3)
-3.4 Rollback Protection
-Prevents downgrade to vulnerable firmware versions
-3.5 Secure Key Storage
-Uses TPM / secure element for key protection
-3.6 Atomic A/B Updates
-Safe update switching between partitions
-3.7 Integrity Validation
-SHA-256 + signature verification
-OTA Security Summary
-Control	Purpose
-Code Signing	Prevent unauthorized firmware
-Secure Boot	Block tampered firmware at startup
-TLS	Secure update transmission
-Rollback Protection	Prevent downgrade attacks
-Secure Storage	Protect cryptographic keys
-A/B Updates	Prevent bricking
-Integrity Check	Detect corruption
-References
-OWASP IoT Security Guidance
-NISTIR 8259 IoT Security Baseline
-ENISA IoT Security Recommendations
+## 3. OTA (Over-The-Air) Security Controls
+
+### Description
+Firmware must be digitally signed by manufacturer
+
+### Security Requirement:
+```text
+Only trusted signatures accepted
