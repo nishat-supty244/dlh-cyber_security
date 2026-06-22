@@ -90,3 +90,4 @@ Only trusted servers with mutual TLS can deliver updates.
 
 IoT smart thermostats face unique risks due to physical access, weak credentials, and firmware-level vulnerabilities. OTA security must ensure authenticity, integrity, encryption, rollback protection, and safe recovery mechanisms to prevent compromise. 
 
+
