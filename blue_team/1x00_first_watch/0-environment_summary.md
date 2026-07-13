@@ -1,38 +1,43 @@
 # Incident Classification Report
 
-## 1. Introduction
+## Environment Summary
 
-This report analyzes six security incidents from MedDefense's incident log using the CIA Triad framework. Each incident is classified according to its primary security impact: Confidentiality, Integrity, or Availability.
+### Organization
+MedDefense is a healthcare organization that operates multiple clinical sites and relies on several critical information systems, including an Electronic Health Record (EHR) system, a billing server, a pharmacy management system, a patient portal, a public-facing website, and a corporate network. These systems support patient care, administrative operations, and business continuity.
 
-The CIA Triad provides a structured approach to evaluate how security events affect information assets and business operations:
+### Scope
+This assessment covers the six security incidents recorded in MedDefense's incident log over the previous six months. The analysis focuses on identifying the security principles affected by each incident using the CIA Triad.
 
-- **Confidentiality:** Protection of information from unauthorized access or disclosure.
-- **Integrity:** Protection of information and systems from unauthorized modification or corruption.
-- **Availability:** Ensuring systems, services, and data remain accessible when required.
+### Objective
+The objective of this assessment is to classify each reported incident according to the primary security principle it impacts, identify any secondary impacts where applicable, and provide a clear justification for each classification.
 
-Each incident is evaluated by identifying the primary CIA pillar affected, providing justification, and identifying any secondary impacts.
+### Methodology
+Each incident is evaluated using the CIA Triad framework:
+- **Confidentiality** – Protection against unauthorized access or disclosure of information.
+- **Integrity** – Protection against unauthorized modification or corruption of information.
+- **Availability** – Ensuring systems, services, and information remain accessible to authorized users when required.
+
+For each incident, the primary CIA pillar is identified, a justification is provided, and any secondary CIA impact is documented when supported by the available evidence.
 
 ---
 
-# 2. Incident Classification Table
+# Incident Classification Table
 
 | Incident | Primary CIA Pillar | Justification | Secondary CIA Pillar | Secondary Justification |
-|-----------|--------------------|---------------|----------------------|-------------------------|
-| Incident A: Ransomware encrypted billing server | Availability | Availability was primarily impacted because the ransomware encrypted the billing server (billing-srv-01), preventing the finance team from processing insurance claims for four days. | Integrity | Integrity was also affected because ransomware modified the state of stored files by encrypting them, preventing the organization from accessing accurate and usable data. |
-| Incident B: Patient portal broken access control | Confidentiality | Confidentiality was primarily impacted because the broken access control allowed authenticated patients to access other patients' laboratory results by modifying URL parameters, exposing protected health information to unauthorized users. | None | No secondary CIA impact was identified because the incident did not affect data availability or modify patient records. |
-| Incident C: Incorrect medication dosages displayed | Integrity | Integrity was primarily impacted because a database update script contained a bug that overwrote medication dosage values, causing incorrect medical information to be displayed across all three sites. | None | No secondary CIA impact was identified because the system remained available and there was no evidence of unauthorized disclosure of information. |
-| Incident D: Public website defacement | Integrity | Integrity was primarily impacted because unauthorized changes were made to the public website homepage, replacing legitimate content with a political message. | None | No secondary CIA impact was identified because the website remained accessible and did not contain patient information. |
-| Incident E: EHR system outage during migration | Availability | Availability was primarily impacted because the EHR system became unavailable for nine hours during a database migration, forcing physicians to use paper records instead of electronic patient records. | None | No secondary CIA impact was identified because there was no evidence that patient information was exposed or modified. |
-| Incident F: Intern laptop connected to internal network | Confidentiality | Confidentiality was primarily impacted because an unmanaged personal laptop connected to the internal network had access to the same network segment as the HR file share, creating a potential risk of unauthorized access to sensitive employee information. | None | No secondary CIA impact was identified because no evidence confirmed that data was modified or systems became unavailable. |
+|----------|--------------------|---------------|----------------------|-------------------------|
+| **Incident A – Ransomware on Billing Server** | **Availability** | Availability was primarily impacted because the ransomware encrypted the billing server, preventing the finance team from processing insurance claims for four days. | **Integrity** | Integrity was also affected because the ransomware altered the stored data by encrypting it, making the original information unusable until recovery. |
+| **Incident B – Broken Access Control in Patient Portal** | **Confidentiality** | Confidentiality was primarily impacted because authenticated patients could access other patients' laboratory results through a broken access control mechanism. | None | No evidence indicates that patient records were modified or that the portal became unavailable. |
+| **Incident C – Incorrect Medication Dosages** | **Integrity** | Integrity was primarily impacted because a faulty database update script overwrote medication dosage values, causing inaccurate information to be displayed. | None | The system remained operational, and there is no indication that unauthorized users accessed sensitive information. |
+| **Incident D – Public Website Defacement** | **Integrity** | Integrity was primarily impacted because unauthorized changes were made to the website's homepage, replacing legitimate content with a political message. | **Availability** | Availability experienced a minor impact because the website was taken offline briefly during restoration, although the primary issue was the unauthorized modification of content. |
+| **Incident E – EHR System Outage** | **Availability** | Availability was primarily impacted because the Electronic Health Record system was unavailable for nine hours during the database migration, preventing physicians from accessing electronic patient records. | None | There is no evidence that patient data was disclosed or modified during the outage. |
+| **Incident F – Personal Laptop Connected to Internal Network** | **Confidentiality** | Confidentiality was primarily impacted because an unmanaged personal laptop had access to the same network segment as the HR file share, increasing the risk of unauthorized access to sensitive employee information. | None | No evidence confirms that files were modified or that systems became unavailable during the exposure period. |
 
 ---
 
-# 3. Conclusion
+# Conclusion
 
-The analysis shows that MedDefense experienced incidents affecting all three elements of the CIA Triad.
+The incident analysis demonstrates that MedDefense has experienced security events affecting all three principles of the CIA Triad.
 
-- Availability impacts were mainly associated with operational disruption, including ransomware encryption and EHR downtime.
-- Confidentiality impacts were related to unauthorized access risks involving patient and employee information.
-- Integrity impacts resulted from unauthorized or incorrect modifications to systems and data.
+Availability was most significantly affected by ransomware and the prolonged Electronic Health Record system outage, both of which disrupted critical healthcare and business operations. Confidentiality issues resulted from improper access controls and inadequate network segmentation, exposing sensitive information to unauthorized access. Integrity issues arose from unauthorized website modifications and erroneous database updates that compromised the accuracy of information.
 
-Understanding the CIA impact of each incident allows security teams to prioritize remediation efforts, improve security controls, and reduce future risk exposure.
+This classification provides a structured understanding of previous security incidents and establishes a foundation for future risk assessment, security control evaluation, and security posture improvement.
