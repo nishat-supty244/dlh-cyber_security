@@ -1,4 +1,4 @@
-# First Impressions Summary: MedDefense Health Systems Vulnerability Scan
+# The Scan Report
 
 ## 1. Scan Metadata
 
