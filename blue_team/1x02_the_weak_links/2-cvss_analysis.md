@@ -15,13 +15,7 @@ CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
 
 # Component Breakdown
 
-## 1. Attack Vector (AV)
-
-### Value
-
-```
-AV:N - Network
-```
+## AV:N — Attack Vector: Network
 
 ### Meaning
 
@@ -33,137 +27,106 @@ The vulnerability can be exploited remotely through a network connection, includ
 
 No physical or local access is required.
 
-### Other Values
+### Other Values and Impact
 
 | Value | Meaning | Impact |
 |-------|---------|--------|
 | A | Adjacent Network | Requires access to the same local network |
-| L | Local | Requires access to the local system |
+| L | Local | Requires access to the local machine |
 | P | Physical | Requires physical device access |
 
-### Why AV:N Was Selected
+Changing the value from **Network (N)** to **Local (L)** lowers the score because the attacker must already have access to the system boundary.
 
-The Apache HTTP Server processes incoming HTTP requests over the network without requiring authentication.
+### Why Selected
 
-An attacker can send a malicious HTTP request directly to the vulnerable server.
+The Apache HTTP Server processes incoming HTTP request bodies over the public network without requiring authentication.
 
-### Score Impact
-
-Changing:
-
-```
-AV:N → AV:L
-```
-
-would reduce the score because the attacker would first need local access to the system.
+An attacker can send a malicious HTTP request directly to the server.
 
 ---
 
-# 2. Attack Complexity (AC)
-
-### Value
-
-```
-AC:L - Low
-```
+# AC:L — Attack Complexity: Low
 
 ### Meaning
 
-The exploit does not require:
+Exploitation requires no specialized conditions.
 
-- Special conditions
-- Timing attacks
-- Complex preparation
-- Unusual configurations
+An attacker can:
 
-The attack can be automated and reliably executed.
+- Script the attack
+- Reliably execute the exploit
+- Repeat exploitation without special timing or environmental requirements
 
-### Other Value
+### Other Values and Impact
 
 | Value | Meaning |
 |-------|---------|
 | H | High complexity |
 
-High complexity reduces the score because exploitation becomes less reliable.
+Changing Attack Complexity from **Low (L)** to **High (H)** would reduce the score because exploitation would require more difficult conditions.
 
-### Why AC:L Was Selected
+### Why Selected
 
-The attacker only needs to send a specially crafted HTTP multipart request to trigger the buffer overflow in Apache `mod_lua`.
+Sending a crafted HTTP multipart request to trigger the Apache `mod_lua` buffer overflow is straightforward and repeatable.
 
 ---
 
-# 3. Privileges Required (PR)
-
-### Value
-
-```
-PR:N - None
-```
+# PR:N — Privileges Required: None
 
 ### Meaning
 
-The attacker does not need:
+The attacker does not require:
 
-- A user account
-- Credentials
-- Administrative privileges
+- User credentials
+- Existing accounts
+- Administrative permissions
 
-### Other Values
+### Other Values and Impact
 
 | Value | Meaning |
 |-------|---------|
 | L | Low privileges required |
 | H | High privileges required |
 
-### Why PR:N Was Selected
+Requiring privileges lowers the score because attackers must first obtain access.
 
-The vulnerable HTTP endpoint accepts requests from anonymous users.
+### Why Selected
 
-No authentication is required before exploitation.
+The vulnerable Apache HTTP endpoint accepts requests from anonymous, unauthenticated users.
 
 ---
 
-# 4. User Interaction (UI)
-
-### Value
-
-```
-UI:N - None
-```
+# UI:N — User Interaction: None
 
 ### Meaning
 
-The attack does not require a user to:
+The exploit works without requiring a user to:
 
 - Click a link
-- Open a document
+- Open a file
 - Approve an action
 
 ### Other Value
 
 | Value | Meaning |
 |-------|---------|
-| R | Required |
+| R | User interaction required |
 
-### Why UI:N Was Selected
+User interaction requirements reduce the likelihood of exploitation.
 
-The attacker can directly send a malicious request to the Apache server without human involvement.
+### Why Selected
+
+A simple automated HTTP POST or GET request can trigger the vulnerability without human involvement.
 
 ---
 
-# 5. Scope (S)
-
-### Value
-
-```
-S:U - Unchanged
-```
+# S:U — Scope: Unchanged
 
 ### Meaning
 
-The impact remains within the security authority of the vulnerable component.
+The impact remains within the security scope of the vulnerable component.
 
-The attack affects the Apache server process only.
+The exploitation affects the Apache web server process only.
 
 ### Other Value
 
@@ -171,29 +134,21 @@ The attack affects the Apache server process only.
 |-------|---------|
 | C | Changed |
 
-Scope would become changed if exploitation affected another security boundary, such as:
+Scope would become changed if exploitation crossed security boundaries, such as:
 
 - Container escape
 - Hypervisor compromise
-- Another application
+- Impacting another application
 
-### Why S:U Was Selected
+### Why Selected
 
-The vulnerability operates within Apache's own process permissions.
-
----
-
-# 6. Confidentiality, Integrity, Availability
-
-## Values
-
-```
-C:H/I:H/A:H
-```
+The vulnerability remains within the permissions and context of the Apache process.
 
 ---
 
-## Confidentiality (C:H)
+# C:H / I:H / A:H — Impact Metrics
+
+## Confidentiality: High (C:H)
 
 ### Meaning
 
@@ -201,13 +156,13 @@ The attacker can access sensitive information.
 
 Examples:
 
-- Database records
+- Application data
 - Configuration files
 - User information
 
 ---
 
-## Integrity (I:H)
+## Integrity: High (I:H)
 
 ### Meaning
 
@@ -216,12 +171,12 @@ The attacker can modify or destroy data.
 Examples:
 
 - Changing files
-- Installing malware
+- Installing malicious software
 - Altering configurations
 
 ---
 
-## Availability (A:H)
+## Availability: High (A:H)
 
 ### Meaning
 
@@ -235,29 +190,29 @@ Examples:
 
 ---
 
-# Why C:H/I:H/A:H Were Selected
+## Why C:H/I:H/A:H Were Selected
 
-Remote Code Execution (RCE) allows an attacker to:
+Remote Code Execution (RCE) allows attackers to:
 
-- Read sensitive data
-- Modify system files
-- Stop or compromise services
+- Read sensitive information
+- Modify system resources
+- Disable or compromise services
 
-Therefore, all CIA impact metrics are rated as High.
+Therefore, all three CIA impact categories receive the highest rating.
 
 ---
 
 # Score Change Analysis
 
-## Change Attack Vector
+## Change: Attack Vector Network → Local
 
-Original:
+### Original Vector
 
 ```
 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
 ```
 
-Modified:
+### Modified Vector
 
 ```
 CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
@@ -268,7 +223,7 @@ CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
 ## New Base Score
 
 ```
-7.8 - High
+8.4 - High
 ```
 
 ---
@@ -278,35 +233,35 @@ CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
 Changing:
 
 ```
-Attack Vector: Network → Local
+Attack Vector: Network (N) → Local (L)
 ```
 
 removes remote exploitation capability.
 
 The attacker must already have:
 
-- Local system access
+- Local account access
 - Terminal access
-- Code execution ability
+- Existing execution privileges
 
-This significantly reduces the attack surface and lowers the urgency.
+Although the vulnerability remains highly damaging because successful exploitation provides complete system control, the reduced accessibility lowers the overall severity from **Critical (9.8)** to **High (8.4)**.
 
 ---
 
 # Exercise 2: CVSS Vector Construction
 
-## Scenario Characteristics
+## Scenario Characteristics and Mapping
 
-| Scenario | CVSS Mapping |
-|----------|--------------|
-| Exploitable only from local network | AV:A |
-| Exploitation requires specific conditions | AC:H |
-| Attacker requires low privileges | PR:L |
-| No user interaction required | UI:N |
-| Only affects the targeted system | S:U |
-| Complete confidentiality compromise | C:H |
-| No integrity impact | I:N |
-| No availability impact | A:N |
+| Scenario Characteristic | CVSS Mapping |
+|------------------------|--------------|
+| Exploitable only from local network | AV:A (Adjacent Network) |
+| Exploitation requires specific conditions | AC:H (High Complexity) |
+| Attacker needs low-level privileges | PR:L (Low Privileges Required) |
+| No user interaction required | UI:N (None) |
+| Affects only targeted system | S:U (Unchanged) |
+| Confidentiality completely compromised | C:H (High) |
+| No integrity impact | I:N (None) |
+| No availability impact | A:N (None) |
 
 ---
 
@@ -320,30 +275,30 @@ CVSS:3.1/AV:A/AC:H/PR:L/UI:N/S:U/C:H/I:N/A:N
 
 # Result
 
-| Metric | Value |
-|--------|-------|
-| Base Score | 5.3 |
-| Severity | Medium |
+| Category | Result |
+|----------|--------|
+| Base Score | 4.8 |
+| Severity Rating | Medium |
 
 ---
 
 # Explanation
 
-The vulnerability has a moderate risk because:
+This vulnerability receives a Medium rating because:
 
-### Reducing Factors
+## Risk Increasing Factor
 
-- Requires local network access
+- Complete confidentiality compromise
+
+## Risk Reducing Factors
+
+- Requires adjacent network access
 - Requires low-level privileges
 - High attack complexity
 - No integrity impact
 - No availability impact
 
-### Increasing Factor
-
-- High confidentiality impact
-
-The attacker can access sensitive information but cannot modify systems or disrupt services.
+The attacker may access sensitive information but cannot modify systems or disrupt services.
 
 ---
 
@@ -351,8 +306,8 @@ The attacker can access sensitive information but cannot modify systems or disru
 
 ## Vulnerability Comparison
 
-| Finding | CVE | Score | Severity |
-|---------|-----|-------|----------|
+| Finding | CVE | CVSS Score | Severity |
+|---------|-----|------------|----------|
 | Finding 001 | CVE-2021-44790 | 9.8 | Critical |
 | Finding 029 | CVE-2021-43798 | 7.5 | High |
 
@@ -360,13 +315,13 @@ The attacker can access sensitive information but cannot modify systems or disru
 
 # Finding 1: CVE-2021-44790
 
-## CVSS Vector
+## Vector
 
 ```
 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
 ```
 
-## Score
+## Base Score
 
 ```
 9.8 - Critical
@@ -374,15 +329,15 @@ CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
 
 ---
 
-# Finding 2: CVE-2021-43798
+# Finding 2: CVE-2021-43798 (Grafana Path Traversal)
 
-## CVSS Vector
+## Vector
 
 ```
 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
 ```
 
-## Score
+## Base Score
 
 ```
 7.5 - High
@@ -390,48 +345,50 @@ CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
 
 ---
 
-# Side-by-Side Metric Comparison
+# Side-by-Side Component Comparison
 
 | Metric | Finding 001 | Finding 029 |
 |--------|-------------|-------------|
-| Attack Vector | Network (N) | Network (N) |
-| Attack Complexity | Low (L) | Low (L) |
-| Privileges Required | None (N) | None (N) |
-| User Interaction | None (N) | None (N) |
-| Scope | Unchanged (U) | Unchanged (U) |
-| Confidentiality | High (H) | High (H) |
-| Integrity | High (H) | None (N) |
-| Availability | High (H) | None (N) |
+| Attack Vector (AV) | Network (N) | Network (N) |
+| Attack Complexity (AC) | Low (L) | Low (L) |
+| Privileges Required (PR) | None (N) | None (N) |
+| User Interaction (UI) | None (N) | None (N) |
+| Scope (S) | Unchanged (U) | Unchanged (U) |
+| Confidentiality (C) | High (H) | High (H) |
+| Integrity (I) | High (H) | None (N) |
+| Availability (A) | High (H) | None (N) |
 
 ---
 
 # Key Score Difference Analysis
 
-The main difference between the two vulnerabilities is the impact on:
+The difference between the **9.8 Critical score** and the lower score comes mainly from differences in the CIA impact metrics:
 
+- Confidentiality
 - Integrity
 - Availability
 
 ---
 
-# CVE-2021-44790 Impact
+# Finding 001 Impact
 
-This vulnerability enables:
+CVE-2021-44790 enables:
 
 - Remote Code Execution
 - Complete system compromise
 
-Therefore:
+Impact:
 
 ```
+Confidentiality = High
 Integrity = High
 Availability = High
 ```
 
 An attacker can:
 
-- Modify files
-- Install malware
+- Read sensitive information
+- Modify system files
 - Disable services
 
 This results in:
@@ -442,21 +399,23 @@ CVSS Score: 9.8 Critical
 
 ---
 
-# CVE-2021-43798 Impact
+# Finding 029 Impact
 
 Grafana Path Traversal allows:
 
 - Unauthorized file reading
 - Sensitive information disclosure
 
-However, it does not directly allow:
+However, it does not directly provide:
 
-- File modification
+- Data modification
+- System takeover
 - Service disruption
 
-Therefore:
+Impact:
 
 ```
+Confidentiality = High
 Integrity = None
 Availability = None
 ```
@@ -469,19 +428,26 @@ CVSS Score: 7.5 High
 
 ---
 
-# Final Conclusion
+# Final Analysis
 
-When comparing vulnerabilities with similar access conditions:
+When comparing vulnerabilities with similar access characteristics:
 
 - Network exposure
+- Low attack complexity
 - No authentication required
-- No user interaction
+- No user interaction required
 
-the biggest score differences usually come from the **CIA impact metrics**.
+the biggest score differences come from the **CIA impact metrics**.
 
-A vulnerability that allows:
+## Major CVSS Score Drivers
 
-- Data access only → Lower score
-- Data modification and service disruption → Much higher score
+| Factor | Effect |
+|--------|--------|
+| Remote exploitation | Increases severity |
+| No privileges required | Increases severity |
+| No user interaction | Increases severity |
+| High confidentiality impact | Increases severity |
+| High integrity impact | Greatly increases severity |
+| High availability impact | Greatly increases severity |
 
-Therefore, **Integrity and Availability often have a major influence on final CVSS severity when attack accessibility is already high.**
+A vulnerability that only exposes information will have a lower score than one that enables complete system compromise.
