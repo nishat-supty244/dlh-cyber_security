@@ -1,157 +1,183 @@
+# 9. The OSINT Hunt
 
----
+## 1. FortiGate FortiOS Vulnerability
 
-## Threat Actor
+### Source
+- NVD Database Details for **CVE-2024-23113**
+- Fortinet PSIRT Advisory **FG-IR-24-029**
 
-Likely:
-
-- Insider threats
-- Attackers with initial foothold
-- Ransomware operators
-
----
-
-## Related Findings
-
-Combined with:
-
-- Finding 001
-- Finding 031
-
-Creates direct database compromise.
-
----
-
-# Adjusted Priority
-
-## Priority: Critical
-
-### Justification
-
-No exploit is required.
-
-Attackers only need:
-
-- Existing network access
-- Database credentials
-- Misconfigured permissions
-
----
-
----
-
-# Critical Finding 5: Synology DSM Backup NAS Vulnerability
-
-## Finding Information
+### Vulnerability Details
 
 | Field | Details |
 |---|---|
-| Finding ID | Finding 015 |
-| CVE | CVE-2023-1383 |
-| Host | 10.10.2.41 NAS-01 |
-| Asset Role | Backup Storage System |
-| Asset Criticality | Availability: Critical |
+| **CVE** | CVE-2024-23113 |
+| **Affected Product** | MedDefense Perimeter Firewall (FortiGate 100F running FortiOS) |
+| **CVSS Severity** | Critical |
+| **CVSS Base Score** | 9.8 |
+
+### Why the Scan Missed It
+
+The automated vulnerability scan was limited to internal application nodes and local subnet targets. It did not include:
+
+- Authenticated administrative access to network security appliances.
+- Proprietary FortiOS protocol analysis.
+- Firmware-level inspection of the firewall control plane.
+
+As a result, the scanner was unable to identify vulnerabilities existing within the FortiGate firmware environment.
+
+### MedDefense Impact
+
+Successful exploitation of this vulnerability could allow a remote attacker to execute unauthorized commands or code through specially crafted network packets.
+
+Potential consequences include:
+
+- Complete takeover of the MedDefense perimeter firewall.
+- Unauthorized modification of firewall rules.
+- Bypass of network security controls.
+- Unauthorized access to clinical network segments.
+- Potential lateral movement toward critical healthcare systems.
+
+### Recommendation
+
+Immediate remediation actions:
+
+- Upgrade FortiOS to a vendor-patched version:
+  - **FortiOS 7.2.7 or later**
+  - **FortiOS 7.0.14 or later**
+- Restrict firewall administrative interfaces to trusted internal VLANs only.
+- Disable unnecessary external management access.
+- Monitor firewall logs for suspicious administrative activity.
 
 ---
 
-# Technical Analysis
+# 2. Microsoft Office 365 / Entra ID Vulnerability
 
-## Vulnerability Description
+### Source
 
-CVE-2023-1383 affects Synology DSM web administration.
+- CISA Advisory on Adversary-in-the-Middle (AiTM) Phishing Attacks
+- Microsoft Security Guidance for Entra ID Identity Protection
 
-An attacker can exploit the vulnerability to gain elevated privileges and compromise backup storage.
+### Vulnerability Details
 
----
-
-## CVSS Information
-
-| Metric | Value |
+| Field | Details |
 |---|---|
-| CVSS Score | 9.8 Critical |
-| CWE | CWE-862 Missing Authorization |
+| **CVE** | N/A |
+| **Affected Product** | MedDefense Microsoft Office 365 E3 Tenant (Microsoft Entra ID) |
+| **Severity** | Critical Business Risk |
+
+### Why the Scan Missed It
+
+Traditional vulnerability scanners primarily evaluate:
+
+- IP-addressable systems.
+- Network services.
+- On-premise infrastructure vulnerabilities.
+
+They do not assess:
+
+- Cloud tenant security configurations.
+- Identity provider policies.
+- Authentication mechanisms.
+- Session token protection.
+- Conditional Access settings.
+
+Therefore, the scanner had no visibility into Microsoft Entra ID identity risks.
+
+### MedDefense Impact
+
+MedDefense relies heavily on Microsoft Office 365 E3 for hospital operations. An attacker using an Adversary-in-the-Middle (AiTM) phishing technique could:
+
+- Steal authentication session cookies.
+- Bypass traditional MFA protections.
+- Hijack legitimate user sessions.
+- Access confidential medical communications.
+- Exfiltrate corporate and patient-related information.
+
+This creates a significant risk to:
+
+- Patient confidentiality.
+- Regulatory compliance.
+- Healthcare operations.
+- Organizational reputation.
+
+### Recommendation
+
+Implement the following security controls:
+
+- Enforce phishing-resistant MFA:
+  - FIDO2 hardware security keys.
+  - Passkeys supported by Microsoft Entra ID.
+- Deploy Conditional Access policies requiring strong authentication.
+- Disable legacy authentication protocols.
+- Enable Microsoft Defender for Identity and Cloud Apps monitoring.
+- Continuously review risky sign-ins and compromised accounts.
 
 ---
 
-## Exploit Intelligence
+# 3. Synology DSM Vulnerability
 
-| Category | Status |
+### Source
+
+- NVD Database Details for **CVE-2025-1021**
+- Synology Security Advisory **Synology-SA-25:03**
+
+### Vulnerability Details
+
+| Field | Details |
 |---|---|
-| Exploit Availability | 5/5 |
-| Public Exploit | Available |
-| CISA KEV | Not Listed |
+| **CVE** | CVE-2025-1021 |
+| **Affected Product** | MedDefense Backup NAS (Synology DSM 7) |
+| **CVSS Severity** | Critical |
+| **CVSS Base Score** | 8.8 - 9.8 |
+
+### Why the Scan Missed It
+
+The automated scanner identified the NAS host as active but lacked:
+
+- Application-level authentication credentials.
+- Synology DSM-specific vulnerability plugins.
+- Required file-system permissions.
+- Deep inspection capabilities for DSM internal components.
+
+Because of these limitations, the scanner could not accurately fingerprint vulnerable DSM sub-components.
+
+### MedDefense Impact
+
+The vulnerability affects the Synology **synocopy** component and may allow a remote unauthenticated attacker to access unauthorized files.
+
+Potential impacts include:
+
+- Exposure of backup archives.
+- Disclosure of system credentials.
+- Leakage of configuration files.
+- Compromise of disaster recovery resources.
+- Loss of confidentiality of sensitive healthcare data.
+
+For MedDefense, compromise of backup infrastructure could severely impact:
+
+- Data recovery capabilities.
+- Business continuity operations.
+- Patient record availability.
+
+### Recommendation
+
+Immediate remediation steps:
+
+- Upgrade Synology DSM to:
+  - **DSM 7.2.2-72806-3 or later**
+- Remove direct internet exposure of NAS management services.
+- Restrict NAS access to isolated administrative management networks.
+- Enforce strong authentication for administrative accounts.
+- Regularly test backup integrity and recovery procedures.
 
 ---
 
-# Contextual Analysis
+# Summary of Critical Findings
 
-## Network Exposure
-
-Backup management interface exposed internally.
-
----
-
-## Threat Actor
-
-Most likely:
-
-- Ransomware groups
-- Data destruction attackers
-
----
-
-## Related Findings
-
-Combined with:
-
-- Finding 001 compromised servers
-- Finding 006 database exposure
-
-Allows ransomware operators to destroy recovery capability.
-
----
-
-# Adjusted Priority
-
-## Priority: Critical
-
-### Justification
-
-Backup infrastructure determines organizational survivability.
-
-Compromise could result in:
-
-- Backup deletion
-- Ransomware impact
-- Permanent data loss
-- Healthcare service interruption
-
----
-
-# Final Risk Ranking
-
-| Rank | Finding | Vulnerability | Priority |
+| Vulnerability | Asset | Severity | Primary Risk |
 |---|---|---|---|
-| 1 | Finding 031 | Tomcat Ghostcat | Critical |
-| 2 | Finding 015 | Synology DSM Backup Compromise | Critical |
-| 3 | Finding 001 | Apache RCE | Critical |
-| 4 | Finding 003 | PostgreSQL Exposure | Critical |
-| 5 | Finding 004 | EternalBlue Medical Workstation | Critical |
+| **CVE-2024-23113 FortiGate FortiOS** | Perimeter Firewall | Critical (CVSS 9.8) | Firewall takeover and network compromise |
+| **Microsoft Entra ID AiTM Risk** | Office 365 E3 Tenant | Critical Business Risk | Identity compromise and data theft |
+| **CVE-2025-1021 Synology DSM** | Backup NAS | Critical (CVSS 8.8-9.8) | Backup exposure and confidentiality loss |
 
----
-
-# SOC Manager Recommendation
-
-Immediate actions:
-
-1. Patch all CISA-listed vulnerabilities.
-2. Segment medical devices from general networks.
-3. Restrict database access using firewall rules.
-4. Harden backup infrastructure.
-5. Establish continuous vulnerability management with:
-   - CVE monitoring
-   - KEV tracking
-   - OSINT intelligence
-   - Configuration audits
-
-These five findings represent the highest probability paths toward a major healthcare security incident.
+These findings demonstrate that vulnerability scanning alone is insufficient for modern healthcare environments. A complete security assessment must include network appliances, cloud identity platforms, and specialized infrastructure components to identify risks that traditional scanners cannot detect.
