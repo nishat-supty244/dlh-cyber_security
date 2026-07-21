@@ -1,5 +1,5 @@
-# 9. The OSINT Hunt
-This supplement identifies additional vulnerabilities discovered through **Open Source Intelligence (OSINT) research** that were not identified during the original vulnerability scan. These findings demonstrate the importance of combining automated scanning with vendor advisories, cloud security reviews, and external threat intelligence.
+# The OSINT Hunt
+This report presents additional vulnerabilities identified through **Open Source Intelligence (OSINT) research** that were not detected during the original vulnerability scan. These findings demonstrate security gaps that can exist outside traditional vulnerability scanning coverage, particularly in **network appliances, cloud identity platforms, and backup infrastructure**.
 
 ---
 
@@ -9,7 +9,7 @@ This supplement identifies additional vulnerabilities discovered through **Open 
 
 | Field | Details |
 |-------|---------|
-| **Source** | NVD Database / Fortinet PSIRT Advisory |
+| **Source** | NVD Database Details for FortiOS CVE-2025-68686 / Fortinet PSIRT Advisory |
 | **CVE** | **CVE-2025-68686** |
 | **Affected Product** | MedDefense Perimeter Firewall (FortiGate 100F) |
 | **Severity** | High |
@@ -19,20 +19,20 @@ This supplement identifies additional vulnerabilities discovered through **Open 
 
 ## Why the Scan Missed It
 
-The automated vulnerability scan was limited to:
+The automated vulnerability scan was restricted to:
 
 - Internal network assets
 - Application servers
 - Standard IP-addressable systems
 
-The scanner did not have:
+The scan did not have:
 
-- Authenticated administrative access
+- Authenticated administrative privileges
 - Firewall API access
-- Firmware inspection capability
+- Firmware version inspection capability
 - Visibility into proprietary FortiOS control plane components
 
-Therefore, firmware-level vulnerabilities affecting the perimeter firewall were not detected.
+Therefore, the scanner could not identify firmware-level vulnerabilities affecting the perimeter firewall.
 
 ---
 
@@ -43,10 +43,10 @@ Successful exploitation could allow attackers to:
 - Bypass integrity restrictions
 - Retrieve sensitive firewall configuration data
 - Access device state information
-- Compromise the network perimeter
-- Expose clinical data communication pathways
+- Compromise the organization's network perimeter
+- Expose clinical data communication pipelines
 
-A compromised firewall could provide attackers with a strategic position for further attacks against internal healthcare systems.
+A compromised firewall could provide attackers with a direct pathway into internal healthcare systems.
 
 ---
 
@@ -54,10 +54,10 @@ A compromised firewall could provide attackers with a strategic position for fur
 
 MedDefense should:
 
-- Verify the FortiGate 100F firmware version against current Fortinet advisories.
+- Verify the FortiGate 100F firmware version against Fortinet security advisories.
 - Apply the latest official FortiOS security patches.
-- Restrict administrative access to trusted management networks only.
-- Enable strong authentication for firewall administrators.
+- Restrict firewall administrative access to trusted management networks.
+- Enforce strong administrator authentication controls.
 
 ---
 
@@ -67,9 +67,9 @@ MedDefense should:
 
 | Field | Details |
 |-------|---------|
-| **Source** | CISA Cloud Identity Alerts / Microsoft Security Advisories |
+| **Source** | CISA Cloud Identity Threat Alerts / Microsoft Security Advisory on AiTM Phishing and Token Theft |
 | **CVE** | N/A |
-| **Attack Technique** | Adversary-in-the-Middle (AiTM) Phishing / Token Theft |
+| **Attack Technique** | Adversary-in-the-Middle (AiTM) Phishing / Session Token Theft |
 | **Affected Product** | MedDefense Microsoft Office 365 E3 Tenant |
 | **Severity** | Critical |
 
@@ -77,34 +77,34 @@ MedDefense should:
 
 ## Why the Scan Missed It
 
-Traditional vulnerability scanners focus on:
+Traditional vulnerability scanners are designed to evaluate:
 
-- Internal IP-based assets
-- Operating systems
-- Installed software packages
+- On-premise systems
 - Network services
+- Installed software packages
+- IP-addressable hosts
 
-They do not have visibility into cloud identity security controls such as:
+They do not provide visibility into cloud identity security controls such as:
 
 - Microsoft Entra ID tenant configuration
 - Conditional Access policies
+- Cloud authentication mechanisms
 - Session token management
-- Cloud authentication workflows
 
 ---
 
 ## Potential Impact on MedDefense
 
-Because MedDefense relies heavily on Microsoft Office 365 for communication and operations, an attacker using AiTM phishing techniques could:
+Because MedDefense relies heavily on Microsoft Office 365 E3 for organizational operations, attackers using AiTM phishing techniques could:
 
 - Bypass traditional MFA protections
-- Steal active session tokens
+- Hijack active authentication session tokens
 - Access employee accounts
 - Read confidential emails
 - Access patient-related communications
-- Maintain unauthorized cloud access
+- Maintain persistent cloud access
 
-This could result in major data confidentiality and privacy breaches.
+This could result in major confidentiality breaches involving sensitive healthcare information.
 
 ---
 
@@ -112,12 +112,12 @@ This could result in major data confidentiality and privacy breaches.
 
 MedDefense should:
 
-- Enforce phishing-resistant MFA using:
-  - FIDO2 security keys
+- Enforce phishing-resistant MFA, including:
+  - FIDO2 hardware security keys
   - Certificate-Based Authentication
 - Implement Microsoft Entra ID Conditional Access policies.
 - Disable legacy authentication protocols.
-- Monitor suspicious sign-in activity and impossible travel events.
+- Monitor identity logs for suspicious authentication activity.
 
 ---
 
@@ -127,37 +127,42 @@ MedDefense should:
 
 | Field | Details |
 |-------|---------|
-| **Source** | NVD Database / Synology Security Advisory |
-| **CVE** | **CVE-2024-10441** |
+| **Source** | NVD Database Details for Synology DSM CVE-2025-1021 / Synology Security Advisory |
+| **CVE** | **CVE-2025-1021** |
 | **Affected Product** | MedDefense Backup NAS (Synology DSM 7) |
 | **Severity** | Critical |
-| **CVSS Base Score** | **9.8** |
+| **CVSS Base Score** | Approximately **8.8–9.8** |
 
 ---
 
 ## Why the Scan Missed It
 
-The vulnerability scanner successfully detected the NAS device as an active host but lacked:
+The automated scanner detected the NAS device as an active host through network discovery but lacked:
 
 - Application-layer scanning credentials
 - DSM administrative access
-- Deep fingerprinting capabilities
+- Deep fingerprinting capability
+- Exact DSM version detection
 
-As a result, the scanner could not determine the exact DSM version running behind the management interface.
+As a result, the scanner could not determine whether the NAS was affected by the vulnerability.
 
 ---
 
 ## Potential Impact on MedDefense
 
-Successful exploitation could allow a remote attacker to:
+Successful exploitation of this missing authorization vulnerability could allow attackers to:
 
-- Execute arbitrary code on the NAS
-- Modify or delete backup data
-- Encrypt hospital backups
-- Exfiltrate sensitive information
-- Destroy disaster recovery capabilities
+- Read arbitrary files
+- Access system configurations
+- Retrieve stored credentials
+- Expose backup data
+- Compromise disaster recovery assets
 
-A compromised backup system could severely impact hospital operations and business continuity.
+For MedDefense, this could result in:
+
+- Unauthorized access to hospital backups
+- Leakage of sensitive healthcare information
+- Loss of recovery capability during a ransomware event
 
 ---
 
@@ -165,41 +170,41 @@ A compromised backup system could severely impact hospital operations and busine
 
 MedDefense should:
 
-- Upgrade Synology DSM to the latest supported patched version (**DSM 7.2 or later**).
-- Disable external internet exposure of NAS management interfaces.
-- Restrict management ports.
-- Place backup storage inside a dedicated secure management VLAN.
-- Apply strict administrative access controls.
+- Immediately update Synology DSM 7 to the latest vendor-patched version.
+- Disable external exposure of NAS management interfaces.
+- Restrict management access to authorized administrators only.
+- Place backup storage inside a secure internal management VLAN.
+- Apply strict network segmentation controls.
 
 ---
 
 # Summary Table
 
-| Vulnerability | Affected System | CVE | Severity | Reason Missed by Scan | Recommended Action |
-|--------------|-----------------|-----|----------|----------------------|-------------------|
-| FortiOS Firmware Vulnerability | FortiGate 100F Firewall | CVE-2025-68686 | High (~7.5) | No firewall firmware/API inspection | Update FortiOS and restrict admin access |
-| AiTM Cloud Identity Attack | Microsoft Office 365 E3 / Entra ID | N/A | Critical | Cloud identity configuration not scanned | Deploy phishing-resistant MFA and Conditional Access |
-| Synology DSM Remote Code Execution | Backup NAS | CVE-2024-10441 | Critical (9.8) | No DSM authenticated deep scan | Patch DSM and isolate backup infrastructure |
+| Vulnerability | Affected System | CVE | Severity | Why Scan Missed It | Recommended Action |
+|--------------|-----------------|-----|----------|-------------------|-------------------|
+| FortiOS Firmware Vulnerability | FortiGate 100F Firewall | CVE-2025-68686 | High (~7.5) | No authenticated firewall firmware/API assessment | Patch FortiOS and restrict administrator access |
+| AiTM Cloud Identity Attack | Microsoft Office 365 E3 / Entra ID | N/A | Critical | Cloud identity configuration outside scanner visibility | Deploy phishing-resistant MFA and Conditional Access |
+| Synology DSM Authorization Vulnerability | Backup NAS (DSM 7) | CVE-2025-1021 | Critical (~8.8–9.8) | No authenticated DSM application scanning | Update DSM and isolate backup infrastructure |
 
 ---
 
 # Conclusion
 
-The OSINT assessment highlights that traditional vulnerability scanners provide only partial visibility into an organization's security posture.
+The OSINT assessment demonstrates that traditional vulnerability scanners provide only limited visibility into an organization's complete security posture.
 
-The original MedDefense scan focused primarily on internal infrastructure and software vulnerabilities, but significant risks also exist in:
+The MedDefense scan successfully identified many internal infrastructure issues, but additional risks remained hidden within:
 
 - Network security appliances
 - Cloud identity platforms
-- Backup infrastructure
+- Backup storage systems
 
-A complete vulnerability management program should combine:
+A mature vulnerability management program should combine:
 
 - Automated vulnerability scanning
-- OSINT threat intelligence
+- OSINT research
 - Vendor security advisories
-- Cloud security assessments
-- Firmware reviews
-- Authenticated scanning
+- Authenticated assessments
+- Cloud security reviews
+- Firmware analysis
 
-Without these additional assessments, critical weaknesses may remain hidden despite a seemingly clean vulnerability report.
+Without these additional security practices, organizations may remain exposed even when traditional vulnerability reports show limited critical findings.
