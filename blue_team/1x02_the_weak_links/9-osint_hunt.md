@@ -1,4 +1,4 @@
-# The OSINT Hunt: MedDefense Vulnerability Assessment Supplement
+# The OSINT Hunt
 
 This assessment identifies additional security risks discovered through **Open Source Intelligence (OSINT) research** that were not detected during the original vulnerability scan. These findings highlight gaps in traditional vulnerability scanning, especially for **network security appliances, cloud identity platforms, and backup infrastructure**.
 
