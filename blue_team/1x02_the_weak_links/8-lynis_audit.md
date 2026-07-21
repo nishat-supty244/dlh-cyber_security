@@ -1,4 +1,4 @@
-# Security Audit Summary & MedDefense Projection Report
+# The Self-Audit
 
 # Part 1: Local System Audit Results (Based on Actual Lynis Scan)
 
