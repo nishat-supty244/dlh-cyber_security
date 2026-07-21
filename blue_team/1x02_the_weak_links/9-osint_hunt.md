@@ -1,4 +1,4 @@
-# Additional Vulnerability Assessment Report
+# The OSINT Hunt
 
 This report identifies vulnerabilities that were **not detected during the original MedDefense vulnerability scan**. These issues were missed because they involve firmware, cloud services, or specialized applications that require authenticated access or vendor-specific scanning techniques.
 
