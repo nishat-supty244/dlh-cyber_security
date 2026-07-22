@@ -1,4 +1,4 @@
-# NIST CSF Current Profile for MedDefense
+# The NIST CSF Mapping
 
 ## Function: Govern (GV)
 
