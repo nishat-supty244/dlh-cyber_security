@@ -1,4 +1,4 @@
-# 10. The Risk Register  
+# The Risk Register  
 ## Master Governance Instrument for MedDefense Health Systems
 
 
