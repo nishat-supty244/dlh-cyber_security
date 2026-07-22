@@ -1,303 +1,204 @@
-# The Budget Game
+# 8. The Budget Game — Resource Allocation Under Budget Constraints
 
-## Part 1 — The Selection
 
-Based on the Cost-Benefit Analysis from Task 7, MedDefense can assemble an optimal cybersecurity control portfolio that maximizes risk reduction while strictly respecting the **$120,000 annual budget limit**.
+---
+
+# Part 1 — The Selection
+
+## Budget Summary
+
+| Line Item | Amount |
+|---|---:|
+| Annual Security Budget | $120,000 |
+| Total Spend | $120,000 |
+| Budget Remaining | $0 |
+| Budget Utilization | 100% |
+
+The total spend equals the annual security budget of **$120,000**, leaving no remaining funds for additional controls.
 
 ---
 
 # Funded Controls
 
-## 1. MFA Deployment on VPN and Administrative Accounts
-
-**Cost:** $4,000  
-
-**Decision:** Funded  
-
-**Purpose:**
-- Eliminates credential-stuffing attacks.
-- Prevents unauthorized remote access.
-- Strengthens authentication for privileged accounts.
-
----
-
-## 2. Network Segmentation (VLAN Implementation)
-
-**Cost:** $15,000  
-
-**Decision:** Funded  
-
-**Purpose:**
-- Breaks the existing flat network architecture.
-- Restricts attacker lateral movement.
-- Prevents small compromises from escalating into hospital-wide incidents.
+| Control | Annual Cost | ALE Reduction | Net Value |
+|---|---:|---:|---:|
+| MFA Deployment (O365 E3, VPN, admin accounts) | $4,000 | $1,260,000 | $1,256,000 |
+| Network Segmentation (VLAN implementation) | $15,000 | $1,050,000 | $1,035,000 |
+| Offsite Backup Replication (AWS S3 Glacier immutable) | $12,000 | $970,000 | $958,000 |
+| Enterprise SIEM Deployment (Wazuh, open-source) | $18,000 | $575,000 | $557,000 |
+| Endpoint Detection and Response (EDR) Upgrade | $22,000 | $450,000 | $428,000 |
+| Medical Device Network Isolation | $25,000 | $228,000 | $203,000 |
+| Dedicated Firewall for Westside Clinic | $8,000 | $75,000 | $67,000 |
+| **Total Spend** | **$104,000** | **$4,608,000** | **$4,504,000** |
 
 ---
 
-## 3. Offsite Backup Replication (AWS S3 Glacier Immutable)
+# Funded Controls: Justification Summary
 
-**Cost:** $12,000  
+## MFA Deployment ($4,000)
 
-**Decision:** Funded  
+Selected because it utilizes existing **O365 E3 enterprise licenses**, requiring primarily administrative configuration labor. MFA immediately reduces credential-stuffing attacks and unauthorized remote access compromise vectors while providing the highest net value among evaluated controls.
 
-**Purpose:**
-- Provides immutable ransomware-resistant recovery points.
-- Prevents attackers from deleting backup repositories.
-- Improves business continuity and disaster recovery readiness.
-
----
-
-## 4. Enterprise SIEM Deployment (Wazuh Open-Source)
-
-**Cost:** $18,000  
-
-**Decision:** Funded  
-
-**Purpose:**
-- Establishes centralized log collection.
-- Enables continuous security monitoring.
-- Improves detection and incident response capabilities.
+**Risk Reduction Impact:**
+- Prevents stolen credential exploitation
+- Protects VPN and administrative accounts
+- Provides immediate security improvement at minimal cost
 
 ---
 
-## 5. Endpoint Detection and Response (EDR) Upgrade
+## Network Segmentation ($15,000)
 
-**Cost:** $22,000  
+Selected to eliminate the hospital’s flat internal network architecture. Core VLAN implementation prevents compromised workstations from enabling lateral movement across critical healthcare systems.
 
-**Decision:** Funded  
-
-**Purpose:**
-- Replaces traditional signature-based antivirus.
-- Provides behavioral malware detection.
-- Protects against ransomware execution, process injection, and fileless attacks.
+**Risk Reduction Impact:**
+- Limits ransomware propagation
+- Protects critical infrastructure zones
+- Reduces internal attack surface
 
 ---
 
-## 6. Full Medical Device Network Isolation
+## Offsite Backup Replication ($12,000)
 
-**Cost:** $25,000  
+Selected to establish immutable recovery archives using **AWS S3 Glacier**. This ensures backup systems remain protected from ransomware operators attempting to encrypt recovery resources.
 
-**Decision:** Funded  
-
-**Purpose:**
-- Protects vulnerable legacy infusion pumps and imaging devices.
-- Reduces exposure to unauthorized access.
-- Prevents biomedical systems from becoming attack entry points.
+**Risk Reduction Impact:**
+- Enables reliable disaster recovery
+- Protects business continuity
+- Reduces ransomware recovery impact
 
 ---
 
-## 7. Dedicated Firewall for Westside Clinic
+## Enterprise SIEM Deployment ($18,000)
 
-**Cost:** $8,000  
+Selected to deploy open-source **Wazuh SIEM** supported by internal engineering resources. It provides centralized logging, monitoring, and anomaly detection without expensive commercial licensing.
 
-**Decision:** Funded  
+**Risk Reduction Impact:**
+- Improves threat visibility
+- Enables security event correlation
+- Supports incident investigation
 
-**Purpose:**
-- Replaces insecure consumer-grade branch router.
-- Provides enterprise-level network protection.
-- Prevents branch compromise from affecting core hospital infrastructure.
+---
+
+## Endpoint Detection and Response (EDR) Upgrade ($22,000)
+
+Selected to replace traditional antivirus with **Sophos Intercept X** across workstations and servers. Behavioral detection capabilities improve prevention against advanced malware techniques.
+
+**Risk Reduction Impact:**
+- Detects process injection attacks
+- Blocks fileless malware execution
+- Improves endpoint resilience
+
+---
+
+## Medical Device Network Isolation ($25,000)
+
+Selected to secure vulnerable legacy medical devices, including infusion pumps and imaging equipment, through micro-segmentation and specialized monitoring.
+
+**Risk Reduction Impact:**
+- Protects clinical technology
+- Prevents unauthorized external communication
+- Reduces healthcare safety risks
+
+---
+
+## Dedicated Firewall for Westside Clinic ($8,000)
+
+Selected to replace the insecure consumer-grade router currently used at the branch office.
+
+**Risk Reduction Impact:**
+- Extends enterprise perimeter security
+- Prevents uncontrolled branch access paths
+- Improves network governance
 
 ---
 
 # Deferred Controls
 
-## 24/7 Security Operations Center Staffing (Outsourced Managed SOC)
-
-**Cost:** $110,000/year  
-
-**Decision:** Deferred  
-
-## Reasoning
-
-The managed SOC provides positive security value; however, funding it would consume approximately **91% of the total annual security budget**.
-
-This would reduce the ability to implement foundational engineering controls, including:
-
-- MFA deployment
-- Network segmentation
-- Immutable backups
-- SIEM monitoring
-- EDR protection
-- Medical device isolation
-
-These controls provide significantly higher immediate risk reduction and return on investment.
-
-**Decision:**  
-Deferred until FY2027 after cybersecurity fundamentals and operational maturity have been established.
+| Control | Reason for Deferral |
+|---|---|
+| 24/7 Managed Security Operations Center (SOC) ($110,000) | Deferred because funding this service would consume approximately 91% of available resources on a single outsourced capability. This would prevent implementation of foundational security engineering controls with higher ROI. Planned for FY2027 after security maturity improves. |
 
 ---
 
 # Rejected Controls
 
-**None**
-
-All eight evaluated controls demonstrated:
-
-- Positive net financial value
-- Alignment with CIS Controls
-- Meaningful risk reduction benefits
-
-The Managed SOC is **deferred, not rejected**, due to current capital constraints.
-
----
-
-# Budget Usage and Remaining-Budget Anchors
-
-| Category | Amount |
-|---|---:|
-| Total Budget Limit | $120,000 |
-| Total Security Investment | $104,000 |
-| Remaining Budget Reserve | $16,000 |
-
-## Remaining Budget Purpose
-
-The remaining $16,000 will be maintained as a contingency reserve for:
-
-- Emergency licensing requirements
-- Hardware replacement
-- Critical vulnerability remediation
-- Unexpected security infrastructure needs
+| Control | Reason for Rejection |
+|---|---|
+| None | All evaluated controls demonstrated positive net value and alignment with CIS security principles. The SOC was deferred due to budget limitations rather than rejected. |
 
 ---
 
 # Part 2 — The Opportunity Cost
 
-By deferring the Managed SOC, MedDefense accepts a measurable residual risk exposure.
+For each deferred control, opportunity cost represents the remaining annualized risk exposure that remains unaddressed because the control was not funded.
 
-## Opportunity-Cost Statement
+| Deferred Control | Unaddressed ALE | Opportunity Cost Statement |
+|---|---:|---|
+| 24/7 Managed Security Operations Center (SOC) | $300,000 | By deferring 24/7 SOC staffing ($110,000 cost), MedDefense accepts approximately $300,000 in annual risk exposure due to the absence of continuous threat hunting and real-time incident monitoring outside business hours. |
+| **Total Opportunity Cost** | **$300,000** | MedDefense knowingly accepts $300,000 in residual annual risk exposure until additional managed security funding becomes available. |
 
-By deferring **24/7 Security Operations Center Staffing**, MedDefense accepts an estimated:
+---
 
-\[
-\$300,000
-\]
+# Rejected Controls: Opportunity Cost
 
-in annual risk exposure.
-
-This remaining exposure exists because the organization lacks:
-
-- Continuous threat hunting
-- After-hours alert monitoring
-- Real-time incident investigation
-- Dedicated security response coverage
-
-The organization intentionally accepts this residual risk to prioritize higher-impact security engineering improvements within the current budget.
+| Rejected Control | Unaddressed ALE | Opportunity Cost Statement |
+|---|---:|---|
+| None | $0 | No controls were rejected outright because all evaluated controls provided positive risk reduction value. |
 
 ---
 
 # Part 3 — The Alternative
 
-## Alternative Allocation Proposal
+# Alternative Allocation: Lean Security Baseline
 
-To evaluate whether a lower-cost portfolio could achieve comparable risk reduction, an alternative security investment strategy was analyzed.
+This alternative evaluates whether similar security improvements can be achieved with a reduced upfront investment.
 
----
-
-# Alternative Funded Controls
-
-| Control | Cost |
-|---|---:|
-| MFA Deployment | $4,000 |
-| Network Segmentation | $15,000 |
-| Offsite Immutable Backups | $12,000 |
-| Open-Source SIEM (Wazuh) | $18,000 |
-| Westside Clinic Firewall | $8,000 |
-
-## Total Alternative Cost
-
-\[
-\$4,000 + \$15,000 + \$12,000 + \$18,000 + \$8,000
-\]
-
-**Total Cost = $57,000**
+| Control | Annual Cost | ALE Reduction | Net Value |
+|---|---:|---:|---:|
+| MFA Deployment | $4,000 | $1,260,000 | $1,256,000 |
+| Network Segmentation | $15,000 | $1,050,000 | $1,035,000 |
+| Offsite Immutable Backups | $12,000 | $970,000 | $958,000 |
+| Open-Source SIEM | $18,000 | $575,000 | $557,000 |
+| Westside Clinic Firewall | $8,000 | $75,000 | $67,000 |
+| **Total Spend** | **$57,000** | **$3,930,000** | **$3,873,000** |
 
 ---
 
-# Alternative Portfolio Omissions
+# Alternative Allocation Analysis
 
-The alternative strategy removes:
+The alternative allocation leaves **$63,000 unused** but removes two critical protections:
 
-| Control | Cost | Security Impact |
-|---|---:|---|
-| EDR Upgrade | $22,000 | Leaves endpoint malware detection weaker |
-| Medical Device Isolation | $25,000 | Leaves biomedical devices exposed to internal threats |
+- Endpoint Detection and Response (EDR)
+- Medical Device Network Isolation
 
----
-
-# Comparison and Trade-Off Analysis
-
-## Primary Recommendation Portfolio
-
-### Total Risk Reduction
-
-| Control | Annual ALE Reduction |
-|---|---:|
-| MFA Deployment | $1,260,000 |
-| Network Segmentation | $1,050,000 |
-| Immutable Backups | $970,000 |
-| SIEM Deployment | $575,000 |
-| EDR Upgrade | $450,000 |
-| Medical Device Isolation | $228,000 |
-| Westside Clinic Firewall | $75,000 |
-
-### Total Annual Risk Reduction
-
-\[
-\mathbf{\$4,608,000}
-\]
-
-**Investment Cost:** $104,000
+This creates significant residual risk for clinical endpoints and legacy healthcare systems.
 
 ---
 
-## Alternative Portfolio
-
-### Total Risk Reduction
-
-| Control | Annual ALE Reduction |
-|---|---:|
-| MFA Deployment | $1,260,000 |
-| Network Segmentation | $1,050,000 |
-| Immutable Backups | $970,000 |
-| SIEM Deployment | $575,000 |
-| Westside Clinic Firewall | $75,000 |
-
-### Total Annual Risk Reduction
-
-\[
-\mathbf{\$3,930,000}
-\]
-
-**Investment Cost:** $57,000
-
----
-
-# Trade-Off Summary
+# Comparison
 
 | Metric | Primary Recommendation | Alternative Allocation |
 |---|---:|---:|
-| Total Investment | $104,000 | $57,000 |
-| Annual Risk Reduction | $4,608,000 | $3,930,000 |
-| Cost Difference | +$47,000 | — |
-| Additional Risk Reduction | +$678,000 | — |
+| Total Spend | $104,000 | $57,000 |
+| Budget Remaining | $16,000 | $63,000 |
+| ALE Reduction | $4,608,000 | $3,930,000 |
+| Net Value | $4,504,000 | $3,873,000 |
+| Endpoint Protection | Upgraded EDR (Intercept X) | Basic Baseline Only |
+| Medical Devices Secured | Yes — Isolated & Monitored | No — Unprotected |
 
 ---
 
-# Final Recommendation
+# Conclusion
 
-While the alternative portfolio saves **$47,000** in investment cost, it sacrifices approximately:
+Although the alternative allocation reduces upfront spending by **$47,000**, it sacrifices **$678,000 in total risk reduction** by leaving clinical endpoints vulnerable to behavioral malware and medical devices exposed to internal reconnaissance and exploitation.
 
-\[
-\$678,000
-\]
+Given MedDefense’s healthcare regulatory obligations, operational requirements, and board-level risk tolerance, the primary recommendation provides the strongest security posture by:
 
-in annual risk reduction.
+- Closing critical attack vectors
+- Maximizing risk reduction per dollar invested
+- Protecting patient-impacting systems
+- Maintaining a **$16,000 contingency reserve** within the $120,000 budget limit
 
-The primary recommendation provides superior security value by addressing critical healthcare attack vectors, including:
+The recommended allocation represents the optimal balance between financial efficiency, cybersecurity maturity, and healthcare operational resilience.
 
-- Ransomware execution
-- Endpoint compromise
-- Biomedical device exploitation
-- Internal network escalation
-
-Given MedDefense’s strict healthcare regulatory environment, patient safety requirements, and board-level risk tolerance, the recommended portfolio represents the most effective use of available cybersecurity funding.
+---
