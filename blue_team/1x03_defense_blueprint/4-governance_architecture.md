@@ -1,3 +1,4 @@
+# The Governance Architecture
 # Part 1: RACI Matrix
 
 | Security Activity | CEO | Deputy CISO (James) | IT Director (Sarah) | Department Heads | Security Analyst (You) |
