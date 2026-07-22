@@ -356,12 +356,3 @@ Security Analyst
 
 ---
 
-**Prepared By:** Security Department  
-**References:**  
-- 1x00 Organizational Context (staffing, budget, vacant CISO position)  
-- 1x02 Task 20 (Budget limitations)  
-- 1x03 Task 0 (Framework selection)  
-- HIPAA Security Rule 45 CFR 164.308 (Administrative Safeguards — Security Management Process)  
-- NIST CSF 2.0 Govern Function  
-
-**Classification:** CONFIDENTIAL — INTERNAL USE ONLY
