@@ -1,4 +1,4 @@
-# 4. The Governance Architecture
+# The Governance Architecture
 ## Security Governance Structure for MedDefense Health Systems
 
 ---
