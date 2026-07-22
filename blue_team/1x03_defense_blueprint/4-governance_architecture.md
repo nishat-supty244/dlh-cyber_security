@@ -181,4 +181,3 @@ MedDefense should formally establish a **Virtual CISO (vCISO) governance model**
 This approach delivers mature executive cybersecurity governance while preserving financial resources for high-priority technical controls identified within the Master Risk Register.
 
 ---
-
