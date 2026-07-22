@@ -1,258 +1,118 @@
-# The Risk Equation
+# 5. The Risk Equation
+## Quantitative Risk Analysis for MedDefense Health Systems
 
-## GAP-001: Internal Network Segmentation Deficiency
-
-**Description:**  
-Internal network operates as a single broadcast domain (**10.10.0.0/16**) with no VLAN segmentation between departments or device types.
-
-### Vulnerability Evidence
-- Finding 003: PostgreSQL Unrestricted Access.
-- Finding 004: BlueKeep / EternalBlue vulnerability on MRI systems.
-- Finding 010: BD Alaris default credentials.
-- Finding 007: LDAP Signing Not Required.
-
-### Threat Context
-- Organized Crime / Ransomware-as-a-Service (RaaS)  
-  - Kill Chain #1 — Ransomware Deployment.
-- Nation-State Actors  
-  - Kill Chain #2 — EHR Data Exfiltration.
-- Opportunistic Attackers  
-  - Kill Chain #3 — Medical Device Compromise.
-
-### Framework Mapping
-- **NIST CSF Function:** Protect (PR.IR — Technology Infrastructure Resilience)
-- **CIS Control:** CIS Control 12 — Network Infrastructure Management  
-  - IG1 Safeguard 12.2  
-  - IG2 Safeguard 12.3
-
-### Recommended Action
-Deploy VLAN segmentation to separate:
-- Clinical IoT networks.
-- Medical Imaging systems.
-- Administrative computing environments.
-- Management networks.
-
-Implement strict inter-VLAN firewall rules to control communication paths.
+**Date:** July 22, 2026  
+**Analyst:** Security Department  
+**Document:** Project 1x03 — Defense Strategy and Risk Register (Task 5)  
+**Reference:** Provided Risk Scenarios File, 1x01 Threat Landscape
 
 ---
 
-# GAP-002: Lack of Multi-Factor Authentication for Remote Access
-
-**Description:**  
-Remote access portals used by employees and external vendors do not enforce multi-factor authentication (MFA).
-
-### Vulnerability Evidence
-- Finding 001: Internet-exposed RDP with weak credentials.
-- Finding 002: VPN portal without MFA.
-
-### Threat Context
-- Organized Crime / RaaS  
-  - Kill Chain #1 — Credential Stuffing and Unauthorized Remote Access.
-
-### Framework Mapping
-- **NIST CSF Function:** Protect (PR.AA — Identity Management, Authentication, and Access Control)
-- **CIS Control:** CIS Control 6 — Access Control Management  
-  - IG1 Safeguard 6.3
-
-### Recommended Action
-Enforce mandatory context-aware MFA across:
-- Remote VPN portals.
-- Administrative endpoints.
-- Cloud services.
-- Privileged user accounts.
+## Methodology Note
+For quantitative analysis, the formula **SLE = AV × EF** represents the financial impact of a single event. **ALE = SLE × ARO** represents the expected annual cost of that risk. In these calculations, "Asset Value" (AV) refers to the business value at risk during the incident (not just hardware replacement cost), ensuring the loss reflects operational impact.
 
 ---
 
-# GAP-003: Lack of Vulnerability Management and Patch Governance
+## Scenario 1: Ransomware Attack on Billing Server
 
-**Description:**  
-MedDefense lacks a centralized vulnerability management program and recurring patch management lifecycle.
-
-### Vulnerability Evidence
-- Finding 004: BlueKeep / MS17-010 EternalBlue vulnerability on legacy imaging systems.
-- Finding 006: Unsupported Windows Server 2012 R2 systems.
-
-### Threat Context
-- Organized Crime / RaaS  
-  - Kill Chain #1 — Exploitation of Known Vulnerabilities.
-
-### Framework Mapping
-- **NIST CSF Function:**  
-  - Protect (PR.PS — Platform Security)
-  - Identify (ID.RA — Risk Assessment)
-- **CIS Control:** CIS Control 7 — Continuous Vulnerability Management  
-  - IG1 Safeguard 7.1  
-  - IG2 Safeguard 7.4
-
-### Recommended Action
-Establish:
-- Automated recurring vulnerability scanning.
-- Risk-based vulnerability prioritization.
-- Formal 30-day emergency patching policy for critical infrastructure.
+| Parameter | Value | Reasoning |
+|-----------|-------|-----------|
+| **Asset Value (AV)** | $4,200,000 | Based on annual revenue processed by the billing server. This represents the maximum operational exposure if the revenue stream were halted for a full year, providing the base against which partial losses are calculated. |
+| **Exposure Factor (EF)** | 11.26% | The incident does not destroy the server permanently but causes temporary loss. EF is calculated as Total Estimated Loss ($473,000) ÷ Annual Revenue ($4.2M). The loss components are: 18 days downtime @ $16K/day ($288K) + Recovery ($85K) + HIPAA Penalty ($100K). |
+| **Single Loss Expectancy (SLE)** | **$473,000** | Derived from sum of direct loss components: Downtime ($288,000) + Recovery ($85,000) + Penalty ($100,000). |
+| **Annualized Rate of Occurrence (ARO)** | 0.25 | Sector intelligence (1x01) indicates approximately 1 attack every 3-4 years for similar-profile hospitals. Conservative estimate uses 1 in 4 years. |
+| **Annualized Loss Expectancy (ALE)** | **$118,250** | SLE ($473,000) × ARO (0.25). |
+| **Confidence Level** | **Medium** | High confidence in downtime/recovery costs (industry averages). Lower confidence in exact timing of next attack (ARO), as a flat network increases this frequency beyond sector averages. |
 
 ---
 
-# GAP-004: Absence of Centralized Logging and SIEM Monitoring
+## Scenario 2: Patient Data Breach via EHR System
 
-**Description:**  
-MedDefense has no centralized logging, log aggregation, or Security Information and Event Management (SIEM) capability.
-
-### Vulnerability Evidence
-- Finding 008: Lack of audit trail and log forwarding.
-- Finding 009: Unmonitored local authentication logs.
-
-### Threat Context
-- Insider Threat.
-- Nation-State Actors.
-- Kill Chain #2 — Stealthy Lateral Movement and Data Exfiltration.
-
-### Framework Mapping
-- **NIST CSF Function:** Detect (DE.CM — Continuous Monitoring)
-- **CIS Control:** CIS Control 8 — Audit Log Management  
-  - IG1 Safeguard 8.2  
-  - IG2 Safeguard 8.3
-
-### Recommended Action
-Deploy:
-- Centralized log collection pipeline.
-- SIEM platform.
-- Automated alert correlation.
-
-Collect logs from:
-- Domain controllers.
-- Firewalls.
-- Critical servers.
-- Medical systems.
-- Endpoint devices.
+| Parameter | Value | Reasoning |
+|-----------|-------|-----------|
+| **Asset Value (AV)** | $9,075,000 | Total value of the EHR dataset at risk. Includes 50,000 records × $165/record ($8.25M) + Fixed Breach Costs ($25K notification + $200K litigation + $600K reputation = $825K). |
+| **Exposure Factor (EF)** | 100% | A successful exfiltration via Kill Chain #2 exposes the entire database. Unlike ransomware where recovery is possible, data exfiltration triggers full breach costs immediately. |
+| **Single Loss Expectancy (SLE)** | **$9,075,000** | AV × EF = $9,075,000 × 100%. |
+| **Annualized Rate of Occurrence (ARO)** | 0.33 | Probabilistic estimate based on HHS breach data and MedDefense's lack of controls (no SIEM, flat network). 1 in 3 years is a reasonable upper-bound expectation given the vulnerability posture. |
+| **Annualized Loss Expectancy (ALE)** | **$3,004,875** | SLE ($9,075,000) × ARO (0.33). |
+| **Confidence Level** | **Low** | Highly sensitive to ARO estimation. If MedDefense implements the proposed segmentation and SIEM (GAP-001, GAP-003), ARO drops significantly. The $600K reputational figure is subjective and difficult to model precisely. |
 
 ---
 
-# GAP-005: Weak Backup Protection and Recovery Readiness
+## Scenario 3: Insider Data Theft (Negligent)
 
-**Description:**  
-Critical clinical and administrative database backups are unverified, improperly isolated, and vulnerable to ransomware destruction.
-
-### Vulnerability Evidence
-- Finding 011: Local administrative backups accessible from production networks.
-
-### Threat Context
-- Organized Crime / RaaS  
-  - Kill Chain #1 — Backup Destruction During Ransomware Extortion.
-
-### Framework Mapping
-- **NIST CSF Function:** Recover (RC.RP — Incident Recovery Plan Execution)
-- **CIS Control:** CIS Control 11 — Data Recovery  
-  - IG1 Safeguard 11.2  
-  - IG2 Safeguard 11.4
-
-### Recommended Action
-Implement:
-- Immutable backup storage.
-- Air-gapped backup architecture.
-- Monthly recovery restoration testing.
-- Backup integrity validation procedures.
+| Parameter | Value | Reasoning |
+|-----------|-------|-----------|
+| **Asset Value (AV)** | $120,000 | Defined as the "Cost per Incident." In insider threat scenarios, the "Asset" is the cumulative cost of investigation, containment, remediation, and reporting. |
+| **Exposure Factor (EF)** | 100% | The incident cost is incurred once the negligence is discovered. EF is 100% because the SLE represents the total financial fallout of the event. |
+| **Single Loss Expectancy (SLE)** | **$120,000** | Based on Ponemon Insider Threat Report averages for healthcare negligent insiders. |
+| **Annualized Rate of Occurrence (ARO)** | 2.5 | With 2,000 staff, no DLP, no USB restrictions, and no security training, sector averages suggest 2-3 incidents per year. Conservative estimate uses 2.5. |
+| **Annualized Loss Expectancy (ALE)** | **$300,000** | SLE ($120,000) × ARO (2.5). |
+| **Confidence Level** | **Medium** | ARO is driven by human behavior which is hard to predict, but the lack of controls (no training, no DLP) strongly correlates with higher incident frequency observed in similar environments. |
 
 ---
 
-# GAP-006: Missing Incident Response Plan
+## Scenario 4: Medical Device Compromise
 
-**Description:**  
-MedDefense lacks a formal documented Incident Response Plan (IRP) and structured containment procedures.
+This scenario is split into two distinct risk vectors: Denial of Service (DoS) and Patient Safety Liability.
 
-### Vulnerability Evidence
-- Finding 012: No defined incident triage or containment playbooks.
+### Vector A: Denial of Service (Operational Disruption)
 
-### Threat Context
-- All Threat Actors:
-  - Organized Crime.
-  - Nation-State Actors.
-  - Opportunistic Attackers.
+| Parameter | Value | Reasoning |
+|-----------|-------|-----------|
+| **Asset Value (AV)** | $355,000 | Replacement cost ($105K for 7 pumps) + FDA investigation ($150K) + Ops disruption ($20K/day × 5 days = $100K). |
+| **Exposure Factor (EF)** | 100% | A compromise leading to quarantine results in total loss of these costs for the affected unit. |
+| **Single Loss Expectancy (SLE)** | **$355,000** | Sum of direct costs associated with the DoS event. |
+| **Annualized Rate of Occurrence (ARO)** | 0.1 | Opportunistic attack is plausible due to default credentials (Finding 010) but targeted DoS is rare. Estimate 1 in 10 years. |
+| **Annualized Loss Expectancy (ALE)** | **$35,500** | SLE ($355,000) × ARO (0.1). |
 
-Kill Chain Impact:
-- Increased dwell time due to delayed detection and response.
+### Vector B: Patient Safety Liability (Direct Harm)
 
-### Framework Mapping
-- **NIST CSF Function:** Respond (RS.MA — Incident Management)
-- **CIS Control:** CIS Control 17 — Incident Response Management  
-  - IG1 Safeguard 17.1  
-  - IG2 Safeguard 17.2
+| Parameter | Value | Reasoning |
+|-----------|-------|-----------|
+| **Asset Value (AV)** | $3,000,000 | Mid-range patient liability ($500K-$5M) + FDA costs ($150K) + Ops disruption ($100K). Used mid-range liability for calculation. |
+| **Exposure Factor (EF)** | 100% | Liability is realized upon a patient safety event. |
+| **Single Loss Expectancy (SLE)** | **$3,000,000** | Catastrophic impact scenario. |
+| **Annualized Rate of Occurrence (ARO)** | 0.02 | Patient harm via hacked infusion pump is statistically rare. Estimate 1 in 50 years. |
+| **Annualized Loss Expectancy (ALE)** | **$60,000** | SLE ($3,000,000) × ARO (0.02). |
 
-### Recommended Action
-Develop, approve, and test an Incident Response Plan including:
-- Incident classification.
-- Triage workflows.
-- Escalation procedures.
-- Communication plans.
-- Containment playbooks.
-
-Conduct regular tabletop exercises.
+| **Combined ALE (Vector A + B)** | **$95,500** | Sum of both vectors. |
+| **Confidence Level** | **Low** | Liability estimates are highly speculative. However, the existence of default credentials makes the lower-frequency, high-impact risk credible enough to justify mitigation spending. |
 
 ---
 
-# GAP-007: Default Credentials and Weak System Hardening
+## Scenario 5: VPN Compromise Leading to Full Network Access
 
-**Description:**  
-Medical devices and workstations operate with default vendor credentials and insecure default configurations.
-
-### Vulnerability Evidence
-- Finding 010: BD Alaris infusion pump default credentials.
-- Finding 005: Default administrative passwords on core network switches.
-
-### Threat Context
-- Opportunistic Attackers.
-- Hacktivists.
-- Kill Chain #3 — Medical Device Compromise.
-
-### Framework Mapping
-- **NIST CSF Function:** Protect (PR.PS — Platform Security)
-- **CIS Control:** CIS Control 4 — Secure Configuration of Enterprise Assets and Software  
-  - IG1 Safeguard 4.1  
-  - IG2 Safeguard 4.2
-
-### Recommended Action
-Implement:
-- Standardized secure configuration baselines.
-- Immediate removal of all default credentials.
-- Strong password requirements for medical equipment and network infrastructure.
+| Parameter | Value | Reasoning |
+|-----------|-------|-----------|
+| **Asset Value (AV)** | $9,548,000 | Aggregate worst-case impact of Scenarios 1 + 2. Ransomware SLE ($473,000) + Data Breach SLE ($9,075,000). This assumes a VPN breach allows an adversary to execute both a ransomware attack and a data exfiltration campaign sequentially. |
+| **Exposure Factor (EF)** | 100% | A VPN compromise grants full access to the flat network. EF is 100% of the aggregated enterprise risk. |
+| **Single Loss Expectancy (SLE)** | **$9,548,000** | Represents the maximum foreseeable loss from a perimeter breach. |
+| **Annualized Rate of Occurrence (ARO)** | 0.3 | Based on 1x01 intelligence showing VPN as the #1 initial access vector (38% of healthcare ransomware attacks). ARO 0.3 equates to roughly once every 3 years. |
+| **Annualized Loss Expectancy (ALE)** | **$2,864,400** | SLE ($9,548,000) × ARO (0.3). |
+| **Confidence Level** | **Medium** | The ALE is dominated by the Breach SLE component. While the probability of a simultaneous Ransomware + Breach event might be slightly lower than the individual probabilities, treating the VPN as a "Master Key" justifies aggregating the downstream risks for strategic planning. |
 
 ---
 
-# GAP-008: Lack of Security Awareness and Phishing Training
+## Summary of Quantitative Risk Posture
 
-**Description:**  
-MedDefense lacks formal security awareness training and interactive phishing simulation programs for employees.
+| Scenario | Risk Type | SLE (Single Loss) | ARO (Annual Rate) | ALE (Annual Loss) | Priority Ranking |
+|----------|-----------|-------------------|-------------------|-------------------|------------------|
+| **Scenario 1** | Ransomware | $473,000 | 0.25 | $118,250 | Medium |
+| **Scenario 2** | Data Breach | $9,075,000 | 0.33 | $3,004,875 | High |
+| **Scenario 3** | Insider Negligence | $120,000 | 2.50 | $300,000 | Medium-High |
+| **Scenario 4** | Medical Device | $3,355,000 | 0.12 | $95,500 | Low-Medium |
+| **Scenario 5** | VPN Perimeter | $9,548,000 | 0.30 | $2,864,400 | Critical |
+| **Total ALE** | | | | **$6,383,025** | |
 
-### Vulnerability Evidence
-- Finding 013: High susceptibility to credential harvesting through social engineering.
+### Strategic Interpretation
 
-### Threat Context
-- Organized Crime / RaaS  
-  - Kill Chain #1 — Phishing and Spear-Phishing Initial Access.
+The quantitative analysis reveals a total expected annual loss exposure of **$6.38 million** for MedDefense. This figure dwarfs the current security budget of **$120,000**, demonstrating a funding gap ratio of **53:1**. 
 
-### Framework Mapping
-- **NIST CSF Function:** Protect (PR.AT — Awareness and Training)
-- **CIS Control:** CIS Control 14 — Security Awareness and Skills Training  
-  - IG1 Safeguard 14.1  
-  - IG2 Safeguard 14.2
-
-### Recommended Action
-Implement a continuous security awareness platform including:
-- Monthly phishing simulations.
-- Role-based cybersecurity training.
-- Clinical staff awareness programs.
-- Social engineering prevention exercises.
+The highest cost driver is the Data Breach (Scenario 2) followed closely by the VPN Perimeter Breach (Scenario 5), which acts as the gateway for the other scenarios. Investing in network segmentation (GAP-001) and SIEM deployment (GAP-003) directly addresses the root cause of the highest ALE figures. A conservative 50% reduction in ARO for these top scenarios would save MedDefense approximately **$3 million annually**, yielding an ROI that justifies significant capital expenditure despite the current budget deficit.
 
 ---
 
-# Traceability Summary Table
-
-| Gap Reference | Description | Vulnerability Evidence | Threat Context | NIST CSF Function | CIS Control | Recommended Action |
-|---|---|---|---|---|---|---|
-| GAP-001 | Flat internal network with no VLAN segmentation | Findings 003, 004, 010, 007 | Organized Crime / Nation-State / Opportunistic | Protect (PR.IR) | CIS Control 12 (IG1/IG2) | Deploy VLAN segmentation separating Clinical IoT, Imaging, and Administrative networks |
-| GAP-002 | Remote access portal lacks MFA | Findings 001, 002 | Organized Crime / RaaS | Protect (PR.AA) | CIS Control 6 (IG1) | Enforce MFA on remote access VPN portals and cloud endpoints |
-| GAP-003 | Lack of vulnerability management and patch cadence | Findings 004, 006 | Organized Crime / RaaS | Protect (PR.PS) / Identify (ID.RA) | CIS Control 7 (IG1/IG2) | Establish automated scanning and 30-day emergency patch cycle |
-| GAP-004 | No centralized logging or SIEM | Findings 008, 009 | Insider Threat / Nation-State | Detect (DE.CM) | CIS Control 8 (IG1/IG2) | Deploy centralized logging and SIEM monitoring |
-| GAP-005 | Backups vulnerable to ransomware | Finding 011 | Organized Crime / RaaS | Recover (RC.RP) | CIS Control 11 (IG1/IG2) | Implement immutable, air-gapped backups and restoration testing |
-| GAP-006 | No Incident Response Plan | Finding 012 | All Threat Actors | Respond (RS.MA) | CIS Control 17 (IG1/IG2) | Develop, approve, and test formal Incident Response procedures |
-| GAP-007 | Default credentials and weak configurations | Findings 005, 010 | Opportunistic / Hacktivist | Protect (PR.PS) | CIS Control 4 (IG1/IG2) | Apply hardening baselines and remove default passwords |
-| GAP-008 | No security awareness training | Finding 013 | Organized Crime / RaaS | Protect (PR.AT) | CIS Control 14 (IG1/IG2) | Deploy continuous awareness and phishing simulation training |
+*Prepared by: Security Department*  
+*References: Provided Risk Scenarios File, 1x01 Threat Landscape (T14 Kill Chains), 1x02 Vulnerability Assessment (Findings 001-031), Ponemon Institute Reports, CISA Data, HHS Breach Portal Statistics*  
+*Classification: CONFIDENTIAL — INTERNAL USE ONLY*
