@@ -1,4 +1,4 @@
-# 11. The Control Selection  
+# The Control Selection  
 ## Security Control Mapping, Framework Alignment, and Dependency Architecture
 
 
