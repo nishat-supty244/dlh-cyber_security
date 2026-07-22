@@ -1,10 +1,5 @@
-# 8. The Roadmap  
+# The Roadmap  
 # MedDefense 6-Month Security Implementation Roadmap
-
-**Date:** July 22, 2026  
-**Owner:** IT Director (Sarah Park) & Security Department  
-**Document:** Project 1x03 — Defense Strategy and Risk Register (Task 8)  
-**Reference:** Task 7 Cost-Benefit Analysis, Task 11 Control Selection, Task 14 Network Segmentation  
 
 ---
 
