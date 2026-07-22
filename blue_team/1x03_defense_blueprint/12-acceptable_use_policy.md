@@ -1,4 +1,4 @@
-# 12. The Policy Draft  
+# The Policy Draft  
 # MedDefense Health Systems Acceptable Use Policy (AUP)
  
 
