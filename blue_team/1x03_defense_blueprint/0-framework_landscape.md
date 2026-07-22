@@ -1,146 +1,366 @@
-# The Framework Landscape
-# Part 1 - Three-Framework Summary
+# 4. Governance Architecture
 
-## NIST Cybersecurity Framework (CSF) 2.0
-
-### What it is and who publishes it
-The **NIST Cybersecurity Framework (CSF) 2.0** is published by the **National Institute of Standards and Technology (NIST)**, a non-regulatory agency of the U.S. Department of Commerce. It is a voluntary, outcome-based cybersecurity risk management framework.
-
-### Primary Purpose
-The framework provides a common structure for organizations to identify, assess, prioritize, and communicate cybersecurity risks while aligning security activities with business objectives.
-
-### Structure
-NIST CSF 2.0 is organized around six core functions:
-
-- **Govern**
-- **Identify**
-- **Protect**
-- **Detect**
-- **Respond**
-- **Recover**
-
-Each function is divided into **Categories**, **Subcategories**, and **Informative References**.
-
-### Who Uses It
-NIST CSF is widely used by organizations across healthcare, government, critical infrastructure, and private industry. It is intended for executives, risk managers, security leaders, and technical teams responsible for cybersecurity governance.
+## Security Governance Framework for MedDefense Health Systems
+ 
 
 ---
 
-## CIS Controls v8
+# Part 1 — RACI Matrix
 
-### What it is and who publishes it
-The **CIS Controls v8** are published by the **Center for Internet Security (CIS)**. They are a prioritized set of cybersecurity best practices developed through industry consensus.
+**Legend:**  
+- **R = Responsible:** Performs the assigned activity.  
+- **A = Accountable:** Owns the final outcome and decision authority (only one accountable role per activity).  
+- **C = Consulted:** Provides expertise, feedback, or recommendations.  
+- **I = Informed:** Receives updates regarding progress or decisions.  
 
-### Primary Purpose
-The CIS Controls provide practical and actionable technical safeguards designed to defend organizations against the most common cyber threats.
-
-### Structure
-CIS Controls v8 includes:
-
-- **18 Controls**
-- **153 Safeguards**
-- **3 Implementation Groups (IG1, IG2, and IG3)**
-
-The Implementation Groups help organizations implement controls according to their size, maturity, and available resources.
-
-### Who Uses It
-The framework is primarily used by IT administrators, system engineers, security analysts, and cybersecurity practitioners responsible for implementing and maintaining technical security controls.
-
----
-
-## ISO/IEC 27001:2022
-
-### What it is and who publishes it
-**ISO/IEC 27001:2022** is published jointly by the **International Organization for Standardization (ISO)** and the **International Electrotechnical Commission (IEC)**. It is the internationally recognized standard for Information Security Management Systems (ISMS).
-
-### Primary Purpose
-ISO 27001 provides requirements for establishing, implementing, maintaining, and continually improving an Information Security Management System to protect organizational information.
-
-### Structure
-The standard consists of:
-
-- **Clauses 4–10**, which define management system requirements.
-- **Annex A**, containing **93 security controls** grouped into:
-  - Organizational controls
-  - People controls
-  - Physical controls
-  - Technological controls
-
-### Who Uses It
-ISO 27001 is adopted by organizations seeking internationally recognized certification to demonstrate compliance with information security requirements and build trust with customers, regulators, and business partners.
+| Activity | CEO | Deputy CISO (James) | IT Director (Sarah) | Department Heads | Security Analyst |
+|----------|-----|----------------------|----------------------|------------------|------------------|
+| Security budget approval | A | R | C | I | C |
+| Vulnerability remediation | I | A | R | I | R |
+| Incident response execution | I | A | R | C | R |
+| Security policy approval | A | C | C | C | R |
+| Risk acceptance decisions | A | C | C | C | R |
+| Security awareness training | I | A | I | R | R |
+| Vendor risk assessment | I | A | C | C | R |
+| Audit coordination | I | A | R | C | R |
 
 ---
 
-# Part 2 - Relationship Map
+# Key RACI Decision Explanations
 
-## Framework Interplay and Relationship
+## Security Budget Approval
 
-The three frameworks complement one another rather than compete. Together, they provide strategic governance, technical implementation, and compliance management.
+The CEO holds accountability because executive leadership has ultimate responsibility for financial decisions. James, as Deputy CISO, is responsible for preparing the security budget proposal, including cost estimates and business justification based on identified risks and priorities.
 
-A simple way to understand their relationship is:
-
-- **NIST CSF 2.0** answers **"What should we do?"** by defining cybersecurity governance, risk management, and strategic security objectives.
-
-- **CIS Controls v8** answers **"How should we do it?"** by providing specific, prioritized technical safeguards that reduce cybersecurity risk.
-
-- **ISO/IEC 27001** answers **"How can we demonstrate and certify what we are doing?"** by establishing the management processes and audit requirements necessary for formal certification.
-
-### Framework Relationship
-
-| Framework | Primary Focus | Key Question Answered |
-|-----------|---------------|-----------------------|
-| **NIST CSF 2.0** | Governance and Risk Management | *What should we do?* |
-| **CIS Controls v8** | Technical Security Controls | *How should we do it?* |
-| **ISO/IEC 27001** | Information Security Management System (ISMS) and Certification | *How do we prove we are doing it?* |
-
-Together, an organization can:
-
-1. Develop its cybersecurity strategy using **NIST CSF 2.0**.
-2. Implement technical safeguards using **CIS Controls v8**.
-3. Manage documentation, governance, and compliance using **ISO/IEC 27001**.
+Sarah is consulted because IT operations and infrastructure requirements directly influence security spending. Department Heads are informed when budget decisions impact their operational resources.
 
 ---
 
-# Part 3 - MedDefense Framework Selection
+## Vulnerability Remediation
 
-## Strategic Recommendation
+James is accountable for ensuring that identified vulnerabilities are addressed within agreed service-level timelines. Sarah is responsible for applying technical fixes, including patches, system updates, and configuration changes across IT-managed assets.
 
-MedDefense Health Systems should adopt **NIST Cybersecurity Framework (CSF) 2.0** as its primary cybersecurity governance framework and implement **CIS Controls v8**, focusing initially on **Implementation Groups (IG1 and IG2)**.
+The Security Analyst is responsible for confirming remediation effectiveness through validation activities such as rescanning and verification based on the Task 23 Validation Plan.
 
----
-
-## Justification
-
-### Resource Limitations
-
-MedDefense operates with a small cybersecurity team consisting of one Security Analyst and one Deputy CISO. Developing a comprehensive cybersecurity program from the ground up would require significant time and resources.
-
-CIS Controls v8 provides a prioritized roadmap of technical safeguards through Implementation Groups, allowing the organization to focus on the highest-impact security improvements first while remaining within its available staffing and budget.
+This structure separates accountability, technical implementation, and independent validation.
 
 ---
 
-### Executive and Board Communication
+## Incident Response Execution
 
-The CEO, Dr. Morales, and the Board require a cybersecurity framework that supports executive decision-making and demonstrates responsible investment.
+James is accountable for activating the incident response process, approving breach notification decisions, and coordinating external communications.
 
-NIST CSF 2.0 introduces the **Govern** function, enabling cybersecurity activities to be aligned with business objectives, organizational risk, and strategic planning. It also provides a common language that facilitates communication between technical teams and executive leadership.
+Sarah is responsible for technical containment activities, including system isolation, account disabling, and infrastructure protection.
 
----
+The Security Analyst performs technical investigation, evidence preservation, forensic analysis, and threat removal activities.
 
-### Compliance and Budget Considerations
-
-Although ISO/IEC 27001 provides internationally recognized certification, pursuing full certification requires significant financial investment, dedicated personnel, and ongoing audit costs.
-
-Given MedDefense's limited budget of **$120,000** and its current level of cybersecurity maturity, immediate ISO 27001 certification is not the most practical option.
-
-Implementing **NIST CSF 2.0** together with **CIS Controls v8 (IG1 and IG2)** provides a cost-effective approach that aligns with healthcare security best practices, supports regulatory expectations such as HIPAA, and significantly improves the organization's cybersecurity posture without the additional expense of formal certification.
+Department Heads are consulted when incidents affect clinical operations to ensure response activities maintain patient care continuity.
 
 ---
 
-## Final Recommendation
+## Security Policy Approval
 
-MedDefense should:
+The CEO maintains accountability as the organization's highest authority for policy approval.
 
-- Adopt **NIST CSF 2.0** as its cybersecurity governance and risk management framework.
-- Implement **CIS Controls v8 (Implementation Groups 1 and 2)** as its operational security baseline.
-- Consider pursuing **ISO/IEC 27001 certification** in the future after achieving greater cybersecurity maturity and allocating sufficient financial and organizational resources.
+James provides cybersecurity expertise and contributes security requirements during policy development. Sarah is consulted to confirm technical feasibility and implementation requirements.
+
+Department Heads provide operational feedback when policies impact healthcare workflows.
+
+The Security Analyst is responsible for researching requirements and preparing draft policies but does not hold approval authority.
+
+---
+
+## Risk Acceptance Decisions
+
+The CEO remains the final authority for accepting organizational risks. Risk acceptance is a business decision and cannot be transferred entirely to the security team.
+
+James provides risk analysis, including financial impact calculations such as Annual Loss Expectancy (ALE), remediation costs, and recommended treatment options.
+
+Sarah and Department Heads are consulted when risks affect technology operations or business processes.
+
+The Security Analyst is responsible for collecting supporting evidence, calculating risk values, and maintaining risk documentation.
+
+This separation ensures that security identifies and analyzes risks while business leadership owns the final decision.
+
+---
+
+## Security Awareness Training
+
+James is accountable for the effectiveness and overall management of the security awareness program.
+
+Department Heads are responsible for ensuring employees complete required training and participate in activities such as phishing simulations.
+
+The Security Analyst develops training materials, manages simulations, and supports awareness initiatives.
+
+This approach ensures managers share responsibility for employee security behavior.
+
+---
+
+## Vendor Risk Assessment
+
+James is accountable for maintaining vendor security oversight and ensuring contractual compliance.
+
+Sarah provides technical input regarding system integrations and security requirements.
+
+Department Heads are consulted when vendors support specific business operations.
+
+The Security Analyst conducts vendor assessments, reviews security documentation, and records findings.
+
+---
+
+## Audit Coordination
+
+James is accountable for overall audit preparedness and regulatory compliance.
+
+Sarah is responsible for providing technical evidence and completing required corrective actions.
+
+Department Heads are consulted when audits involve their departments.
+
+The Security Analyst manages audit documentation, evidence collection, and communication with auditors.
+
+---
+
+# Part 2 — Role Definitions
+
+## Data Owner
+
+**Assigned To:** Department Heads  
+*(Example: Dr. Patel in Cardiology owns cardiovascular patient information; Revenue Cycle Manager owns billing information.)*
+
+### Definition
+
+The Data Owner is the business leader responsible for managing a specific category of information. This role determines:
+
+- Data classification requirements
+- Appropriate access permissions
+- Business usage requirements
+- Approval of access requests
+
+The Data Owner is also responsible for understanding the business impact if the information is compromised.
+
+### Reason for Assignment
+
+Department Heads possess the operational and clinical knowledge required to make appropriate decisions about their data.
+
+For example, Dr. Patel understands which healthcare professionals require access to cardiology records and what represents appropriate clinical usage.
+
+Assigning ownership to IT or Security would create a situation where technical teams make business decisions without sufficient operational context.
+
+---
+
+# Data Controller
+
+**Assigned To:** MedDefense Health Systems  
+*(Represented by the CEO as the organizational authority.)*
+
+### Definition
+
+The Data Controller determines why and how Protected Health Information (PHI) is collected, processed, stored, and shared.
+
+Under HIPAA terminology, MedDefense functions as the Covered Entity and is legally responsible for:
+
+- Protecting PHI
+- Maintaining compliance
+- Managing privacy obligations
+- Reporting breaches when required
+
+### Reason for Assignment
+
+MedDefense creates, receives, maintains, and transmits healthcare information as part of its medical operations.
+
+The organization itself holds legal responsibility, and this responsibility cannot be transferred to IT teams or external vendors.
+
+---
+
+# Data Processor
+
+**Assigned To:** External service providers processing PHI on behalf of MedDefense
+
+Examples:
+
+- SecurePoint Consulting for security assessments
+- BD for medical device cloud telemetry
+- Microsoft 365 for email processing
+
+### Definition
+
+A Data Processor is an external organization that handles PHI while providing services to the Data Controller.
+
+Under HIPAA, these organizations operate as Business Associates and must sign Business Associate Agreements (BAAs) defining their security responsibilities.
+
+### Reason for Assignment
+
+These providers process healthcare information but do not determine the purpose of processing.
+
+Their responsibilities are limited to performing contracted services while protecting MedDefense data.
+
+---
+
+# Data Custodian / Steward
+
+**Assigned To:** IT Director Sarah Park and IT Operations Team
+
+### Definition
+
+The Data Custodian is responsible for the technical protection and maintenance of organizational information.
+
+Responsibilities include:
+
+- Access management
+- Encryption implementation
+- Backup management
+- Storage security
+- Transmission protection
+- Security configuration
+
+The Custodian implements decisions made by Data Owners and enforces policies defined by the organization.
+
+### Reason for Assignment
+
+Sarah Park and the IT team manage:
+
+- Servers
+- Databases
+- Network infrastructure
+- Backup platforms
+- Security configurations
+
+They administer technical controls such as PostgreSQL permissions, Active Directory accounts, Synology NAS backups, and network segmentation.
+
+However, IT does not determine who should access data or why the data is used; they enforce business decisions through technical mechanisms.
+
+---
+
+# Part 3 — The CISO Function and Recommendation
+
+# Impact of the Vacant CISO Position
+
+The absence of a permanent Chief Information Security Officer creates several security governance challenges.
+
+---
+
+## 1. Lack of Clear Security Accountability
+
+Without a dedicated CISO, cybersecurity ownership becomes unclear between James (Deputy CISO) and Sarah (IT Director).
+
+This creates overlapping responsibilities and potential conflicts, particularly regarding areas such as endpoint security ownership.
+
+During a cybersecurity incident, unclear authority may delay critical response decisions.
+
+---
+
+## 2. Limited Authority Across Departments
+
+A Deputy CISO may not have sufficient organizational authority to enforce security requirements across independent departments.
+
+For example, Department Heads may challenge security requirements because James does not hold executive-level authority.
+
+A CISO provides the leadership position necessary to enforce enterprise-wide security policies.
+
+---
+
+## 3. Absence of Strategic Security Leadership
+
+The Deputy CISO role primarily focuses on operational security activities.
+
+However, developing a long-term cybersecurity strategy requires executive leadership responsible for:
+
+- Security roadmap development
+- HIPAA compliance
+- Framework adoption
+- Audit preparation
+- Security maturity improvement
+
+---
+
+## 4. Reduced Board-Level Security Visibility
+
+The Board approved a $120K security investment based on identified risks.
+
+Without a CISO, there is no dedicated executive leader consistently communicating:
+
+- Security posture
+- Risk metrics
+- Program progress
+- Strategic security needs
+
+James participates as a Deputy role rather than an executive peer.
+
+---
+
+## 5. Increased Audit and Regulatory Exposure
+
+Although HIPAA does not specifically require a CISO position, regulatory investigations evaluate whether organizations demonstrate effective security leadership.
+
+A vacant CISO role during a security incident may increase scrutiny regarding governance effectiveness and organizational responsibility.
+
+---
+
+# Recommendation: Implement a Virtual CISO (vCISO)
+
+MedDefense should engage a **Virtual Chief Information Security Officer (vCISO)** through a managed security provider instead of immediately hiring a full-time CISO.
+
+A permanent CISO position in healthcare typically requires approximately **$180,000–$250,000 annually**, which would exceed the organization's current **$120,000 security budget** and reduce available funding for critical remediation activities.
+
+A vCISO engagement generally costs approximately **$60,000–$90,000 annually**, providing strategic security leadership while preserving budget for:
+
+- Vulnerability remediation
+- Network segmentation
+- Security monitoring
+- Infrastructure improvements
+
+The vCISO would provide:
+
+- Executive-level security leadership
+- Board reporting
+- HIPAA compliance guidance
+- Strategic planning
+- Cross-department security authority
+
+James Chen would continue managing daily security operations and implementing the security program.
+
+This arrangement should be reviewed after **12–18 months**, once major remediation activities are completed and MedDefense reaches a higher cybersecurity maturity level suitable for a full-time CISO.
+
+---
+
+# Governance Structure Diagram
+
+```
+Board of Directors
+        |
+        v
+CEO
+(Accountable for enterprise security and risk acceptance)
+        |
+        v
+Virtual CISO (vCISO)
+(Strategic security leadership, Board reporting, HIPAA compliance)
+        |
+        v
+Deputy CISO - James Chen
+(Security execution, risk analysis, incident response coordination)
+        |
+        v
+IT Director - Sarah Park
+(Infrastructure security, patching, backups, account management)
+        |
+        v
+Department Heads
+(Data ownership, employee compliance, operational input)
+        |
+        v
+Security Analyst
+(Vulnerability scanning, monitoring, validation, awareness content, investigations)
+```
+
+---
+
+**Prepared By:** Security Department  
+**References:**  
+- 1x00 Organizational Context (staffing, budget, vacant CISO position)  
+- 1x02 Task 20 (Budget limitations)  
+- 1x03 Task 0 (Framework selection)  
+- HIPAA Security Rule 45 CFR 164.308 (Administrative Safeguards — Security Management Process)  
+- NIST CSF 2.0 Govern Function  
+
+**Classification:** CONFIDENTIAL — INTERNAL USE ONLY
