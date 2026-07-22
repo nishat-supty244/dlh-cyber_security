@@ -2,10 +2,7 @@
 
 ## Security Governance Framework for MedDefense Health Systems
 
-**Date:** July 22, 2026  
-**Analyst:** Security Department  
-**Document:** Project 1x03 — Defense Strategy and Risk Register (Task 4)  
-**Reference:** 1x00 Organizational Context, 1x03 Task 0 Framework Selection  
+ 
 
 ---
 
