@@ -1,4 +1,4 @@
-# 9. The CFO Challenge 
+#  The CFO Challenge 
 
 
 ---
