@@ -1,4 +1,4 @@
-# 16. The Cryptographic Attack Surface
+# The Cryptographic Attack Surface
 
 ## 1. TLS Downgrade
 
