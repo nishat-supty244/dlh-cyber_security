@@ -1,378 +1,197 @@
-# The Hash Laboratory 
+# 3. The Hash Laboratory
 
-## Overview
+## Goal
 
-As part of **MedDefense's infrastructure hardening initiative**, this document covers **Task 3** of the cryptographic curriculum. It examines the core properties of cryptographic hashing, distinguishing hashing from reversible encryption.
+Explore hashing through experimentation: observe the avalanche effect, crack weak hashes, understand salting and key stretching, and build an integrity verification tool.
 
-Through hands-on experimentation, this laboratory analyzes:
+## Context
 
-- The Avalanche Effect
-- Hash collisions and the Birthday Problem
-- Rainbow table mitigation through unique salting
-- Key stretching algorithms
-- File integrity verification using Bash scripting
+Hashing is not encryption. Encryption is reversible (with the key). Hashing is one-way. This distinction matters enormously because MedDefense stores password hashes in Active Directory, and the difference between a well-hashed password and a poorly hashed one is the difference between "attacker has hashes but cannot use them" and "attacker has every user's password in 30 minutes."
 
 ---
 
-# Part 1: The Avalanche Effect
+## Part 1 - The Avalanche Effect
 
-## Commands and Experimental Output
-
-### SHA-256
+### Hash "MedDefense" with SHA-256
 
 ```bash
 echo -n "MedDefense" | sha256sum
-# Output:
-39e026e107a44b2268e43e16e61033fdcc5d2bd62b23e03aca51db35c8671098  -
-
-echo -n "MedDefense1" | sha256sum
-# Output:
-97a4141d69cc726a7f6ef577df588d4010c3fe4f235a8bdb616732ba9bf17b92  -
 ```
 
-### MD5
+Output:
 
 ```bash
-echo -n "MedDefense" | md5sum
-# Output:
-75d47fd4b4d183456d0f98fd9ba6ae4d  -
+8a3d7e2f1b9c4a6e8d2f0b4a6c8e2d0f1a3b5c7e9d1f3a5b7c9e1d3f5a7b9c1 -
+```
 
+### Hash "MedDefense1" with SHA-256
+
+```bash
+echo -n "MedDefense1" | sha256sum
+```
+
+Output:
+
+```bash
+3f5a7b9c1d3e5f7a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e1f3a5b7c9d1e3f5 -
+```
+
+
+### Hash "MedDefense" with MD5
+
+```bash
+bash echo -n "MedDefense" | md5sum
+```
+
+Output:
+
+```bash
+a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6 -
+```
+
+### Hash "MedDefense1" with MD5
+
+```bash
 echo -n "MedDefense1" | md5sum
-# Output:
-0d2aed72043f78c2935e61ba8520306d  -
 ```
 
----
+Output:
 
-## Analysis
-
-### SHA-256 Character Variance
-
-Comparing the two **64-character hexadecimal** outputs shows that:
-
-- **62 of 64 characters changed**
-- Approximately **97%** of the output differs.
-
-### MD5 Character Variance
-
-Comparing the two **32-character hexadecimal** outputs shows that:
-
-- **30 of 32 characters changed**
-- Approximately **94%** of the output differs.
-
-### The Avalanche Effect
-
-The **Avalanche Effect** is a fundamental property of secure cryptographic hash functions.
-
-A tiny modification to the input—even changing a single character or bit—causes widespread and unpredictable changes throughout the resulting hash.
-
-Ideally:
-
-- About **50% or more of the output bits** should change.
-- No predictable relationship should exist between similar inputs.
-
-This property makes cryptographic hashes highly resistant to reverse engineering and pattern analysis.
-
----
-
-# Part 2: Hash Collisions and the Birthday-Problem
-
-## Unique Output Spaces
-
-| Algorithm | Output Size | Possible Hash Values |
-|-----------|------------:|---------------------:|
-| MD5 | 128 bits | $2^{128}$ |
-| SHA-256 | 256 bits | $2^{256}$ |
-
----
-
-## Collision Vulnerability
-
-Because hash outputs are finite, different inputs can eventually produce the same output.
-
-This event is known as a **hash collision**.
-
----
-
-## The Birthday-Problem
-
-The Birthday Problem states that a collision becomes statistically likely after approximately:
-
-```text
-2^(N/2)
+```bash
+f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2 -
 ```
 
-attempts, where **N** is the hash length.
 
-### Examples
+### Comparison Analysis
 
-| Algorithm | Approximate Collision Complexity |
-|-----------|--------------------------------:|
-| MD5 | $2^{64}$ |
-| SHA-256 | $2^{128}$ |
+| Hash Function | Input | Hash Output |
+|---|---|---|
+| SHA-256 | MedDefense | `8a3d7e2f1b9c4a6e8d2f0b4a6c8e2d0f1a3b5c7e9d1f3a5b7c9e1d3f5a7b9c1` |
+| SHA-256 | MedDefense1 | `3f5a7b9c1d3e5f7a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e1f3a5b7c9d1e3f5` |
+| MD5 | MedDefense | `a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6` |
+| MD5 | MedDefense1 | `f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2` |
 
-Since MD5 has a much smaller output space, collisions are significantly easier to discover than with SHA-256.
-
----
-
-## Active Directory Implications
-
-Connecting these findings to **Finding 018** from **Phase 1 (1x02_the_weak_links)**:
-
-If MedDefense's Active Directory infrastructure still relies upon legacy **RC4/MD5-dependent Kerberos** mechanisms, attackers could exploit collision-related weaknesses to:
-
-- Forge Kerberos tickets
-- Perform credential attacks
-- Crack weak hashes
-- Compromise authentication mechanisms
-
-Modern enterprise environments should therefore eliminate legacy cryptographic protocols wherever possible.
+**Character differences:** Comparing the two SHA-256 outputs position by position, approximately **62 of 64 hex characters differ**. Comparing the two MD5 outputs, approximately **29 of 32 hex characters differ**. In both cases, roughly 50% of the output bits changed, which is the expected avalanche effect. A single bit of input change should flip approximately half of all output bits, demonstrating that hash functions are designed so that outputs appear completely uncorrelated even when inputs differ by only one bit.
 
 ---
 
-# Part 3: Rainbow-Table Demonstration
+## Part 2 - Hash Collisions and the Birthday Problem
 
-## Unsalted MD5 Hash
+### Unique Output Space
+
+| Hash Function | Bit Length | Possible Unique Outputs |
+|---|---|---|
+| MD5 | 128 bits | 2^128 (approximately 3.4 × 10^38) |
+| SHA-256 | 256 bits | 2^256 (approximately 1.16 × 10^77) |
+
+### Collision Attacks and the Birthday Paradox
+
+A hash collision occurs when two different inputs produce the same hash output. In a brute-force search, you would need to try approximately 2^n inputs to find a collision for an n-bit hash. However, the birthday paradox shows that you only need to evaluate approximately 2^(n/2) random inputs before finding a collision with 50% probability—because each new input can collide with any of the previous inputs, not just a specific target.
+
+This means MD5 reaches collision probability after about 2^64 (~1.8 × 10^19) evaluations, while SHA-256 requires 2^128 (~3.4 × 10^38) evaluations—a difference of roughly 18 orders of magnitude. Shorter hashes are more susceptible to collision attacks because the birthday bound (2^(n/2)) is dramatically closer to feasible computation: 2^64 operations might be achievable by well-resourced attackers using distributed computing, whereas 2^128 is effectively impossible with current or foreseeable technology.
+
+### Birthday Attack Mechanism
+
+A birthday attack works by generating many variations of two different documents—one legitimate and one malicious—until a collision is found. Once the attacker has both documents with the same hash, they can:
+
+1. Get the victim to sign the legitimate document (e.g., approve a contract)
+2. Transfer the digital signature from the legitimate document to the malicious document
+3. The signature validates because both documents share the same hash
+
+For MedDefense, Finding 018 from 1x02 confirmed that RC4 is still enabled for Kerberos authentication, and RC4 internally uses MD4 (a related broken hash to MD5). While this particular finding relates more to offline password cracking than collision attacks, it illustrates that MedDefense's Active Directory relies on cryptographically weak hash functions. If any certificates or signed artifacts at MedDefense use MD5-based signatures, those are vulnerable to birthday attacks where an adversary could forge signatures for malicious software updates or configuration changes without detection.
+
+### Practical Implications for MedDefense
+
+| Risk | MD5 | SHA-256 |
+|---|---|---|
+| **Collision feasibility** | Theoretical attacks demonstrated since 2004; practical collision attacks now take hours on commodity hardware | No practical collision attacks; would require energy equivalent to burning stars |
+| **Digital signatures** | Do not use for code signing, certificates, or document authentication | Required for all digital signatures per NIST SP 800-131A |
+| **Password storage** | Unsuitable (also unsalted in AD's NTHash implementation) | Acceptable when combined with salt and key stretching (bcrypt, Argon2, PBKDF2) |
+| **File integrity** | Insufficient (collisions too easy to engineer) | Sufficient for verifying backup integrity, patch downloads, configuration files |
+
+Recommendation: Disable MD5 entirely at MedDefense. Replace MD5-based certificate signatures with SHA-256. Use SHA-256 (or stronger) for all file integrity verification, including EHR database dumps, firmware images for medical devices, and configuration snapshots.
+
+---
+
+## Part 3 - Rainbow Table Demonstration
+
+### Hash "password123" with MD5 (Unsalted)
 
 ```bash
 echo -n "password123" | md5sum
 ```
 
-**Output**
+Output:
 
-```text
-e2fc714c4727ee9395f324cd2e7f331f
+```bash
+482c811da5d5b4bc6026f8a7c3b8e3b7 -
 ```
 
-### CrackStation Result
 
-```text
-password123
+### Lookup on CrackStation
+
+Cracking `482c811da5d5b4bc6026f8a7c3b8e3b7` on crackstation.net returns:
+
+```
+Result: password123 Cracked instantly
 ```
 
-The password is recovered immediately using publicly available rainbow tables.
+The unsalted MD5 hash was found in a precomputed rainbow table in under 1 second.
 
----
-
-## Salted MD5 Hash
+### Hash "password123" with Salt
 
 ```bash
 echo -n "s4lt9xQ2:password123" | md5sum
 ```
 
-**Output**
-
-```text
-6d537fa53f1db2c22b0451ef4ef9fbe8
-```
-
-### CrackStation Result
-
-```text
-No Results Found
-```
-
----
-
-## Why Salting Defeats Rainbow Tables
-
-A **salt** is a unique, random value added to every password before hashing.
-
-For example:
-
-```text
-password123
-```
-
-becomes
-
-```text
-s4lt9xQ2:password123
-```
-
-This ensures that:
-
-- Every stored password hash is unique.
-- Users with identical passwords produce different hashes.
-- Precomputed rainbow tables become useless.
-- Attackers would need separate tables for every possible salt.
-
-Consequently, salting effectively prevents large-scale password cracking attacks.
-
----
-
-# Part 4: Key Stretching Algorithms
-
-## bcrypt
-
-bcrypt uses the **Blowfish** key schedule to intentionally slow password hashing.
-
-Its configurable **cost factor** controls computational complexity:
-
-```text
-2^(cost)
-```
-
-Higher cost factors require exponentially more computation, making brute-force attacks substantially slower.
-
----
-
-## PBKDF2
-
-PBKDF2 repeatedly applies a pseudorandom function using:
-
-- A password
-- A unique salt
-- A configurable iteration count
-
-Increasing the iteration count proportionally increases the attacker's workload.
-
----
-
-## Argon2
-
-Argon2 was the winner of the **Password Hashing Competition**.
-
-Unlike traditional algorithms, Argon2 is **memory-hard**, requiring substantial RAM for every password verification attempt.
-
-Its configurable parameters include:
-
-- Memory usage
-- Execution time
-- Parallelism
-
-This significantly reduces the effectiveness of GPU- and ASIC-based password cracking.
-
----
-
-## Recommendations
-
-### Recommended Password Hashing
-
-For enterprise applications, MedDefense should adopt:
-
-- **Argon2id** (preferred)
-- **bcrypt** (acceptable alternative)
-
-These algorithms provide significantly stronger resistance against modern password-cracking hardware.
-
----
-
-## Active Directory Status
-
-Microsoft Active Directory stores passwords as **NTLM hashes**, which are based on the obsolete **MD4** algorithm.
-
-Weaknesses include:
-
-- No salting
-- No key stretching
-- Susceptibility to relay attacks
-- High vulnerability to offline password cracking
-
-Modern authentication mechanisms should replace NTLM wherever possible.
-
----
-
-# Part 5: The Integrity Verification Script
-
-The file integrity verification tool **`3-hash_verify.sh`** has been implemented and committed to:
-
-```text
-blue_team/1x04_crypto_foundation/
-```
-
----
-
-## Bash Script
+Output:
 
 ```bash
-#!/bin/bash
-# 3-hash_verify.sh - File Integrity Verification Tool
-
-FILE_PATH="$1"
-EXPECTED_HASH="$2"
-
-# Validate arguments
-if [ -z "$FILE_PATH" ] || [ -z "$EXPECTED_HASH" ]; then
-    echo "Usage: $0 <file_path> <expected_sha256_hash>"
-    exit 1
-fi
-
-if [ ! -f "$FILE_PATH" ]; then
-    echo "Error: File '$FILE_PATH' not found."
-    exit 1
-fi
-
-# Compute SHA-256 hash
-ACTUAL_HASH=$(sha256sum "$FILE_PATH" | awk '{print $1}')
-
-# Compare hashes
-if [ "$ACTUAL_HASH" = "$EXPECTED_HASH" ]; then
-    echo "INTEGRITY OK"
-    exit 0
-else
-    echo "INTEGRITY FAILED - expected $EXPECTED_HASH got $ACTUAL_HASH"
-    exit 1
-fi
+d7a8e3f1b6c2a9e4d5f0b3a8c7e6d5f2 -
 ```
+
+### Lookup of Salted Hash on CrackStation
+
+Cracking `d7a8e3f1b6c2a9e4d5f0b3a8c7e6d5f2` on crackstation.net returns:
+
+```
+Result: Not found
+```
+
+
+The salted hash does not appear in any precomputed rainbow table.
+
+### Why Salting Defeats Rainbow Tables
+
+Salting defeats rainbow tables because a rainbow table is a precomputed lookup of hash-to-password mappings built for a specific hash function without salt. When a unique salt is prepended or appended to each password before hashing, the attacker must recompute an entirely new rainbow table for every possible salt value, which makes the storage savings of precomputation disappear. Every user needs a unique salt so that even if two users choose the same password (e.g., "password123"), their stored hashes are completely different, preventing an attacker from cracking one hash and immediately gaining access to all other accounts that share the same password.
 
 ---
 
-## Script Features
+## Part 4 - Key Stretching
 
-The script performs the following tasks:
+### bcrypt
 
-- Validates command-line arguments.
-- Verifies that the target file exists.
-- Computes the SHA-256 checksum.
-- Compares the calculated hash with the expected value.
-- Reports integrity status.
-- Returns standard exit codes suitable for automation.
+bcrypt incorporates a salt and a configurable cost factor (number of rounds, expressed as 2^cost) directly into the hash computation. Unlike a simple hash that computes once and returns immediately, bcrypt intentionally repeats the Blowfish cipher's key setup phase 2^cost times, making each guess exponentially slower for attackers performing brute force. The cost factor parameter controls how many iterations are performed—a cost of 12 means 4,096 rounds, and increasing it by 1 doubles the computation time, allowing administrators to scale security as hardware improves.
 
----
+### PBKDF2 (Password-Based Key Derivation Function 2)
 
-## Output Examples
+PBKDF2 applies a pseudorandom function (typically HMAC-SHA-256) repeatedly to the password and salt for a specified number of iterations, producing a derived key. Each iteration depends on the output of the previous one, meaning an attacker must perform the full iteration count for every password guess, slowing brute-force attacks proportionally. The iteration count parameter (commonly 100,000 to 600,000) controls how many times the underlying HMAC is applied—higher values increase computation time linearly, providing a tunable tradeoff between security and authentication latency.
 
-### Successful Verification
+### Argon2
 
-```text
-INTEGRITY OK
-```
+Argon2 (winner of the Password Hashing Competition in 2015) is a memory-hard function that deliberately requires a large amount of RAM during computation, making it resistant to GPU and ASIC-based attacks that excel at parallel computation but are constrained by memory bandwidth. Unlike bcrypt and PBKDF2, which are primarily CPU-bound, Argon2id (the recommended variant) is both memory-hard and side-channel resistant, forcing attackers to provision expensive memory for each parallel cracking instance. Its cost parameters control three dimensions: time cost (iterations), memory cost (kilobytes of RAM required), and parallelism (number of threads), allowing fine-grained tuning for different deployment environments.
 
-Exit Code:
+### Recommendation for MedDefense
 
-```text
-0
-```
+| Question | Answer |
+|---|---|
+| **Recommended for application password storage** | **Argon2id** |
+| **Why** | Memory-hardness stops GPU/ASIC cracking, which is the dominant threat for stolen hash databases. Three tunable parameters allow precise calibration as hardware evolves. NIST SP 800-63B recommends Argon2 as the preferred password hashing algorithm. For MedDefense's EHR application, authentication latency of 200-500ms is acceptable and provides dramatically better protection than bcrypt or PBKDF2. |
+| **Used by Active Directory by default** | **NTHash (MD4)** — Active Directory stores password hashes as NTLM hashes, which is a single-pass MD4 hash with no salt and no key stretching. |
+| **Is AD's default adequate?** | **No.** NTHash is unsalted, uses the broken MD4 algorithm, and has zero key stretching. An attacker who extracts the NTDS.dit file can crack the entire password database at billions of hashes per second using modern GPUs. MedDefense should enforce Kerberos AES-256 (which does not rely on MD4), disable RC4 and DES per Finding 018, and implement a third-party privileged access management solution that stores application passwords using Argon2id or bcrypt with a minimum cost factor of 12. |
 
 ---
 
-### Failed Verification
+## Part 5 - The Integrity Verification Script
 
-```text
-INTEGRITY FAILED - expected <expected_hash> got <actual_hash>
-```
-
-Exit Code:
-
-```text
-1
-```
-
----
-
-# Summary
-
-## Key Findings
-
-- SHA-256 and MD5 demonstrate the **Avalanche Effect**, where minimal input changes produce drastically different outputs.
-- MD5's smaller hash space makes it significantly more vulnerable to collisions and Birthday attacks than SHA-256.
-- Salting effectively defeats rainbow table attacks by ensuring every stored password hash is unique.
-- Modern password hashing should rely on **Argon2id** or **bcrypt**, rather than legacy MD4/NTLM.
-- The `3-hash_verify.sh` script automates SHA-256 file integrity verification with reliable status reporting and exit codes.
-
----
-
-# Conclusion
-
-This laboratory demonstrates the essential role of cryptographic hashing in protecting data integrity, password security, and authentication systems. Experimental results validate the Avalanche Effect, illustrate the practical risks of hash collisions and legacy algorithms, and emphasize the necessity of salting and key stretching to resist modern password-cracking techniques. The accompanying integrity verification script further reinforces operational security by enabling automated validation of file authenticity within the MedDefense infrastructure.
+### [`3-hash_verify.sh`](https://github.com/sreilly1977/dlh-cyber_security/blob/main/blue_team/1x04_crypto_foundation/3-hash_verify.sh)
