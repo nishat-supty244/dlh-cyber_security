@@ -1,4 +1,4 @@
-# 18. The Data Classification Matrix
+# The Data Classification Matrix
 
 ## Part 1 - Data Type Inventory
 
