@@ -1,4 +1,4 @@
-The Hash Laboratory
+# The Hash Laboratory 
 
 ## Overview
 As a security analyst hardening MedDefense's infrastructure, understanding cryptographic hashing is essential for safeguarding stored credentials, ensuring data integrity, and recognizing the vulnerabilities of legacy authentication structures. Unlike encryption, hashing is a strictly one-way mathematical function. This laboratory exercise evaluates the avalanche effect, hash collision properties, rainbow table vulnerabilities, key stretching algorithms, and file integrity verification scripts.
