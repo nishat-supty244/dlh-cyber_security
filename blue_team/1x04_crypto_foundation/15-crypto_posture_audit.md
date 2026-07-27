@@ -1,4 +1,4 @@
-# 15. The Crypto Posture Audit
+#The Crypto Posture Audit
 
 ## Crypto Posture Findings
 
