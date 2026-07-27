@@ -1,4 +1,4 @@
-# 9. The Certificate Chain and Trust Infrastructure
+# The Chain of Trust
 
 ## Overview
 
