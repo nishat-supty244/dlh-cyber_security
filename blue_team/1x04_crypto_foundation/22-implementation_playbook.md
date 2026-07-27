@@ -1,6 +1,6 @@
 # The Implementation Playbook (Condensed)**
 
-##Action #1: Patient Portal TLS Hardening & Protocol Upgrade**
+**Action #1: Patient Portal TLS Hardening & Protocol Upgrade**
 
 - **Priority: Immediate | System: portal.meddefense.com**
 - **Prerequisites: Backup config file, valid ACME 90-day cert ready, staging verified.**
