@@ -1,4 +1,4 @@
-# 17. Certificate Lifecycle Management
+# Certificate Lifecycle Management
 
 ## Certificate Inventory
 
