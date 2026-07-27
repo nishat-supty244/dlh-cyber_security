@@ -75,7 +75,7 @@ This property makes cryptographic hashes highly resistant to reverse engineering
 
 ---
 
-# Part 2: Hash Collisions and the Birthday Problem
+# Part 2: Hash Collisions and the Birthday-Problem
 
 ## Unique Output Spaces
 
@@ -94,7 +94,7 @@ This event is known as a **hash collision**.
 
 ---
 
-## The Birthday Problem
+## The Birthday-Problem
 
 The Birthday Problem states that a collision becomes statistically likely after approximately:
 
@@ -130,7 +130,7 @@ Modern enterprise environments should therefore eliminate legacy cryptographic p
 
 ---
 
-# Part 3: Rainbow Table Demonstration
+# Part 3: Rainbow-Table Demonstration
 
 ## Unsalted MD5 Hash
 
