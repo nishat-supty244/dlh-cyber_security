@@ -1,4 +1,4 @@
-# Data Protection Map
+# The Crypto Inventory
 
 | Data Category | At Rest (Stored on disk, database, NAS, backup) | In Transit (Moving between systems over the network) | In Use (Actively being processed or displayed) |
 |---------------|-------------------------------------------------|------------------------------------------------------|------------------------------------------------|
