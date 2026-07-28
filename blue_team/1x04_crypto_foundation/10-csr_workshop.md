@@ -1,4 +1,4 @@
-# 10. The CSR Workshop: MedDefense Patient Portal
+# The CSR Workshop: MedDefense Patient Portal
 
 ## Part 1 – Key Generation Decision
 
