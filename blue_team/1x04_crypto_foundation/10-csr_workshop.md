@@ -2,19 +2,30 @@
 
 ## Part 1 - Key Generation Decision
 
-For the MedDefense patient portal (`portal.meddefense.local`), **ECC P-256 (Elliptic Curve Cryptography)** was selected for private key generation.
+### Algorithm Selection: ECC P-256
 
-### Justification
+**Chosen Algorithm: ECC P-256 (Elliptic Curve Cryptography)**
 
-- **Security Level:** ECC P-256 provides cryptographic strength equivalent to RSA-3072 while using a significantly smaller key size, offering strong protection against modern cryptographic attacks.
-- **Performance Impact:** Elliptic Curve Cryptography requires substantially less CPU overhead during TLS handshakes, making it ideal for maintaining high throughput and low latency for the 800+ daily patient sessions handled by the portal.
-- **Compatibility:** Modern web browsers, mobile devices, and clinical workstations provide near-universal support for the P-256 curve (ANSI X9.62 / NIST `prime256v1`).
-- **Alignment:** This selection satisfies the requirements specified in the MedDefense Algorithm Reference Table (`T6`).
+ECC P-256 was selected for the MedDefense patient portal (`portal.meddefense.local`) because it provides strong cryptographic security while minimizing computational overhead during TLS handshakes.
+
+The decision is based on the following considerations:
+
+- **Security Level:** ECC P-256 provides cryptographic strength comparable to RSA-3072 while using a significantly smaller key size, protecting patient data against modern cryptographic attacks.
+- **Performance Impact:** ECC requires substantially less CPU overhead during TLS handshakes, making it ideal for maintaining high throughput and low latency for the 800+ daily patient sessions handled by the portal.
+- **Compatibility:** Modern web browsers, mobile devices, and enterprise clinical workstations provide near-universal support for the P-256 curve (ANSI X9.62 / NIST `prime256v1`).
+- **Alignment:** The selected algorithm satisfies the requirements specified in the MedDefense Algorithm Reference Table (T6).
 
 ### Key Generation Command
 
+Generate the ECC private key.
+
 ```bash
 openssl ecparam -genkey -name secp256r1 -out portal_key.pem
+```
+
+Protect the private key from unauthorized access.
+
+```bash
 chmod 600 portal_key.pem
 ```
 
@@ -22,13 +33,13 @@ chmod 600 portal_key.pem
 
 ## Part 2 - CSR Generation Process
 
-To generate the Certificate Signing Request (CSR) for the MedDefense patient portal, OpenSSL was executed using command-line arguments. The CSR includes the required Distinguished Name (DN) attributes and Subject Alternative Names (SANs).
+To generate the Certificate Signing Request (CSR), OpenSSL is executed using command-line arguments. The CSR includes the required Distinguished Name (DN) attributes together with the Subject Alternative Names (SANs).
 
-### Distinguished Name (DN)
+### Distinguished Name Fields
 
 | Field | Value |
 |-------|-------|
-| **Common Name (CN)** | `portal.meddefense.local` |
+| **Common Name (CN)** | portal.meddefense.local |
 | **Organization (O)** | MedDefense Health Systems |
 | **Organizational Unit (OU)** | Information Technology |
 | **Locality (L)** | Boston |
@@ -37,9 +48,11 @@ To generate the Certificate Signing Request (CSR) for the MedDefense patient por
 
 ### Subject Alternative Names (SAN)
 
-- `portal.meddefense.local`
-- `meddefense.local`
-- `portal.meddefense.com`
+| SAN Entry |
+|-----------|
+| portal.meddefense.local |
+| meddefense.local |
+| portal.meddefense.com |
 
 ### CSR Generation Command
 
@@ -53,7 +66,7 @@ openssl req -new -key portal_key.pem -out portal.csr \
 
 ## Part 3 - CSR Inspection & Verification
 
-After generating the CSR, it should be inspected to verify that all metadata, distinguished name fields, and certificate extensions have been correctly embedded before submission to the Certificate Authority (CA).
+After generating the CSR, inspect the request to verify that all subject information and certificate extensions have been embedded correctly before submission to the Certificate Authority (CA).
 
 ### Inspection Command
 
@@ -63,49 +76,68 @@ openssl req -text -noout -in portal.csr
 
 ### Verification Checklist
 
-Verify that the inspection output includes:
+Confirm that the inspection output contains:
 
-- ✅ Common Name (CN): `portal.meddefense.local`
-- ✅ Organization: **MedDefense Health Systems**
-- ✅ Organizational Unit: **Information Technology**
-- ✅ Country: **US**
-- ✅ State: **Massachusetts**
-- ✅ Locality: **Boston**
-- ✅ Public Key Algorithm: **ECC P-256 (`prime256v1`)**
-- ✅ Subject Alternative Names:
-  - `portal.meddefense.local`
-  - `meddefense.local`
-  - `portal.meddefense.com`
-- ✅ Signature Algorithm: **ECDSA with SHA-256**
+| Field | Expected Value | Verified |
+|-------|----------------|:--------:|
+| Common Name | portal.meddefense.local | ✅ |
+| Organization | MedDefense Health Systems | ✅ |
+| Organizational Unit | Information Technology | ✅ |
+| Country | US | ✅ |
+| State | Massachusetts | ✅ |
+| Locality | Boston | ✅ |
+| Public Key Algorithm | ECC P-256 (`prime256v1`) | ✅ |
+| SAN | portal.meddefense.local | ✅ |
+| SAN | meddefense.local | ✅ |
+| SAN | portal.meddefense.com | ✅ |
+| Signature Algorithm | ECDSA with SHA-256 | ✅ |
 
 ---
 
 ## Part 4 - The Full Certificate Lifecycle Procedure
 
-### Step 1 - CSR Generation
+### Phase 1 - Preparation
 
-Generate the private key (`portal_key.pem`) and Certificate Signing Request (`portal.csr`), then secure the private key using restrictive file permissions.
+#### Step 1: Key Generation
 
----
+- Generate the ECC private key (`portal_key.pem`).
+- Secure the private key using restrictive file permissions (`chmod 600`).
 
-### Step 2 - Submission to the Certificate Authority
+#### Step 2: CSR Generation
 
-Submit `portal.csr` to the organization's automated ACME Certificate Authority or a commercial Certificate Authority for certificate issuance.
-
----
-
-### Step 3 - Domain Validation
-
-The Certificate Authority validates domain ownership using one of the supported challenge-response mechanisms:
-
-- HTTP-01
-- DNS-01
+- Generate the Certificate Signing Request (`portal.csr`).
+- Verify that all Distinguished Name fields are correct.
+- Confirm that all Subject Alternative Names are present.
 
 ---
 
-### Step 4 - Certificate Issuance
+### Phase 2 - Certificate Authority Submission
 
-Once validation is successful, the Certificate Authority signs the public key and returns the operational TLS certificate.
+#### Step 3: Submit the CSR
+
+Submit `portal.csr` to the organization's Certificate Authority using either:
+
+- Automated ACME Certificate Authority
+- Commercial Certificate Authority workflow
+
+---
+
+### Phase 3 - Validation Process
+
+#### Step 4: Domain Validation
+
+The Certificate Authority validates ownership of the domain using one of the supported challenge-response methods:
+
+- HTTP-01 Challenge
+- DNS-01 Challenge
+
+---
+
+### Phase 4 - Certificate Issuance
+
+#### Step 5: Receive the Certificate
+
+After successful validation, the Certificate Authority signs the public key and issues the TLS certificate.
 
 Example output:
 
@@ -115,23 +147,25 @@ portal.crt
 
 ---
 
-### Step 5 - Installation on the Web Server
+### Phase 5 - Installation on the Web Server
 
-Copy the issued certificate and private key to the secure Nginx certificate directories.
+#### Step 6: Install the Certificate
+
+Copy the certificate and private key into the secure Nginx directories.
 
 | File | Location |
 |------|----------|
 | Certificate | `/etc/ssl/certs/portal.crt` |
 | Private Key | `/etc/ssl/private/portal_key.pem` |
 
-Configure Nginx to use the new certificate.
+Configure Nginx.
 
 ```nginx
 ssl_certificate     /etc/ssl/certs/portal.crt;
 ssl_certificate_key /etc/ssl/private/portal_key.pem;
 ```
 
-Restart the web server.
+Restart the web service.
 
 ```bash
 sudo systemctl restart nginx
@@ -139,9 +173,11 @@ sudo systemctl restart nginx
 
 ---
 
-### Step 6 - Certificate Verification
+### Phase 6 - Verification
 
-Verify that the new certificate is correctly deployed and being served by the web server.
+#### Step 7: Verify the New Certificate
+
+Verify the deployed certificate.
 
 ```bash
 openssl s_client -connect portal.meddefense.local:443
@@ -152,26 +188,26 @@ Confirm that:
 - The certificate chain is valid.
 - The ECC public key is presented.
 - The Subject Alternative Names are correct.
-- The TLS handshake completes successfully.
+- TLS negotiation completes successfully.
 
 ---
 
-### Step 7 - Decommission the Old Certificate
+### Phase 7 - Decommission the Old Certificate
 
-After successful deployment:
+#### Step 8: Remove Legacy Certificate
 
 - Archive the expired certificate.
 - Remove obsolete certificate files.
-- Revoke legacy certificates or trust anchors if required.
+- Revoke legacy trust anchors if required.
 - Update the certificate inventory.
 
 ---
 
-### Step 8 - Certificate Monitoring and Renewal
+### Phase 8 - Monitoring and Renewal
 
-Enable automated certificate lifecycle monitoring to prevent unexpected expiration.
+#### Step 9: Enable Certificate Monitoring
 
-Recommended alert schedule:
+Configure automated monitoring to alert administrators before certificate expiration.
 
 | Remaining Validity | Action |
 |-------------------:|--------|
@@ -180,4 +216,4 @@ Recommended alert schedule:
 | **30 Days** | Begin renewal process |
 | **7 Days** | Critical renewal alert |
 
-Continuous monitoring ensures timely certificate renewal and uninterrupted HTTPS availability for the MedDefense patient portal.
+Continuous monitoring ensures that certificates are renewed before expiration and helps maintain uninterrupted HTTPS availability for the MedDefense patient portal.
