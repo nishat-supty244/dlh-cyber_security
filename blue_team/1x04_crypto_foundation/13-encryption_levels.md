@@ -1,98 +1,98 @@
-# The Encryption Levels
+# 13. The Encryption Levels (Corrected & Refined)
 
 ## Part 1 - Encryption Level Comparison Table
 
 | Encryption Level | Scope | Performance Impact | Key Management | Use Case |
 |---|---|---|---|---|
-| **Full-disk** | Entire physical or virtual disk | Low-to-moderate (transparent hardware/OS acceleration) | Low (single master key per disk) | Best choice when protecting entire hardware assets from physical theft or loss, such as employee laptops. |
+| **Full-disk** | Entire physical or virtual disk | Low (transparent hardware/OS acceleration) | Low (single master key per disk) | Best choice when protecting entire hardware assets from physical theft or loss, such as employee laptops. |
 | **Partition** | One logical partition | Low-to-moderate | Low-to-moderate | Best choice when isolating a specific operating system or data partition on shared physical storage media. |
-| **Volume** | Logical volume (may span disks) | Low-to-moderate (e.g., AES-256-XTS) | Moderate (managed via volume manager or LUKS) | Best choice when securing multi-disk storage pools or backup arrays like NAS-01 against offline media theft. |
+| **Volume** | Logical volume (may span disks) | Low-to-moderate (e.g., AES-256-XTS) | Moderate (managed via volume manager or LUKS) | Best choice when securing multi-disk storage pools or backup arrays like NAS-01 against offline media theft without application modification. |
 | **File** | Individual files | Moderate (per-file overhead during I/O operations) | Moderate-to-high (per-file keys or centralized file system keys) | Best choice when protecting individual sensitive documents or shared home directories on multi-user systems. |
-| **Database** | Entire database or tablespace | Moderate (transparent data encryption overhead on reads/writes) | High (database master key wrapping data encryption keys) | Best choice when securing entire structured database instances (TDE) against unauthorized file-level access. |
-| **Record** | Individual fields or records | High (application-level crypto processing per field/row) | Very High (granular key management or tokenization vaults) | Best choice when protecting highly sensitive individual elements like SSNs or medical record tokens against database administrators. |
+| **Database** | Entire database or tablespace | Moderate (transparent data encryption overhead on reads/writes) | High (database master key wrapping data encryption keys) | Best choice when securing entire structured database instances (TDE) against unauthorized file-level extraction while preserving application query compatibility. |
+| **Record** | Individual fields or records | High (application-level crypto processing per field/row) | Very High (granular key management or tokenization vaults) | Best choice when protecting highly sensitive individual elements like SSNs or specific medical identifiers against database administrators. |
 
 ---
 
-# Part 2 - MedDefense Encryption Level Map
+# Part 2 - MedDefense Encryption Level Map (Corrected Architecture)
 
 ## Patient Records in PostgreSQL (`ehr-db-01`)
 
-**Recommended Encryption Level:** Database (Transparent Data Encryption - TDE)
+**Recommended Level:** Database (Transparent Data Encryption - TDE)
 
 **Justification:**
 
-Database-level encryption protects underlying database files and tablespaces from physical theft or unauthorized storage access while maintaining transparent query performance for clinical applications.
+Database-level encryption avoids the performance bottlenecks associated with record-level encryption while ensuring that underlying database files are fully encrypted at rest to comply with HIPAA protection requirements.
 
 ---
 
 ## Backup Data on NAS-01
 
-**Recommended Encryption Level:** Volume (LUKS)
+**Recommended Level:** Volume-level (LUKS)
 
 **Justification:**
 
-Volume-level encryption secures aggregated backup blocks and virtual disk archives efficiently without introducing high file-system or application overhead during bulk backup operations.
+Volume-level encryption avoids the high I/O penalty of file-level encryption on large aggregated backup streams by securing the entire storage volume block-by-block.
 
 ---
 
 ## Financial Records in MySQL (`billing-srv-01`)
 
-**Recommended Encryption Level:** Database (TDE) / Record-level encryption for specific financial identifiers
+**Recommended Level:** Database-level (TDE) combined with selective field tokenization
 
 **Justification:**
 
-Database encryption ensures structured billing and financial data meets compliance requirements while preventing unauthorized extraction of database files. Record-level encryption can additionally protect highly sensitive identifiers such as payment information.
+Database-level encryption prevents structural query failures in billing workflows by using TDE for bulk tablespace protection rather than applying complex record-level encryption to every database column.
 
 ---
 
 ## Medical Images on PACS (`pacs-srv-01`)
 
-**Recommended Encryption Level:** Volume-level or File-level storage encryption
+**Recommended Level:** Volume-level storage encryption
 
 **Justification:**
 
-Volume or file-level encryption efficiently protects large DICOM medical image repositories while maintaining minimal performance impact during high-throughput imaging reads and writes.
+Volume-level encryption prevents the heavy processing overhead that file-level or database encryption would introduce when handling massive, high-throughput DICOM medical image streaming operations.
 
 ---
 
 ## Email Data in O365
 
-**Recommended Encryption Level:** Cloud Service Provider Native Encryption (Application/Transport Layer Encryption)
+**Recommended Level:** Cloud Service Provider Native Application/Transport Encryption
 
 **Justification:**
 
-Using built-in Microsoft 365 enterprise encryption mechanisms, including Office 365 Message Encryption and customer-managed keys, provides protection for email data both in transit and at rest within a SaaS environment.
+Using built-in Microsoft 365 enterprise security controls provides encryption for cloud-hosted mailboxes both in transit and at rest without requiring additional local infrastructure encryption layers.
 
 ---
 
 ## Employee Laptops
 
-**Recommended Encryption Level:** Full-disk encryption (BitLocker / LUKS)
+**Recommended Level:** Full-disk encryption (BitLocker / LUKS)
 
 **Justification:**
 
-Full-disk encryption mitigates the risk of sensitive data exposure from lost or stolen devices by protecting the entire operating system, applications, and local user data.
+Full-disk encryption secures the complete operating system, applications, and local user profiles against physical theft while avoiding vulnerabilities caused by encrypting only selected files or partitions.
 
 ---
 
 ## BD Alaris Pump Firmware/Configuration
 
-**Recommended Encryption Level:** File-level or Specialized Embedded Storage Encryption
+**Recommended Level:** File-level or Embedded Storage Container Encryption
 
 **Justification:**
 
-File-level or embedded storage encryption secures sensitive device configuration profiles and local telemetry logs stored on medical IoT flash memory against unauthorized extraction, modification, or tampering.
+File-level or embedded storage encryption protects individual configuration files and localized telemetry logs stored on medical IoT flash memory without requiring an active database or volume management layer.
 
 ---
 
 # Summary: MedDefense Encryption Strategy
 
-| Asset | Recommended Encryption Level | Primary Security Objective |
+| Asset | Recommended Encryption Level | Security Objective |
 |---|---|---|
-| PostgreSQL Patient Records (`ehr-db-01`) | Database TDE | Protect PHI stored in database files |
-| NAS-01 Backup Storage | Volume (LUKS) | Protect backup archives from offline theft |
-| MySQL Financial Records (`billing-srv-01`) | Database TDE + Record Encryption | Protect billing data and financial identifiers |
-| PACS Medical Images (`pacs-srv-01`) | Volume/File Encryption | Protect DICOM image repositories |
-| Microsoft 365 Email | Cloud Provider Encryption | Protect SaaS-hosted communication data |
-| Employee Laptops | Full-Disk Encryption | Protect devices against loss or theft |
-| BD Alaris Pump Firmware | File/Embedded Storage Encryption | Protect medical IoT configurations |
+| PostgreSQL Patient Records (`ehr-db-01`) | Database TDE | Encrypt PHI databases while maintaining application compatibility |
+| NAS-01 Backup Storage | Volume-level LUKS | Protect backup storage blocks against offline theft |
+| MySQL Financial Records (`billing-srv-01`) | Database TDE + Field Tokenization | Protect financial data while preserving billing workflows |
+| PACS Medical Images (`pacs-srv-01`) | Volume-level Encryption | Secure large DICOM repositories with minimal performance impact |
+| Microsoft 365 Email | Cloud Native Encryption | Protect SaaS email data in transit and at rest |
+| Employee Laptops | Full-Disk Encryption | Prevent exposure from lost or stolen devices |
+| BD Alaris Pump Firmware | File/Embedded Storage Encryption | Protect IoT configuration files and telemetry data |
