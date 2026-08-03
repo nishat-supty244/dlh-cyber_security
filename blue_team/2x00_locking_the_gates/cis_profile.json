@@ -6,7 +6,7 @@
     "severity": "critical",
     "asset_scope": ["billing-srv-01", "web-srv-01", "log-srv-01"],
     "threat_mapping": "SSH lateral movement",
-    "implementation_task": "Configuresshd_config permissions and access controls",
+    "implementation_task": "Configure sshd_config permissions and access controls",
     "verification_method": "sshd -t and audit checks",
     "justification": "Prevents unauthorized remote access and lateral movement."
   },
@@ -20,6 +20,148 @@
     "implementation_task": "Set Protocol 2 in sshd_config",
     "verification_method": "grep Protocol /etc/ssh/sshd_config",
     "justification": "Protocol 1 has known cryptographic weaknesses."
+  },
+  {
+    "control_id": "CIS-3.1.1",
+    "title": "Disable IP forwarding",
+    "cis_section": "3.1",
+    "severity": "high",
+    "asset_scope": ["billing-srv-01", "web-srv-01", "log-srv-01"],
+    "threat_mapping": "Network pivoting and unauthorized routing",
+    "implementation_task": "Configure sysctl to set net.ipv4.ip_forward to 0",
+    "verification_method": "sysctl net.ipv4.ip_forward",
+    "justification": "Prevents the server from acting as a router between networks."
+  },
+  {
+    "control_id": "CIS-3.2.1",
+    "title": "Ensure source routed packets are not accepted",
+    "cis_section": "3.2",
+    "severity": "medium",
+    "asset_scope": ["billing-srv-01", "web-srv-01", "log-srv-01"],
+    "threat_mapping": "Spoofing and malicious routing",
+    "implementation_task": "Configure sysctl net.ipv4.conf.all.accept_source_route",
+    "verification_method": "sysctl net.ipv4.conf.all.accept_source_route",
+    "justification": "Stops attackers from specifying routing paths for packets."
+  },
+  {
+    "control_id": "CIS-5.3.1",
+    "title": "Configure PAM password complexity",
+    "cis_section": "5.3",
+    "severity": "critical",
+    "asset_scope": ["billing-srv-01", "web-srv-01", "log-srv-01"],
+    "threat_mapping": "Brute force and weak authentication",
+    "implementation_task": "Configure libpam-pwquality module settings",
+    "verification_method": "Check pam_pwquality configuration in /etc/security/",
+    "justification": "Enforces strong passwords to prevent credential compromise."
+  },
+  {
+    "control_id": "CIS-1.1.1",
+    "title": "Disable unused filesystem types",
+    "cis_section": "1.1",
+    "severity": "medium",
+    "asset_scope": ["billing-srv-01", "web-srv-01", "log-srv-01"],
+    "threat_mapping": "Privilege escalation via unusual filesystem modules",
+    "implementation_task": "Blacklist cramfs, freevxfs, jffs2, hfs, hfsplus",
+    "verification_method": "modprobe -n -v <fs>",
+    "justification": "Reduces kernel attack surface by disabling unneeded filesystems."
+  },
+  {
+    "control_id": "CIS-2.1.1",
+    "title": "Ensure service xinetd is not enabled",
+    "cis_section": "2.1",
+    "severity": "high",
+    "asset_scope": ["billing-srv-01", "web-srv-01", "log-srv-01"],
+    "threat_mapping": "Unnecessary services exposure",
+    "implementation_task": "Disable and purge xinetd service",
+    "verification_method": "systemctl status xinetd",
+    "justification": "Minimizes running background services that can be exploited."
+  },
+  {
+    "control_id": "CIS-2.2.1",
+    "title": "Ensure time synchronization is configured",
+    "cis_section": "2.2",
+    "severity": "medium",
+    "asset_scope": ["billing-srv-01", "web-srv-01", "log-srv-01"],
+    "threat_mapping": "Log tampering and forensic invalidation",
+    "implementation_task": "Configure systemd-timesyncd or chrony",
+    "verification_method": "timedatectl status",
+    "justification": "Ensures accurate timestamps for log correlation and forensics."
+  },
+  {
+    "control_id": "CIS-4.1.1",
+    "title": "Ensure auditd is installed and enabled",
+    "cis_section": "4.1",
+    "severity": "critical",
+    "asset_scope": ["billing-srv-01", "web-srv-01", "log-srv-01"],
+    "threat_mapping": "Missing audit visibility",
+    "implementation_task": "Install and enable auditd service",
+    "verification_method": "systemctl is-enabled auditd",
+    "justification": "Provides critical tracking of security-relevant events."
+  },
+  {
+    "control_id": "CIS-4.1.3",
+    "title": "Ensure audit log retention is configured",
+    "cis_section": "4.1",
+    "severity": "high",
+    "asset_scope": ["billing-srv-01", "web-srv-01", "log-srv-01"],
+    "threat_mapping": "Log deletion and lack of log retention",
+    "implementation_task": "Configure max_log_file and action_keep_logs in auditd.conf",
+    "verification_method": "grep max_log_file /etc/audit/auditd.conf",
+    "justification": "Ensures historical security logs are preserved for analysis."
+  },
+  {
+    "control_id": "CIS-3.5.1",
+    "title": "Ensure UFW firewall is installed and active",
+    "cis_section": "3.5",
+    "severity": "critical",
+    "asset_scope": ["billing-srv-01", "web-srv-01", "log-srv-01"],
+    "threat_mapping": "Exposed database services and open ports",
+    "implementation_task": "Install and enable UFW with default deny incoming policy",
+    "verification_method": "ufw status verbose",
+    "justification": "Restricts network exposure to only authorized ports."
+  },
+  {
+    "control_id": "CIS-6.1.2",
+    "title": "Ensure permissions on /etc/passwd are configured",
+    "cis_section": "6.1",
+    "severity": "high",
+    "asset_scope": ["billing-srv-01", "web-srv-01", "log-srv-01"],
+    "threat_mapping": "Unauthorized user account modification",
+    "implementation_task": "Execute chmod 644 /etc/passwd",
+    "verification_method": "stat -c '%a' /etc/passwd",
+    "justification": "Prevents unauthorized tampering with user accounts."
+  },
+  {
+    "control_id": "CIS-6.1.3",
+    "title": "Ensure permissions on /etc/shadow are configured",
+    "cis_section": "6.1",
+    "severity": "critical",
+    "asset_scope": ["billing-srv-01", "web-srv-01", "log-srv-01"],
+    "threat_mapping": "Credential theft and offline password cracking",
+    "implementation_task": "Execute chmod 000 /etc/shadow",
+    "verification_method": "stat -c '%a' /etc/shadow",
+    "justification": "Protects password hashes from unprivileged users."
+  },
+  {
+    "control_id": "CIS-5.4.1",
+    "title": "Ensure system account default shell is restricted",
+    "cis_section": "5.4",
+    "severity": "high",
+    "asset_scope": ["billing-srv-01", "web-srv-01", "log-srv-01"],
+    "threat_mapping": "Unauthorized interactive system access",
+    "implementation_task": "Set inactive system accounts to /usr/sbin/nologin",
+    "verification_method": "awk -F: '($3 < 1000) {print $1,$7}' /etc/passwd",
+    "justification": "Prevents system accounts from launching interactive shells."
+  },
+  {
+    "control_id": "CIS-3.3.1",
+    "title": "Ensure TCP SYN Cookies are enabled",
+    "cis_section": "3.3",
+    "severity": "high",
+    "asset_scope": ["billing-srv-01", "web-srv-01", "log-srv-01"],
+    "threat_mapping": "Denial of Service (DoS) attacks",
+    "implementation_task": "Configure sysctl net.ipv4.tcp_syncookies to 1",
+    "verification_method": "sysctl net.ipv4.tcp_syncookies",
+    "justification": "Protects the system against SYN flood denial of service attacks."
   }
-  // ... Add remaining controls up to 15 total (5 critical, 7 high, 3 medium)
 ]
