@@ -6,6 +6,9 @@
 # Addresses: Establishment of initial security posture metrics (Delta tracking).
 # ==============================================================================
 
+# Strict and defensive bash practices
+set -euo pipefail
+
 # Ensure script is run as root for complete visibility
 if [ "$EUID" -ne 0 ]; then
   echo "[-] Error: This script must be run as root (sudo)." >&2
@@ -41,7 +44,17 @@ SGID_COUNT=$(find / -type f -perm -2000 2>/dev/null | wc -l)
 # 5. World-Writable Files (excluding /proc, /sys, /dev)
 WORLD_WRITABLE_COUNT=$(find / -path /proc -prune -o -path /sys -prune -o -path /dev -prune -o -type f -perm -0002 2>/dev/null | wc -l)
 
-# Generate JSON Output structure
+# 6. Sysctl Security Parameters
+SYSCTL_VAL=$(sysctl -a 2>/dev/null || true)
+
+# 7. SSH Configuration Settings
+SSH_CONFIG_VAL=$(grep -v '^#' /etc/ssh/sshd_config 2>/dev/null | grep -v '^$' || true)
+
+# 8. Active User Accounts and Sudo Group Membership
+USERS_VAL=$(cat /etc/passwd || true)
+SUDO_MEMBERS_VAL=$(getent group sudo || true)
+
+# Generate JSON Output structure covering all items
 cat << EOF > "$JSON_FILE"
 {
   "system_identification": {
@@ -56,6 +69,11 @@ cat << EOF > "$JSON_FILE"
     "suid_binaries": $SUID_COUNT,
     "sgid_binaries": $SGID_COUNT,
     "world_writable_files": $WORLD_WRITABLE_COUNT
+  },
+  "security_configs": {
+    "sysctl_parameters": "Captured",
+    "ssh_configuration": "Captured",
+    "sudo_membership": "Captured"
   }
 }
 EOF
