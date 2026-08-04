@@ -1,221 +1,130 @@
-#!/bin/bash
+k#!/bin/bash
 
-# Log Architect Script
-# MedDefense Security Hardening
-#
-# Purpose:
-# Configure rsyslog, log rotation and permissions
-# for security telemetry collection.
+# The Log Architect
+# MedDefense - Log Configuration Script
 
 set -euo pipefail
 
-
-RSYSLOG_CONFIG="/etc/rsyslog.d/meddefense.conf"
-LOGROTATE_CONFIG="/etc/logrotate.d/meddefense"
-AUTH_LOG="/var/log/auth.log"
-SYSLOG="/var/log/syslog"
-
+RSYSLOG_CONF="/etc/rsyslog.d/meddefense.conf"
+LOGROTATE_CONF="/etc/logrotate.d/meddefense"
 
 echo "[*] Configuring rsyslog..."
 
-
-############################################
-# 1. Install rsyslog if missing
-############################################
+########################################
+# Install rsyslog if missing
+########################################
 
 if ! command -v rsyslogd >/dev/null 2>&1; then
-
-    echo "[*] Installing rsyslog..."
-
     apt update
     apt install -y rsyslog
-
 fi
 
+########################################
+# Configure rsyslog
+########################################
 
-############################################
-# 2. Configure rsyslog rules
-############################################
+cat > "$RSYSLOG_CONF" <<EOF
+# MedDefense rsyslog configuration
 
+# Authentication logs
+auth,authpriv.*    /var/log/auth.log
 
-cat > "$RSYSLOG_CONFIG" <<EOF
+# General system logs
+*.info;auth.none   /var/log/syslog
 
-# MedDefense Security Logging Configuration
-
-# Authentication and authorization events
-auth,authpriv.*                         /var/log/auth.log
-
-# General system events excluding authentication logs
-*.info;auth.none                        /var/log/syslog
-
-# Structured timestamp format
+# Structured log format
 \$ActionFileDefaultTemplate RSYSLOG_FileFormat
-
 EOF
 
+systemctl restart rsyslog
 
 echo "    auth,authpriv.* -> /var/log/auth.log     [CONFIGURED]"
 echo "    *.info;auth.none -> /var/log/syslog      [CONFIGURED]"
 
-
-
-############################################
-# Restart rsyslog
-############################################
-
-systemctl restart rsyslog
-
-
-
 echo
 
-
-############################################
-# 3. Configure Log Rotation
-############################################
-
+########################################
+# Configure log rotation
+########################################
 
 echo "[*] Setting log rotation policies..."
 
-
-cat > "$LOGROTATE_CONFIG" <<EOF
-
+cat > "$LOGROTATE_CONF" <<EOF
 /var/log/auth.log {
-
-    rotate 90
-
     daily
-
+    rotate 90
     compress
-
     delaycompress
-
     missingok
-
     notifempty
-
     create 640 root adm
-
 }
-
 
 /var/log/syslog {
-
-    rotate 60
-
     daily
-
+    rotate 60
     compress
-
     delaycompress
-
     missingok
-
     notifempty
-
     create 640 root adm
-
 }
-
 EOF
-
 
 echo "    /var/log/auth.log: rotate 90, compress after 7d  [SET]"
 echo "    /var/log/syslog: rotate 60, compress after 7d    [SET]"
 
-
-
 echo
 
-
-############################################
-# 4. Verify Log Activity
-############################################
-
+########################################
+# Verify log activity
+########################################
 
 echo "[*] Verifying log activity..."
 
+# Ensure log files exist
+touch /var/log/auth.log
+touch /var/log/syslog
 
-# Generate a test syslog event
-
-logger "MedDefense rsyslog validation test"
-
-
+# Generate test log entries
+logger -p auth.info "MedDefense auth test"
+logger "MedDefense syslog test"
 
 sleep 2
 
-
-
-if [ -f "$AUTH_LOG" ]; then
-
+if grep -q "MedDefense auth test" /var/log/auth.log; then
     echo "    /var/log/auth.log: receiving events       [OK]"
-
 else
-
-    echo "    /var/log/auth.log: missing                [FAIL]"
-
+    echo "    /var/log/auth.log: receiving events       [FAIL]"
 fi
 
-
-
-if grep -q "MedDefense rsyslog validation test" "$SYSLOG" 2>/dev/null; then
-
+if grep -q "MedDefense syslog test" /var/log/syslog; then
     echo "    /var/log/syslog: receiving events         [OK]"
-
 else
-
-    echo "    /var/log/syslog: no events found          [FAIL]"
-
+    echo "    /var/log/syslog: receiving events         [FAIL]"
 fi
-
-
 
 echo
 
-
-############################################
-# 5. Secure Log Permissions
-############################################
-
+########################################
+# Secure log permissions
+########################################
 
 echo "[*] Securing log file permissions..."
 
+chown root:adm /var/log/auth.log
+chmod 640 /var/log/auth.log
 
+chown root:adm /var/log/syslog
+chmod 640 /var/log/syslog
 
-if [ -f "$AUTH_LOG" ]; then
-
-    chown root:adm "$AUTH_LOG"
-    chmod 640 "$AUTH_LOG"
-
-    echo "    /var/log/auth.log: 640 root:adm          [OK]"
-
-fi
-
-
-
-if [ -f "$SYSLOG" ]; then
-
-    chown root:adm "$SYSLOG"
-    chmod 640 "$SYSLOG"
-
-    echo "    /var/log/syslog: 640 root:adm            [OK]"
-
-fi
-
-
+echo "    /var/log/auth.log: 640 root:adm          [OK]"
+echo "    /var/log/syslog: 640 root:adm            [OK]"
 
 echo
 
-
-############################################
+########################################
 # Summary
-############################################
+########################################
 
-
-echo "=========================================="
-echo "Log Configuration Completed"
-echo "=========================================="
-
-echo "Log sources configured: 2"
-echo "Rotation policies: 2"
-echo "Permissions: secured"
+echo "Log sources configured: 2 | Rotation policies: 2 | Permissions: secured"
