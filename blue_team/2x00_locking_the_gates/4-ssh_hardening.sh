@@ -3,7 +3,7 @@
 # SSH Hardening Script for MedDefense billing-srv-01
 # Purpose: Reduce SSH attack surface and prevent credential-based attacks
 
-set -e
+set -euo pipefail
 
 SSHD_CONFIG="/etc/ssh/sshd_config"
 BACKUP="/etc/ssh/sshd_config.bak"
@@ -13,12 +13,12 @@ echo "[+] Starting SSH hardening..."
 
 # Backup existing SSH configuration
 echo "[+] Creating SSH configuration backup..."
-cp $SSHD_CONFIG $BACKUP
+cp "$SSHD_CONFIG" "$BACKUP"
 
 # Apply SSH hardening settings
 echo "[+] Applying SSH security controls..."
 
-cat >> $SSHD_CONFIG <<EOF
+cat >> "$SSHD_CONFIG" <<EOF
 
 # Threat: Prevents attackers from gaining full root access through SSH
 PermitRootLogin no
@@ -35,7 +35,7 @@ X11Forwarding no
 # Threat: Limits brute-force authentication attempts
 MaxAuthTries 3
 
-# Threat: Disconnects inactive sessions to reduce hijacking risk
+# Threat: Disconnects inactive sessions to reduce session hijacking risk
 ClientAliveInterval 300
 ClientAliveCountMax 2
 
@@ -56,7 +56,7 @@ EOF
 # Create SSH warning banner
 echo "[+] Creating SSH warning banner..."
 
-cat > $BANNER <<EOF
+cat > "$BANNER" <<EOF
 ************************************************************************
 WARNING: Authorized access only.
 All activities are monitored and logged.
@@ -68,6 +68,7 @@ EOF
 echo "[+] Validating SSH configuration..."
 
 if sshd -t; then
+
     echo "[+] SSH configuration valid. Restarting SSH service..."
 
     systemctl restart sshd
@@ -75,13 +76,16 @@ if sshd -t; then
     echo "[+] SSH hardening completed successfully."
 
 else
+
     echo "[!] SSH configuration validation failed!"
     echo "[!] Restoring previous configuration..."
 
-    cp $BACKUP $SSHD_CONFIG
+    cp "$BACKUP" "$SSHD_CONFIG"
 
     systemctl restart sshd
 
     echo "[+] Backup restored. SSH remains unchanged."
+
     exit 1
+
 fi
