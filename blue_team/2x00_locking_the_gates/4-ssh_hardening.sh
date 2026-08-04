@@ -1,46 +1,87 @@
 #!/bin/bash
-# Defensive bash practices
-set -euo pipefail
 
-# Must be run as root
-if [ "$EUID" -ne 0 ]; then
-    echo "Error: This script must be run with root privileges (sudo)." >&2
-    exit 1
-fi
+# SSH Hardening Script for MedDefense billing-srv-01
+# Purpose: Reduce SSH attack surface and prevent credential-based attacks
+
+set -e
 
 SSHD_CONFIG="/etc/ssh/sshd_config"
-BACKUP_CONFIG="/etc/ssh/sshd_config.bak"
-BANNER_FILE="/etc/issue.net"
+BACKUP="/etc/ssh/sshd_config.bak"
+BANNER="/etc/issue.net"
 
-echo "[*] Backing up /etc/ssh/sshd_config"
-cp -f "$SSHD_CONFIG" "$BACKUP_CONFIG"
+echo "[+] Starting SSH hardening..."
 
-echo "[*] Creating login banner..."
-echo "Authorized access only." > "$BANNER_FILE"
-chmod 644 "$BANNER_FILE"
+# Backup existing SSH configuration
+echo "[+] Creating SSH configuration backup..."
+cp $SSHD_CONFIG $BACKUP
 
-echo "[*] Applying SSH hardening settings..."
-sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/' "$SSHD_CONFIG"
-sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' "$SSHD_CONFIG"
-sed -i 's/^#\?PermitEmptyPasswords.*/PermitEmptyPasswords no/' "$SSHD_CONFIG"
-sed -i 's/^#\?X11Forwarding.*/X11Forwarding no/' "$SSHD_CONFIG"
-sed -i 's/^#\?MaxAuthTries.*/MaxAuthTries 3/' "$SSHD_CONFIG"
-sed -i 's/^#\?ClientAliveInterval.*/ClientAliveInterval 300/' "$SSHD_CONFIG"
-sed -i 's/^#\?ClientAliveCountMax.*/ClientAliveCountMax 2/' "$SSHD_CONFIG"
-sed -i 's/^#\?AllowUsers.*/AllowUsers medadmin sysadmin/' "$SSHD_CONFIG"
-sed -i 's/^#\?Protocol.*/Protocol 2/' "$SSHD_CONFIG"
-sed -i 's/^#\?LoginGraceTime.*/LoginGraceTime 60/' "$SSHD_CONFIG"
-sed -i "s|^#\?Banner.*|Banner $BANNER_FILE|" "$SSHD_CONFIG"
+# Apply SSH hardening settings
+echo "[+] Applying SSH security controls..."
 
-echo "[*] Validating SSH configuration..."
+cat >> $SSHD_CONFIG <<EOF
+
+# Threat: Prevents attackers from gaining full root access through SSH
+PermitRootLogin no
+
+# Threat: Blocks brute-force attacks using stolen or guessed passwords
+PasswordAuthentication no
+
+# Threat: Prevents login attempts with empty passwords
+PermitEmptyPasswords no
+
+# Threat: Reduces unnecessary remote attack features
+X11Forwarding no
+
+# Threat: Limits brute-force authentication attempts
+MaxAuthTries 3
+
+# Threat: Disconnects inactive sessions to reduce hijacking risk
+ClientAliveInterval 300
+ClientAliveCountMax 2
+
+# Threat: Restricts SSH access to authorized administrators only
+AllowUsers medadmin sysadmin
+
+# Threat: Ensures secure SSH protocol version
+Protocol 2
+
+# Threat: Reduces time available for attackers during login attempts
+LoginGraceTime 60
+
+# Threat: Displays security warning to unauthorized users
+Banner /etc/issue.net
+
+EOF
+
+# Create SSH warning banner
+echo "[+] Creating SSH warning banner..."
+
+cat > $BANNER <<EOF
+************************************************************************
+WARNING: Authorized access only.
+All activities are monitored and logged.
+Unauthorized access attempts will be investigated.
+************************************************************************
+EOF
+
+# Validate SSH configuration
+echo "[+] Validating SSH configuration..."
+
 if sshd -t; then
-    echo "    sshd -t: OK"
-    echo "[*] Restarting SSH service..."
-    systemctl restart ssh || systemctl restart sshd
-    echo "    ssh.service: active (running)"
-    echo "Settings applied: 11"
+    echo "[+] SSH configuration valid. Restarting SSH service..."
+
+    systemctl restart sshd
+
+    echo "[+] SSH hardening completed successfully."
+
 else
-    echo "Error: validation failed, restoring backup" >&2
-    cp -f "$BACKUP_CONFIG" "$SSHD_CONFIG"
+    echo "[!] SSH configuration validation failed!"
+    echo "[!] Restoring previous configuration..."
+
+    cp $BACKUP $SSHD_CONFIG
+
+    systemctl restart sshd
+
+    echo "[+] Backup restored. SSH remains unchanged."
     exit 1
 fi
