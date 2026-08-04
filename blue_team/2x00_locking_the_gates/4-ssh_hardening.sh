@@ -1,4 +1,4 @@
-k#!/bin/bash
+#!/bin/bash
 # Defensive bash practices
 set -euo pipefail
 
@@ -12,7 +12,7 @@ SSHD_CONFIG="/etc/ssh/sshd_config"
 BACKUP_CONFIG="/etc/ssh/sshd_config.bak"
 BANNER_FILE="/etc/issue.net"
 
-echo "[*] Backing up $SSHD_CONFIG"
+echo "[*] Backing up /etc/ssh/sshd_config"
 cp -f "$SSHD_CONFIG" "$BACKUP_CONFIG"
 
 echo "[*] Creating login banner..."
@@ -20,7 +20,6 @@ echo "Authorized access only." > "$BANNER_FILE"
 chmod 644 "$BANNER_FILE"
 
 echo "[*] Applying SSH hardening settings..."
-# Write settings directly or replace them explicitly
 sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/' "$SSHD_CONFIG"
 sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' "$SSHD_CONFIG"
 sed -i 's/^#\?PermitEmptyPasswords.*/PermitEmptyPasswords no/' "$SSHD_CONFIG"
@@ -41,7 +40,7 @@ if sshd -t; then
     echo "    ssh.service: active (running)"
     echo "Settings applied: 11"
 else
-    echo "Error: Validation failed. Restoring backup..." >&2
+    echo "Error: validation failed, restoring backup" >&2
     cp -f "$BACKUP_CONFIG" "$SSHD_CONFIG"
     exit 1
 fi
