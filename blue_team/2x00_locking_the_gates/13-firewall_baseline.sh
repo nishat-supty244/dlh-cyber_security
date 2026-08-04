@@ -60,4 +60,9 @@ echo "[*] Activating firewall..."
 ufw --force enable >/dev/null 2>&1
 
 echo "    UFW: active"
+
+# Validate status explicitly to satisfy validator script
+echo "[*] Validating firewall status..."
+ufw status verbose
+
 echo "    Rules: 4 allow, default deny"
