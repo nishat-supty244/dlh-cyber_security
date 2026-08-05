@@ -1,0 +1,91 @@
+{
+    "generated_at":  "2026-08-05 18:14:41",
+    "total_findings":  9,
+    "summary":  {
+                    "critical":  3,
+                    "medium":  2,
+                    "high":  4
+                },
+    "findings":  [
+                     {
+                         "id":  "FIND-01",
+                         "severity":  "CRITICAL",
+                         "category":  "Password Policy",
+                         "asset":  "Domain Policy",
+                         "evidence":  "Minimum password length is 7 (Target: 14)",
+                         "risk":  "Weak passwords vulnerable to offline brute-force cracking.",
+                         "recommended_remediation":  "Enforce a minimum password length of 14 characters via GPO.",
+                         "mapped_task":  "Task 2"
+                     },
+                     {
+                         "id":  "FIND-02",
+                         "severity":  "CRITICAL",
+                         "category":  "Account Lockout Policy",
+                         "asset":  "Domain Policy",
+                         "evidence":  "Account lockout threshold is not configured (0).",
+                         "risk":  "Vulnerable to online password spraying and brute-force attacks.",
+                         "recommended_remediation":  "Configure account lockout threshold to 5 attempts.",
+                         "mapped_task":  "Task 2"
+                     },
+                     {
+                         "id":  "FIND-03",
+                         "severity":  "CRITICAL",
+                         "category":  "Kerberos Hardening",
+                         "asset":  "Domain Controllers",
+                         "evidence":  "Kerberos DES and RC4 encryption types enabled.",
+                         "risk":  "Susceptible to downgrade attacks and ticket cracking (e.g., Kerberoasting/AS-REP roasting).",
+                         "recommended_remediation":  "Disable DES and RC4 encryption, enforcing AES128/AES256.",
+                         "mapped_task":  "Task 4"
+                     },
+                     {
+                         "id":  "FIND-04",
+                         "severity":  "HIGH",
+                         "category":  "User Accounts",
+                         "asset":  "6 accounts",
+                         "evidence":  "6 accounts have PasswordNeverExpires set to True.",
+                         "risk":  "Long-lived credentials increase exposure window if compromised.",
+                         "recommended_remediation":  "Disable PasswordNeverExpires on non-service accounts.",
+                         "mapped_task":  "Task 3"
+                     },
+                     {
+                         "id":  "FIND-05",
+                         "severity":  "HIGH",
+                         "category":  "Service Accounts",
+                         "asset":  "3 Service Accounts",
+                         "evidence":  "3 service accounts configured with unconstrained delegation.",
+                         "risk":  "Compromise of service accounts allows extraction of TGTs for domain-wide escalation.",
+                         "recommended_remediation":  "Disable unconstrained delegation or restrict to specific services.",
+                         "mapped_task":  "Task 5"
+                     },
+                     {
+                         "id":  "FIND-06",
+                         "severity":  "HIGH",
+                         "category":  "Audit Policy",
+                         "asset":  "Domain Controllers",
+                         "evidence":  "Advanced Audit Policy not fully configured.",
+                         "risk":  "Lack of forensic visibility during security incidents.",
+                         "recommended_remediation":  "Enable advanced audit policies for process creation and logon events.",
+                         "mapped_task":  "Task 6"
+                     },
+                     {
+                         "id":  "FIND-07",
+                         "severity":  "MEDIUM",
+                         "category":  "Stale Objects",
+                         "asset":  "2 computer objects",
+                         "evidence":  "2 stale computer objects with no authentication activity in 90+ days.",
+                         "risk":  "Abandoned assets present potential attack vectors.",
+                         "recommended_remediation":  "Clean up or disable stale computer objects.",
+                         "mapped_task":  "Task 7"
+                     },
+                     {
+                         "id":  "FIND-08",
+                         "severity":  "MEDIUM",
+                         "category":  "Group Policy",
+                         "asset":  "GPO Configuration",
+                         "evidence":  "Only default GPOs present; no MedDefense hardening GPOs deployed.",
+                         "risk":  "Baseline security configurations not enforced systematically.",
+                         "recommended_remediation":  "Create and link hardening GPOs.",
+                         "mapped_task":  "Task 6"
+                     }
+                 ]
+}
