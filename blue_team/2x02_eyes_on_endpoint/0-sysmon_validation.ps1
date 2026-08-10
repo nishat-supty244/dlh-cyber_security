@@ -10,16 +10,19 @@
     File: 0-sysmon_validation.ps1
 #>
 
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "SilentlyContinue"
+
 # Ensure running with Administrator privileges
 if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Write-Error "This script must be run as an Administrator to query Sysmon logs and perform certain test actions."
+    Write-Error "This script must be run as an Administrator."
     exit 1
 }
 
 $LogName = "Microsoft-Windows-Sysmon/Operational"
 $results = @()
 
-Write-Host "[*] Running Sysmon telemetry validation..." -ForegroundColor Cyan
+Write-Host "[*] Running Sysmon telemetry validation..."
 
 # Helper function to check for recent Sysmon events
 function Test-SysmonEvent {
@@ -30,86 +33,79 @@ function Test-SysmonEvent {
         [scriptblock]$ValidationCriteria
     )
 
-    # Get the latest event record number or timestamp before action
-    $beforeTime = Get-Date
-
-    # Execute the trigger action
+    $beforeTime = (Get-Date).AddSeconds(-5)
     & $Action
-
-    # Give Sysmon a brief moment to write to the event log
     Start-Sleep -Seconds 2
 
-    # Query the event log for events matching the ID after our action timestamp
     try {
-        $events = Get-WinEvent -LogName $LogName -FilterXPath "*[System[(EventID=$EventID) and TimeCreated[timediff(@SystemTime) <= 10000]]]" -ErrorAction Stop
-        
-        if ($events) {
-            foreach ($evt in $events) {
+        $events = Get-WinEvent -LogName $LogName -FilterXPath "*[System[(EventID=$EventID)]]" -MaxEvents 5 -ErrorAction Stop
+        foreach ($evt in $events) {
+            if ($evt.TimeCreated -ge $beforeTime) {
                 $xml = [xml]$evt.ToXml()
-                # Run custom validation criteria if provided
                 if ($null -eq $ValidationCriteria -or (& $ValidationCriteria $xml)) {
-                    Write-Host "    $Description -> Sysmon EID $EventID captured, details present" -ForegroundColor Green
                     return $true
                 }
             }
         }
     }
-    catch {
-        # Catch if no events found or log error
-    }
-
-    Write-Host "    $Description -> Sysmon EID $EventID NOT captured or missing details" -ForegroundColor Red
+    catch {}
     return $false
 }
 
 # [1/5] Process creation (Event ID 1)
-Write-Host "    [1/5] Process creation (Event ID 1)..." -NoNewline
-$action1 = {
-    Start-Process -FilePath "cmd.exe" -ArgumentList "/c whoami" -NoNewWindow -Wait
-}
+Write-Host "    [1/5] Process creation (Event ID 1)..."
+$action1 = { Start-Process -FilePath "cmd.exe" -ArgumentList "/c whoami" -NoNewWindow -Wait }
 $pass1 = Test-SysmonEvent -EventID 1 -Action $action1 -Description "cmd.exe /c whoami" -ValidationCriteria {
     param($xml)
     $cmdLine = $xml.Event.EventData.Data | Where-Object { $_.Name -eq 'CommandLine' }
     return ($cmdLine -like '*cmd.exe*whoami*')
 }
-if (-not $pass1) { $results += [PSCustomObject]@{ Test="Process Creation"; Status="FAIL" } } else { $results += [PSCustomObject]@{ Test="Process Creation"; Status="PASS" } }
-
+if ($pass1) {
+    Write-Host "          cmd.exe /c whoami -> Sysmon EID 1 captured, cmdline present   [PASS]"
+    $results += "PASS"
+} else {
+    Write-Host "          cmd.exe /c whoami -> Sysmon EID 1 NOT captured                [FAIL]"
+    $results += "FAIL"
+}
 
 # [2/5] Network connection (Event ID 3)
-Write-Host "    [2/5] Network connection (Event ID 3)..." -NoNewline
-$action2 = {
-    # Perform a quick TCP connection test to an external or local routable address
-    Test-NetConnection -ComputerName "8.8.8.8" -Port 53 -InformationLevel Quiet -WarningAction SilentlyContinue | Out-Null
-}
+Write-Host "    [2/5] Network connection (Event ID 3)..."
+$action2 = { Test-NetConnection -ComputerName "8.8.8.8" -Port 53 -InformationLevel Quiet -WarningAction SilentlyContinue | Out-Null }
 $pass2 = Test-SysmonEvent -EventID 3 -Action $action2 -Description "Outbound TCP" -ValidationCriteria {
     param($xml)
-    $destinationIp = $xml.Event.EventData.Data | Where-Object { $_.Name -eq 'DestinationIp' }
-    return ($destinationIp -ne $null)
+    $destIp = $xml.Event.EventData.Data | Where-Object { $_.Name -eq 'DestinationIp' }
+    return ($destIp -ne $null)
 }
-if (-not $pass2) { $results += [PSCustomObject]@{ Test="Network Connection"; Status="FAIL" } } else { $results += [PSCustomObject]@{ Test="Network Connection"; Status="PASS" } }
-
+if ($pass2) {
+    Write-Host "          Outbound TCP -> Sysmon EID 3 captured, dest IP/port present   [PASS]"
+    $results += "PASS"
+} else {
+    Write-Host "          Outbound TCP -> Sysmon EID 3 NOT captured                     [FAIL]"
+    $results += "FAIL"
+}
 
 # [3/5] File creation (Event ID 11)
-Write-Host "    [3/5] File creation (Event ID 11)..." -NoNewline
+Write-Host "    [3/5] File creation (Event ID 11)..."
 $testFile = "C:\Windows\Temp\test.txt"
-$action3 = {
-    Set-Content -Path $testFile -Value "Sysmon validation test file."
-}
+$action3 = { Set-Content -Path $testFile -Value "Sysmon validation test file." }
 $pass3 = Test-SysmonEvent -EventID 11 -Action $action3 -Description "$testFile" -ValidationCriteria {
     param($xml)
     $targetFilename = $xml.Event.EventData.Data | Where-Object { $_.Name -eq 'TargetFilename' }
     return ($targetFilename -like '*test.txt*')
 }
-if (-not $pass3) { $results += [PSCustomObject]@{ Test="File Creation"; Status="FAIL" } } else { $results += [PSCustomObject]@{ Test="File Creation"; Status="PASS" } }
-
+if ($pass3) {
+    Write-Host "          C:\Windows\Temp\test.txt -> Sysmon EID 11 captured            [PASS]"
+    $results += "PASS"
+} else {
+    Write-Host "          C:\Windows\Temp\test.txt -> Sysmon EID 11 NOT captured        [FAIL]"
+    $results += "FAIL"
+}
 
 # [4/5] Registry modification (Event ID 13)
-Write-Host "    [4/5] Registry modification (Event ID 13)..." -NoNewline
+Write-Host "    [4/5] Registry modification (Event ID 13)..."
 $regPath = "Registry::HKEY_CURRENT_USER\Software\SysmonTest"
 $action4 = {
-    if (-not (Test-Path $regPath)) {
-        New-Item -Path $regPath -Force | Out-Null
-    }
+    if (-not (Test-Path $regPath)) { New-Item -Path $regPath -Force | Out-Null }
     Set-ItemProperty -Path $regPath -Name "ValidationKey" -Value "TestValue"
 }
 $pass4 = Test-SysmonEvent -EventID 13 -Action $action4 -Description "HKCU\...\SysmonTest" -ValidationCriteria {
@@ -117,34 +113,37 @@ $pass4 = Test-SysmonEvent -EventID 13 -Action $action4 -Description "HKCU\...\Sy
     $targetObject = $xml.Event.EventData.Data | Where-Object { $_.Name -eq 'TargetObject' }
     return ($targetObject -like '*SysmonTest*')
 }
-if (-not $pass4) { $results += [PSCustomObject]@{ Test="Registry Modification"; Status="FAIL" } } else { $results += [PSCustomObject]@{ Test="Registry Modification"; Status="PASS" } }
-
+if ($pass4) {
+    Write-Host "          HKCU\...\SysmonTest -> Sysmon EID 13 captured                 [PASS]"
+    $results += "PASS"
+} else {
+    Write-Host "          HKCU\...\SysmonTest -> Sysmon EID 13 NOT captured             [FAIL]"
+    $results += "FAIL"
+}
 
 # [5/5] DNS query (Event ID 22)
-Write-Host "    [5/5] DNS query (Event ID 22)..." -NoNewline
-$action5 = {
-    Resolve-DnsName -Name "example.com" -Type A -ErrorAction SilentlyContinue | Out-Null
-}
+Write-Host "    [5/5] DNS query (Event ID 22)..."
+$action5 = { Resolve-DnsName -Name "example.com" -Type A -ErrorAction SilentlyContinue | Out-Null }
 $pass5 = Test-SysmonEvent -EventID 22 -Action $action5 -Description "nslookup example.com" -ValidationCriteria {
     param($xml)
     $queryName = $xml.Event.EventData.Data | Where-Object { $_.Name -eq 'QueryName' }
     return ($queryName -like '*example.com*')
 }
-if (-not $pass5) { $results += [PSCustomObject]@{ Test="DNS Query"; Status="FAIL" } } else { $results += [PSCustomObject]@{ Test="DNS Query"; Status="PASS" } }
-
+if ($pass5) {
+    Write-Host "          nslookup example.com -> Sysmon EID 22 captured                [PASS]"
+    $results += "PASS"
+} else {
+    Write-Host "          nslookup example.com -> Sysmon EID 22 NOT captured            [FAIL]"
+    $results += "FAIL"
+}
 
 # Cleanup phase
-Write-Host "[*] Cleanup: removing test artifacts..." -ForegroundColor Cyan
-if (Test-Path $testFile) {
-    Remove-Item -Path $testFile -Force -ErrorAction SilentlyContinue
-}
-if (Test-Path $regPath) {
-    Remove-Item -Path $regPath -Recurse -Force -ErrorAction SilentlyContinue
-}
+Write-Host "[*] Cleanup: removing test artifacts..."
+if (Test-Path $testFile) { Remove-Item -Path $testFile -Force -ErrorAction SilentlyContinue }
+if (Test-Path $regPath) { Remove-Item -Path $regPath -Recurse -Force -ErrorAction SilentlyContinue }
 
-# Summary calculation
-$totalTested = $results.Count
-$totalCaptured = ($results | Where-Object { $_.Status -eq "PASS" }).Count
+$totalTested = 5
+$totalCaptured = ($results | Where-Object { $_ -eq "PASS" }).Count
 $totalMissed = $totalTested - $totalCaptured
 
-Write-Host "Actions tested: $totalTested | Captured: $totalCaptured | Missed: $totalMissed" -ForegroundColor Yellow
+Write-Host "Actions tested: $totalTested | Captured: $totalCaptured | Missed: $totalMissed"
