@@ -1,0 +1,151 @@
+{
+    "generated_at":  "2026-08-10 15:26:03",
+    "config_source":  "sysmonconfig.xml",
+    "summary":  {
+                    "techniques_assessed":  7,
+                    "covered":  2,
+                    "partial":  0,
+                    "blind":  5
+                },
+    "matrix":  [
+                   {
+                       "technique_id":  "T1059",
+                       "technique_name":  "Command and Scripting Interpreter",
+                       "required_event_ids":  [
+                                                  1
+                                              ],
+                       "enabled_event_ids":  1,
+                       "filter_conflicts":  false,
+                       "coverage_status":  "covered",
+                       "evidence_fields_expected":  [
+                                                        "UtcTime",
+                                                        "ProcessGuid",
+                                                        "ProcessId",
+                                                        "Image",
+                                                        "CommandLine",
+                                                        "User",
+                                                        "ParentImage"
+                                                    ],
+                       "reason":  "All required Event IDs are enabled and configured without critical suppression rules.",
+                       "recommendation":  "None. Telemetry and fields are fully supported."
+                   },
+                   {
+                       "technique_id":  "T1053",
+                       "technique_name":  "Scheduled Task/Job",
+                       "required_event_ids":  [
+                                                  1
+                                              ],
+                       "enabled_event_ids":  1,
+                       "filter_conflicts":  false,
+                       "coverage_status":  "covered",
+                       "evidence_fields_expected":  [
+                                                        "UtcTime",
+                                                        "ProcessGuid",
+                                                        "CommandLine",
+                                                        "ParentImage",
+                                                        "User"
+                                                    ],
+                       "reason":  "All required Event IDs are enabled and configured without critical suppression rules.",
+                       "recommendation":  "None. Telemetry and fields are fully supported."
+                   },
+                   {
+                       "technique_id":  "T1547",
+                       "technique_name":  "Boot or Logon Autostart Execution",
+                       "required_event_ids":  [
+                                                  13
+                                              ],
+                       "enabled_event_ids":  1,
+                       "filter_conflicts":  false,
+                       "coverage_status":  "blind",
+                       "evidence_fields_expected":  [
+                                                        "UtcTime",
+                                                        "EventType",
+                                                        "TargetObject",
+                                                        "Details",
+                                                        "Image"
+                                                    ],
+                       "reason":  "Required Event ID(s) [13] are completely disabled in configuration.",
+                       "recommendation":  "Enable the corresponding Sysmon event block in sysmonconfig.xml."
+                   },
+                   {
+                       "technique_id":  "T1055",
+                       "technique_name":  "Process Injection",
+                       "required_event_ids":  [
+                                                  8,
+                                                  10
+                                              ],
+                       "enabled_event_ids":  1,
+                       "filter_conflicts":  false,
+                       "coverage_status":  "blind",
+                       "evidence_fields_expected":  [
+                                                        "UtcTime",
+                                                        "SourceProcessGuid",
+                                                        "SourceImage",
+                                                        "TargetImage",
+                                                        "GrantedAccess"
+                                                    ],
+                       "reason":  "Required Event ID(s) [8, 10] are completely disabled in configuration.",
+                       "recommendation":  "Enable the corresponding Sysmon event block in sysmonconfig.xml."
+                   },
+                   {
+                       "technique_id":  "T1071",
+                       "technique_name":  "Application Layer Protocol",
+                       "required_event_ids":  [
+                                                  3,
+                                                  22
+                                              ],
+                       "enabled_event_ids":  1,
+                       "filter_conflicts":  false,
+                       "coverage_status":  "blind",
+                       "evidence_fields_expected":  [
+                                                        "UtcTime",
+                                                        "ProcessGuid",
+                                                        "Image",
+                                                        "DestinationIp",
+                                                        "DestinationPort",
+                                                        "QueryName"
+                                                    ],
+                       "reason":  "Required Event ID(s) [3, 22] are completely disabled in configuration.",
+                       "recommendation":  "Enable the corresponding Sysmon event block in sysmonconfig.xml."
+                   },
+                   {
+                       "technique_id":  "T1574.002",
+                       "technique_name":  "DLL Side-Loading",
+                       "required_event_ids":  [
+                                                  7
+                                              ],
+                       "enabled_event_ids":  1,
+                       "filter_conflicts":  false,
+                       "coverage_status":  "blind",
+                       "evidence_fields_expected":  [
+                                                        "UtcTime",
+                                                        "ProcessGuid",
+                                                        "Image",
+                                                        "ImageLoaded",
+                                                        "Signed",
+                                                        "Signature"
+                                                    ],
+                       "reason":  "Required Event ID(s) [7] are completely disabled in configuration.",
+                       "recommendation":  "Enable the corresponding Sysmon event block in sysmonconfig.xml."
+                   },
+                   {
+                       "technique_id":  "T1027",
+                       "technique_name":  "Obfuscated or Compressed Files",
+                       "required_event_ids":  [
+                                                  11,
+                                                  15
+                                              ],
+                       "enabled_event_ids":  1,
+                       "filter_conflicts":  false,
+                       "coverage_status":  "blind",
+                       "evidence_fields_expected":  [
+                                                        "UtcTime",
+                                                        "ProcessGuid",
+                                                        "TargetFilename",
+                                                        "Hash"
+                                                    ],
+                       "reason":  "Required Event ID(s) [11, 15] are completely disabled in configuration.",
+                       "recommendation":  "Enable the corresponding Sysmon event block in sysmonconfig.xml."
+                   }
+               ]
+}
