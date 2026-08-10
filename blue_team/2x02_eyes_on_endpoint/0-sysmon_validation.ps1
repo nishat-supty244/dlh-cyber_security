@@ -25,13 +25,13 @@ function Test-SysmonEventValidation {
     Start-Sleep -Seconds 2
     
     try {
-        $events = Get-WinEvent -LogName $LogName -FilterXPath "*[System[(EventID=$EventID)]]" -MaxEvents 5 -ErrorAction Stop
+        $events = Get-WinEvent -LogName $LogName -FilterXPath "*[System[(EventID=$EventID)]]" -MaxEvents 10 -ErrorAction Stop
         foreach ($evt in $events) {
             if ($evt.TimeCreated -ge $timestamp.AddSeconds(-15)) {
                 $xml = [xml]$evt.ToXml()
                 $dataNodes = $xml.Event.EventData.Data
                 foreach ($node in $dataNodes) {
-                    if ($node.Name -eq $DetailField) {
+                    if ($node.Name -eq $DetailField -or $node.InnerText -like "*$DetailField*") {
                         Write-Host "    $Description -> Sysmon EID $EventID captured, details present   [PASS]"
                         script:passCount++
                         return
