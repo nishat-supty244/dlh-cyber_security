@@ -2,7 +2,10 @@
 .SYNOPSIS
     0-sysmon_validation.ps1
 .DESCRIPTION
-    Validates Sysmon telemetry by triggering specific actions and verifying Event IDs 1, 3, 11, 13, and 22.
+    Validates Sysmon telemetry by triggering actions for Event IDs 1, 3, 11, 13, and 22.
+.NOTES
+    Repository: dlh-cyber_security
+    Directory: blue_team/2x02_eyes_on_endpoint
 #>
 
 Set-StrictMode -Version Latest
@@ -14,67 +17,62 @@ $LogName = "Microsoft-Windows-Sysmon/Operational"
 $passCount = 0
 $missCount = 0
 
-function Test-SysmonLog {
-    param([int]$EID, [scriptblock]$Action, [string]$Desc, [string]$DetailCheck)
-    $ts = Get-Date
+function Test-SysmonEventValidation {
+    param([int]$EventID, [scriptblock]$Action, [string]$Description, [string]$DetailField)
+    
+    $timestamp = Get-Date
     & $Action
     Start-Sleep -Seconds 2
     
     try {
-        $events = Get-WinEvent -LogName $LogName -FilterXPath "*[System[(EventID=$EID)]]" -MaxEvents 5 -ErrorAction Stop
-        foreach ($e in $events) {
-            if ($e.TimeCreated -ge $ts.AddSeconds(-10)) {
-                $xml = [xml]$e.ToXml()
-                $data = $xml.Event.EventData.Data
-                if ($null -eq $DetailCheck) {
-                    Write-Host "    $Desc -> Sysmon EID $EID captured                      [PASS]"
-                    script:passCount++
-                    return
-                } else {
-                    foreach ($d in $data) {
-                        if ($d.Name -eq $DetailCheck -or ($d.('#text') -and $d.Name)) {
-                            Write-Host "    $Desc -> Sysmon EID $EID captured, details present   [PASS]"
-                            script:passCount++
-                            return
-                        }
+        $events = Get-WinEvent -LogName $LogName -FilterXPath "*[System[(EventID=$EventID)]]" -MaxEvents 5 -ErrorAction Stop
+        foreach ($evt in $events) {
+            if ($evt.TimeCreated -ge $timestamp.AddSeconds(-15)) {
+                $xml = [xml]$evt.ToXml()
+                $dataNodes = $xml.Event.EventData.Data
+                foreach ($node in $dataNodes) {
+                    if ($node.Name -eq $DetailField) {
+                        Write-Host "    $Description -> Sysmon EID $EventID captured, details present   [PASS]"
+                        script:passCount++
+                        return
                     }
                 }
             }
         }
     } catch {}
     
-    Write-Host "    $Desc -> Sysmon EID $EID NOT captured                  [FAIL]"
+    Write-Host "    $Description -> Sysmon EID $EventID NOT captured                [FAIL]"
     script:missCount++
 }
 
 # [1/5] Process creation (Event ID 1)
 Write-Host "    [1/5] Process creation (Event ID 1)..."
-Test-SysmonLog -EID 1 -Action { Start-Process cmd.exe -ArgumentList "/c whoami" -NoNewWindow -Wait } -Desc "cmd.exe /c whoami" -DetailCheck "CommandLine"
+Test-SysmonEventValidation -EventID 1 -Action { Start-Process cmd.exe -ArgumentList "/c whoami" -NoNewWindow -Wait } -Description "cmd.exe /c whoami" -DetailField "CommandLine"
 
 # [2/5] Network connection (Event ID 3)
 Write-Host "    [2/5] Network connection (Event ID 3)..."
-Test-SysmonLog -EID 3 -Action { Test-NetConnection -ComputerName "8.8.8.8" -Port 53 -InformationLevel Quiet -WarningAction SilentlyContinue | Out-Null } -Desc "Outbound TCP" -DetailCheck "DestinationIp"
+Test-SysmonEventValidation -EventID 3 -Action { Test-NetConnection -ComputerName "8.8.8.8" -Port 53 -InformationLevel Quiet -WarningAction SilentlyContinue | Out-Null } -Description "Outbound TCP" -DetailField "DestinationIp"
 
 # [3/5] File creation (Event ID 11)
 Write-Host "    [3/5] File creation (Event ID 11)..."
-$tf = "C:\Windows\Temp\test.txt"
-Test-SysmonLog -EID 11 -Action { Set-Content -Path $tf -Value "test" } -Desc "$tf" -DetailCheck "TargetFilename"
+$testFile = "C:\Windows\Temp\test.txt"
+Test-SysmonEventValidation -EventID 11 -Action { Set-Content -Path $testFile -Value "test" } -Description "$testFile" -DetailField "TargetFilename"
 
 # [4/5] Registry modification (Event ID 13)
 Write-Host "    [4/5] Registry modification (Event ID 13)..."
-$rp = "Registry::HKEY_CURRENT_USER\Software\SysmonTest"
-Test-SysmonLog -EID 13 -Action {
-    if (-not (Test-Path $rp)) { New-Item -Path $rp -Force | Out-Null }
-    Set-ItemProperty -Path $rp -Name "Val" -Value "1"
-} -Desc "HKCU\...\SysmonTest" -DetailCheck "TargetObject"
+$regPath = "Registry::HKEY_CURRENT_USER\Software\SysmonTest"
+Test-SysmonEventValidation -EventID 13 -Action {
+    if (-not (Test-Path $regPath)) { New-Item -Path $regPath -Force | Out-Null }
+    Set-ItemProperty -Path $regPath -Name "Val" -Value "1"
+} -Description "HKCU\...\SysmonTest" -DetailField "TargetObject"
 
 # [5/5] DNS query (Event ID 22)
 Write-Host "    [5/5] DNS query (Event ID 22)..."
-Test-SysmonLog -EID 22 -Action { Resolve-DnsName -Name "example.com" -ErrorAction SilentlyContinue | Out-Null } -Desc "nslookup example.com" -DetailCheck "QueryName"
+Test-SysmonEventValidation -EventID 22 -Action { Resolve-DnsName -Name "example.com" -ErrorAction SilentlyContinue | Out-Null } -Description "nslookup example.com" -DetailField "QueryName"
 
 Write-Host "[*] Cleanup: removing test artifacts..."
-if (Test-Path $tf) { Remove-Item $tf -Force -ErrorAction SilentlyContinue }
-if (Test-Path $rp) { Remove-Item $rp -Recurse -Force -ErrorAction SilentlyContinue }
+if (Test-Path $testFile) { Remove-Item $testFile -Force -ErrorAction SilentlyContinue }
+if (Test-Path $regPath) { Remove-Item $regPath -Recurse -Force -ErrorAction SilentlyContinue }
 
-$total = $passCount + $missCount
-Write-Host "Actions tested: $total | Captured: $passCount | Missed: $missCount"
+$totalTested = $passCount + $missCount
+Write-Host "Actions tested: $totalTested | Captured: $passCount | Missed: $missCount"
