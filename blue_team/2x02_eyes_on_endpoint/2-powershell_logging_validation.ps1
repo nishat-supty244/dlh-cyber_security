@@ -1,9 +1,6 @@
 <#
 .Notes
-    name:        2-powershell_logging_validation.ps1
-    purpose:     Verify PowerShell logging captures commands of varying complexity
-    author:      Steve - Cybersecurity Engineer
-    date:        August 8, 2026
+   
 
 .Purpose
     This script validates that PowerShell logging is correctly capturing four
