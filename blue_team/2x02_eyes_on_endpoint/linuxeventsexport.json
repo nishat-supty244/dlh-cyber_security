@@ -1,0 +1,14 @@
+[
+  {
+    "timestamp": "2026-03-25T00:00:00Z",
+    "hostname": "localhost",
+    "source_type": "auth.log",
+    "event_category": "ssh_login"
+  },
+  {
+    "timestamp": "2026-03-25T00:00:01Z",
+    "hostname": "localhost",
+    "source_type": "audit.log",
+    "event_category": "execve"
+  }
+]

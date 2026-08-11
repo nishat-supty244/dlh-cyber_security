@@ -1,0 +1,45 @@
+{
+  "total_actions": 6,
+  "captured_actions": 6,
+  "percentage": 100,
+  "multi_source_detections": 1,
+  "matrix": [
+    {
+      "action": "Create user",
+      "detections": [
+        {"source": "auditd", "key": "identity", "detail": "Full", "status": "CAPTURED"},
+        {"source": "auth.log", "key": "useradd", "detail": "Full", "status": "CAPTURED"}
+      ]
+    },
+    {
+      "action": "Modify sudoers",
+      "detections": [
+        {"source": "auditd", "key": "sudoers", "detail": "Full", "status": "CAPTURED"}
+      ]
+    },
+    {
+      "action": "Execute from /tmp",
+      "detections": [
+        {"source": "auditd", "key": "process_exec", "detail": "Full", "status": "CAPTURED"}
+      ]
+    },
+    {
+      "action": "Reverse shell",
+      "detections": [
+        {"source": "auditd", "key": "network_connect", "detail": "Full", "status": "CAPTURED"}
+      ]
+    },
+    {
+      "action": "Cron persistence",
+      "detections": [
+        {"source": "auditd", "key": "cron_persist", "detail": "Full", "status": "CAPTURED"}
+      ]
+    },
+    {
+      "action": "Access /etc/shadow",
+      "detections": [
+        {"source": "auditd", "key": "identity", "detail": "Full", "status": "CAPTURED"}
+      ]
+    }
+  ]
+}
