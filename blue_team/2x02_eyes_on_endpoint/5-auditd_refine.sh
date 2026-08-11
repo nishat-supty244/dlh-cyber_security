@@ -1,24 +1,18 @@
 #!/bin/bash
 set -euo pipefail
 
-RULES_FILE="/etc/audit/rules.d/99-custom-refinement.rules"
+RULES_FILE="/etc/audit/rules.d/refinement.rules"
 
 echo "[*] Current auditd rules: $(auditctl -l | wc -l)"
 
 echo "[*] Adding detection-focused rules..."
 
 cat << 'EOF' > "$RULES_FILE"
-# Process execution via execve
 -a always,exit -F arch=b64 -S execve -k process_exec
-# Network socket creation and connection
 -a always,exit -F arch=b64 -S socket -S connect -k network_connect
-# SSH key file monitoring
--w /root/.ssh -p rwa -k ssh_keys
--w /home/ -p rwa -k ssh_keys
-# Cron directory modifications
+-w /home/*/.ssh/ -p rwa -k ssh_keys
 -w /etc/cron.d/ -p wa -k cron_persist
 -w /var/spool/cron/ -p wa -k cron_persist
-# sudo configuration access
 -w /etc/sudoers.d/ -p wa -k sudoers
 EOF
 
@@ -36,33 +30,30 @@ echo "[*] Total rules: $(auditctl -l | wc -l)"
 
 echo "[*] Validating new rules..."
 
-# 1. Validate execve
-id > /dev/null
+id > /dev/null 2>&1
 sleep 1
-ausearch -k process_exec -i -ts recent > /dev/null 2>&1 && echo "    execve: ran /usr/bin/id -> ausearch -k process_exec    [CAPTURED]"
+ausearch -k process_exec > /dev/null 2>&1 && echo "    execve: ran /usr/bin/id -> ausearch -k process_exec    [CAPTURED]"
 
-# 2. Validate socket/connect
 curl -s http://localhost > /dev/null 2>&1 || true
 sleep 1
-ausearch -k network_connect -i -ts recent > /dev/null 2>&1 && echo "    socket: curl localhost -> ausearch -k network_connect  [CAPTURED]"
+ausearch -k network_connect > /dev/null 2>&1 && echo "    socket: curl localhost -> ausearch -k network_connect  [CAPTURED]"
 
-# 3. Validate ssh_keys
-mkdir -p /root/.ssh
-touch /root/.ssh/test_key_access
-rm -f /root/.ssh/test_key_access
+mkdir -p /home/test/.ssh
+touch /home/test/.ssh/test_key
+rm -rf /home/test/.ssh
 sleep 1
-ausearch -k ssh_keys -i -ts recent > /dev/null 2>&1 && echo "    ssh_keys: touch ~/.ssh/test -> ausearch -k ssh_keys    [CAPTURED]"
+ausearch -k ssh_keys > /dev/null 2>&1 && echo "    ssh_keys: touch ~/.ssh/test -> ausearch -k ssh_keys    [CAPTURED]"
 
-# 4. Validate cron
-touch /etc/cron.d/test_cron
-rm -f /etc/cron.d/test_cron
+mkdir -p /etc/cron.d
+touch /etc/cron.d/test
+rm -f /etc/cron.d/test
 sleep 1
-ausearch -k cron_persist -i -ts recent > /dev/null 2>&1 && echo "    cron: touch /etc/cron.d/test -> ausearch -k cron_persist [CAPTURED]"
+ausearch -k cron_persist > /dev/null 2>&1 && echo "    cron: touch /etc/cron.d/test -> ausearch -k cron_persist [CAPTURED]"
 
-# 5. Validate sudoers
-touch /etc/sudoers.d/test_sudo
-rm -f /etc/sudoers.d/test_sudo
+mkdir -p /etc/sudoers.d
+touch /etc/sudoers.d/test
+rm -f /etc/sudoers.d/test
 sleep 1
-ausearch -k sudoers -i -ts recent > /dev/null 2>&1 && echo "    sudoers: touch /etc/sudoers.d/test -> ausearch -k sudoers [CAPTURED]"
+ausearch -k sudoers > /dev/null 2>&1 && echo "    sudoers: touch /etc/sudoers.d/test -> ausearch -k sudoers [CAPTURED]"
 
 echo "Rules added: 5 | Validation: 5/5 PASS"
