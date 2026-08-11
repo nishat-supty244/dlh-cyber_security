@@ -1,12 +1,7 @@
 <#
 .Synopsis
     2-eventlog_assessment.ps1 - Windows Event Log Assessment
-.Purpose
-    Assesses current event logging capability by checking which critical Event IDs
-    the domain is generating, verifying audit policy configuration and actual
-    log generation within the last 24 hours.
-.Author
-    Analyst
+
 .Date
     2026-08-05
 #>
