@@ -1,14 +1,7 @@
 <#
 .Synopsis
     8-smb_hardening.ps1 - SMB and Protocol Hardening
-.Purpose
-    Disables SMBv1 and enforces SMB signing to eliminate one of the most
-    commonly exploited lateral movement vectors in enterprise Windows environments.
-    Also disables legacy protocols (NetBIOS, LLMNR) to reduce attack surface.
-.Author
-    Steve - Cybersecurity Engineer
-.Date
-    August 4, 2026
+
 #>
 
 param(
