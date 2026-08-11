@@ -1,8 +1,21 @@
 #!/bin/bash
-
 #     This script generates a comprehensive telemetry coverage assessment that the SOC
 #     can use to understand detection strengths, weaknesses, and blind spots across
 #     Windows and Linux platforms.
+#
+#     Input files:
+#         - telemetry_handoff/windows_events.json
+#         - telemetry_handoff/linux_events.json
+#         - telemetry_handoff/attack_ground_truth.json
+#         - windows_detection_matrix.json
+#         - linux_detection_matrix.json
+#         - windows_telemetry_quality.json
+#         - linux_telemetry_quality.json
+#         - sysmon_coverage_matrix.json
+#
+#     Output:
+#         - telemetry_coverage_assessment.json
+#
 #     The assessment includes event counts by platform/source/category, detection
 #     summary, ATT&CK technique coverage, known gaps, and quality scores.
 #
