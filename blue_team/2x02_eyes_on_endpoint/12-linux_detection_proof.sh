@@ -1,4 +1,18 @@
 #!/bin/bash
+
+#This script correlates the Linux attack simulation log (ground truth from Task 11)
+#Against captured telemetry (auditd, auth.log, syslog) to produce a detection matrix.
+
+#For each simulated action, it searches telemetry within a 30-second window
+#around the recorded timestamp and determines:
+
+#Which source captured it (auditd, auth.log, syslog)
+#The audit key (if auditd)
+#Detail level (Full/Partial/Missed)
+#Key fields present in the event
+
+#Output: linux_detection_matrix.json
+
 set -euo pipefail
 
 INPUT_FILE="linux_attack_log.json"
