@@ -1,13 +1,7 @@
 <#
 .Synopsis
     7-auth_hardening.ps1 - Kerberos and Authentication Hardening
-.Purpose
-    Disables weak Kerberos encryption types (DES, RC4), enforces AES-only, 
-    clears DES flags on service accounts, and hardens NTLM.
-.Author
-    Steve - Cybersecurity Engineer
-.Date
-    August 4, 2026
+
 #>
 
 Set-StrictMode -Version Latest
