@@ -1,13 +1,7 @@
 <#
 .Synopsis
     11-firewall_hardening.ps1 - Windows Firewall Lockdown
-.Purpose
-    Configures Windows Firewall with a default-deny inbound policy and
-    service-specific allow rules, implementing endpoint-level network segmentation.
-.Author
-    Steve - Cybersecurity Engineer
-.Date
-    August 5, 2026
+
 #>
 
 Set-StrictMode -Version Latest
