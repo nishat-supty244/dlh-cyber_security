@@ -1,9 +1,6 @@
 <#
 .Notes
-    name:        1-sysmon_coverage_matrix.ps1
-    purpose:     Parse Sysmon config and generate an ATT&CK-aligned coverage matrix
-    author:      Steve - Cybersecurity Engineer
-    date:        August 8, 2026
+
 
 .Purpose
     This script reads sysmonconfig.xml and produces sysmon_coverage_matrix.json,
