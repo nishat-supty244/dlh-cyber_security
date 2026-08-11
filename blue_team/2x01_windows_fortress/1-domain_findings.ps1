@@ -1,15 +1,7 @@
 <#
 .Synopsis
     1-domain_findings.ps1 - Domain Risk Findings Extractor
-.Purpose
-    Audits the MedDefense Active Directory domain and produces a structured
-    findings inventory in JSON format. Each finding includes severity,
-    category, evidence, risk, recommended remediation, and the mapped
-    hardening task that addresses it.
-.Author
-    Steve - Cybersecurity Engineer
-.Date
-    August 4, 2026
+
 #>
 
 param(
