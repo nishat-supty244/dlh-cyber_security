@@ -1,14 +1,8 @@
 <#
 .Synopsis
     3-telemetry_reference.ps1 - Windows Telemetry Reference Builder
-.Purpose
-    Builds a machine-readable Windows event reference that connects security
-    events to detection use cases, mapping Event IDs to log source, audit
-    dependency, detection meaning, attack phase, triage priority, and validation method.
-.Author
-    Steve - Cybersecurity Engineer
-.Date
-    August 4, 2026
+
+
 #>
 
 param(

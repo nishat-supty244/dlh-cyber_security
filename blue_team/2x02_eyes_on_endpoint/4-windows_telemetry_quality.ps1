@@ -1,9 +1,6 @@
 <#
 .Notes
-    name:        4-windows_telemetry_quality.ps1
-    purpose:     Assess Windows telemetry export quality and produce a quality report
-    author:      Steve - Cybersecurity Engineer
-    date:        August 8, 2026
+  
 
 .Purpose
     This script reads windows_events_export.json and evaluates the quality

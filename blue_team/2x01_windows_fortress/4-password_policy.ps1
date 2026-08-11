@@ -1,14 +1,8 @@
 <#
 .Synopsis
     4-password_policy.ps1 - Password and Lockout Policy Deployment
-.Purpose
-    Deploys a CIS-compliant password and lockout policy via Group Policy,
-    fixing the two most critical findings from the domain assessment (weak password
-    policy and absent lockout). This is the single highest-impact GPO for MedDefense.
-.Author
-    Steve - Cybersecurity Engineer
-.Date
-    August 4, 2026
+
+
 #>
 
 param(

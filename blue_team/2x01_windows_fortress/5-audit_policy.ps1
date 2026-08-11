@@ -1,15 +1,7 @@
 <#
 .Synopsis
     5-audit_policy.ps1 - Advanced Audit Policy Deployment
-.Purpose
-    Configures Advanced Audit Policies via GPO to generate the security events
-    needed for detection, closing the visibility gaps identified in Task 2.
-    Enables CommandLine logging in process creation events, restricts Security
-    log Clear access, and sets Security log size to 1 GB.
-.Author
-    Steve - Cybersecurity Engineer
-.Date
-    August 4, 2026
+
 #>
 
 param(

@@ -1,4 +1,13 @@
 #!/bin/bash
+#
+
+#
+# Reads: linux_events_export.json (NDJSON format)
+# Outputs: linux_telemetry_quality.json with distribution, coverage, gaps, completeness, and quality score
+# Uses: jq for JSON parsing and analysis, perl for preprocessing
+# Reports: count and percentage of total for each event category and source type
+# Metrics: events per hour, hours with events, hours without events, gap detection (>30 minutes), field completeness
+# Field checks: timestamp, hostname, source_type, event_category, command_line for execve, source_ip and user for SSH events, path/operation/key for auditd file events
 
 set -euo pipefail
 

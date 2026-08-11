@@ -1,15 +1,7 @@
 <#
 .Synopsis
     6-powershell_security.ps1 - PowerShell Security Configuration
-.Purpose
-    Configures PowerShell logging and execution restrictions to ensure every
-    PowerShell command executed on MedDefense systems is captured, neutralizing
-    the attacker's most powerful post-expiloration tool through comprehensive
-    Script Block Logging, Module Logging, and Transcription.
-.Author
-    Steve - Cybersecurity Engineer
-.Date
-    August 4, 2026
+
 #>
 
 param(
