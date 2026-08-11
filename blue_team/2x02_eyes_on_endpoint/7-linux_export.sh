@@ -1,9 +1,5 @@
 #!/bin/bash
-#
-# Name:        7-linux_export.sh
-# Purpose:     Export security-relevant Linux logs to structured JSON with normalized fields
-# Author:      Steve - Cybersecurity Engineer
-# Date:        August 8, 2026
+
 #
 # Parses: auth.log (SSH/sshd, sudo, su, PAM), audit.log (syscall events via ausearch or direct file read), syslog (service/error)
 # Uses ausearch -k <key> for filtered queries when needed; falls back to direct file parsing for performance
