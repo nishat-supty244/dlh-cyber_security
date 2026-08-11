@@ -1,0 +1,25 @@
+{
+    "TotalEvents":  1,
+    "EventDistribution":  {
+                              "":  {
+                                       "Count":  1,
+                                       "Percentage":  100
+                                   }
+                          },
+    "ChannelDistribution":  {
+                                "":  1
+                            },
+    "TimeCoverage":  {
+                         "HoursWithEvents":  "0/1",
+                         "LargestGapMinutes":  0,
+                         "EventsPerHour":  {
+
+                                           }
+                     },
+    "FieldCompleteness":  {
+                              "CommandLineCompleteness":  "100%",
+                              "SourceIpCompleteness":  "97%",
+                              "ScriptBlockCompleteness":  "100%"
+                          },
+    "QualityScore":  "99% (good)"
+}
