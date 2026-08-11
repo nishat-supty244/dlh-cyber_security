@@ -1,14 +1,7 @@
 <#
 .Synopsis
     15-master_validation.ps1 - Comprehensive Compliance Validation Script
-.Purpose
-    Checks every hardening setting deployed across the MedDefense domain,
-    produces a weekly compliance dashboard. Run every Friday by James Chen.
-    Makes NO changes to the system - reads-only validation.
-.Author
-    Steve - Cybersecurity Engineer
-.Date
-    August 5, 2026
+
 #>
 
 Set-StrictMode -Version Latest
