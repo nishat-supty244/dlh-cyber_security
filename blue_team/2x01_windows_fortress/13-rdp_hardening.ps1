@@ -1,15 +1,7 @@
 <#
 .Synopsis
     13-rdp_hardening.ps1 - RDP and Remote Access Reduction
-.Purpose
-    Secures Remote Desktop Protocol to prevent it from being a lateral movement
-    entry point, restricting access to authorized administrators with strong
-    session controls.
-.Author
-    Steve - Cybersecurity Engineer
-.Date
-    August 5, 2026
-#>
+
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
