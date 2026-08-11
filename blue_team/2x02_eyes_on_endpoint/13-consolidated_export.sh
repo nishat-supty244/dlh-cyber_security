@@ -1,61 +1,270 @@
 #!/bin/bash
+
+#      This script creates a consolidated telemetry handoff package for SOC intake.
+#      It combines normalized telemetry from both Windows and Linux platforms along with
+#      attacker simulation ground truth data for detection validation.
+#      All timestamps normalized to UTC ISO 8601 format (YYYY-MM-DDTHH:MM:SSZ)
+
+
 set -euo pipefail
 
+# Check for jq
+if ! command -v jq &> /dev/null; then
+    echo "[ERROR] jq is required. Install with: sudo apt install jq" >&2
+    exit 1
+fi
+
+# Configuration
+WINDOWS_EVENTS_FILE="windows_events_export.json"
+LINUX_EVENTS_FILE="linux_events_export.json"
+WINDOWS_GROUND_TRUTH="windows_attack_log.json"
+LINUX_GROUND_TRUTH="linux_attack_log.json"
 HANDOFF_DIR="telemetry_handoff"
-WIN_EXPORT="windows_events_export.json"
-LIN_EXPORT="linux_events_export.json"
-WIN_ATTACK="windows_attack_log.json"
-LIN_ATTACK="linux_attack_log.json"
 
-echo "[*] Loading Windows events (2,270)..."
-if [ ! -f "$WIN_EXPORT" ]; then
-    echo "[]" > "$WIN_EXPORT"
+# Check for required input files
+MISSING_FILES=()
+if [[ ! -f "$WINDOWS_EVENTS_FILE" ]]; then
+    MISSING_FILES+=("$WINDOWS_EVENTS_FILE")
+fi
+if [[ ! -f "$LINUX_EVENTS_FILE" ]]; then
+    MISSING_FILES+=("$LINUX_EVENTS_FILE")
+fi
+if [[ ! -f "$WINDOWS_GROUND_TRUTH" ]]; then
+    MISSING_FILES+=("$WINDOWS_GROUND_TRUTH")
+fi
+if [[ ! -f "$LINUX_GROUND_TRUTH" ]]; then
+    MISSING_FILES+=("$LINUX_GROUND_TRUTH")
 fi
 
-echo "[*] Loading Linux events (2,022)..."
-if [ ! -f "$LIN_EXPORT" ]; then
-    echo "[]" > "$LIN_EXPORT"
+if [[ ${#MISSING_FILES[@]} -gt 0 ]]; then
+    echo "[ERROR] Missing required input files:" >&2
+    for file in "${MISSING_FILES[@]}"; do
+        echo "  - $file" >&2
+    done
+    echo >&2
+    exit 1
 fi
 
+# Detect JSON format: "array", "ndjson", or "object"
+detect_format() {
+    local file="$1"
+    local root_type
+    root_type=$(jq -r 'type' "$file" 2>/dev/null || echo "")
+
+    if [[ "$root_type" == "array" ]]; then
+        echo "array"
+        return
+    fi
+
+    if [[ "$root_type" == "object" ]]; then
+        if jq -e 'has("events") and (.events | type == "array")' "$file" >/dev/null 2>&1; then
+            echo "object"
+            return
+        fi
+        if jq -e 'has("records") and (.records | type == "array")' "$file" >/dev/null 2>&1; then
+            echo "object"
+            return
+        fi
+        if jq -e 'has("data") and (.data | type == "array")' "$file" >/dev/null 2>&1; then
+            echo "object"
+            return
+        fi
+        if jq -e 'has("log_entries") and (.log_entries | type == "array")' "$file" >/dev/null 2>&1; then
+            echo "object"
+            return
+        fi
+        echo "ndjson"
+        return
+    fi
+
+    echo "ndjson"
+}
+
+# Count events based on detected format
+count_events() {
+    local file="$1"
+    local format="$2"
+
+    case "$format" in
+        "array")
+            jq 'length' "$file"
+            ;;
+        "object")
+            jq '(.events // .records // .data // .log_entries) | length' "$file"
+            ;;
+        "ndjson")
+            jq -s 'length' "$file"
+            ;;
+        *)
+            echo "0"
+            ;;
+    esac
+}
+
+# Get events as a JSON array
+get_events_array() {
+    local file="$1"
+    local format="$2"
+
+    case "$format" in
+        "array")
+            jq '.' "$file"
+            ;;
+        "object")
+            jq '.events // .records // .data // .log_entries' "$file"
+            ;;
+        "ndjson")
+            jq -s '.' "$file"
+            ;;
+        *)
+            echo '[]'
+            ;;
+    esac
+}
+
+# Normalize timestamps in a JSON array
+NORM_FILTER='
+    def normalize_ts:
+        if type != "string" then .
+        elif test("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$") then .
+        elif test("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}[+-][0-9]{2}:[0-9]{2}$") then
+            sub("[+-][0-9]{2}:[0-9]{2}$"; "") + "Z"
+        elif test("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}") then
+            . + "Z"
+        else
+            .
+        end;
+
+    if type == "array" then
+        [.[] | if type == "object" and .timestamp then .timestamp |= normalize_ts else . end]
+    else
+        .
+    end
+'
+
+# ==========================================
+# Main script
+# ==========================================
+
+echo "[*] Loading Windows events..."
+WINDOWS_FORMAT=$(detect_format "$WINDOWS_EVENTS_FILE")
+WINDOWS_EVENT_COUNT=$(count_events "$WINDOWS_EVENTS_FILE" "$WINDOWS_FORMAT")
+if [[ "$WINDOWS_EVENT_COUNT" == "null" ]] || [[ -z "$WINDOWS_EVENT_COUNT" ]]; then
+    WINDOWS_EVENT_COUNT=0
+fi
+
+echo "[*] Loading Linux events..."
+LINUX_FORMAT=$(detect_format "$LINUX_EVENTS_FILE")
+LINUX_EVENT_COUNT=$(count_events "$LINUX_EVENTS_FILE" "$LINUX_FORMAT")
+if [[ "$LINUX_EVENT_COUNT" == "null" ]] || [[ -z "$LINUX_EVENT_COUNT" ]]; then
+    LINUX_EVENT_COUNT=0
+fi
+
+echo ""
 echo "[*] Normalizing timestamps to UTC..."
-echo "    Windows: 2,270 events normalized"
-echo "    Linux: 2,022 events normalized"
 
-echo "[*] Verifying field consistency..."
-echo "    Required fields present in all events    [OK]"
-
-echo "[*] Combining ground truth..."
-echo "    Windows actions: 6 | Linux actions: 6 | Total: 12"
-
-echo "[*] Building handoff directory..."
+# Create handoff directory
 mkdir -p "$HANDOFF_DIR"
 
-# Copy or process events to handoff folder
-cp "$WIN_EXPORT" "$HANDOFF_DIR/windows_events.json"
-cp "$LIN_EXPORT" "$HANDOFF_DIR/linux_events.json"
+# Extract, normalize, and write Windows events
+get_events_array "$WINDOWS_EVENTS_FILE" "$WINDOWS_FORMAT" | jq "$NORM_FILTER" > "$HANDOFF_DIR/windows_events.json"
+echo "    Windows: $WINDOWS_EVENT_COUNT events normalized"
 
-# Combine attack ground truth files using jq if available, or create combined payload
-if [ -f "$WIN_ATTACK" ] && [ -f "$LIN_ATTACK" ]; then
-    jq -s '.' "$WIN_ATTACK" "$LIN_ATTACK" > "$HANDOFF_DIR/attack_ground_truth.json" 2>/dev/null || \
-    cat << 'EOF' > "$HANDOFF_DIR/attack_ground_truth.json"
-{
-  "windows_actions": 6,
-  "linux_actions": 6,
-  "total_actions": 12
-}
-EOF
-else
-    cat << 'EOF' > "$HANDOFF_DIR/attack_ground_truth.json"
-{
-  "windows_actions": 6,
-  "linux_actions": 6,
-  "total_actions": 12
-}
-EOF
+# Extract, normalize, and write Linux events
+get_events_array "$LINUX_EVENTS_FILE" "$LINUX_FORMAT" | jq "$NORM_FILTER" > "$HANDOFF_DIR/linux_events.json"
+echo "    Linux: $LINUX_EVENT_COUNT events normalized"
+
+echo ""
+echo "[*] Verifying field consistency..."
+
+REQUIRED_FIELDS=("timestamp" "hostname" "source_type" "event_category")
+
+WINDOWS_VALID=true
+if [[ $WINDOWS_EVENT_COUNT -gt 0 ]]; then
+    WINDOWS_FIRST_KEYS=$(jq '[.[] | select(type == "object")] | if length > 0 then .[0] | keys else [] end' "$HANDOFF_DIR/windows_events.json" 2>/dev/null || echo '[]')
+    for field in "${REQUIRED_FIELDS[@]}"; do
+        if ! echo "$WINDOWS_FIRST_KEYS" | grep -q "\"$field\""; then
+            echo "    Warning: Missing required field '$field' in Windows events" >&2
+            WINDOWS_VALID=false
+        fi
+    done
 fi
 
-echo "$HANDOFF_DIR/"
-echo "  windows_events.json     (2,270 events, 4.2 MB)"
-echo "  linux_events.json       (2,022 events, 3.1 MB)"
-echo "  attack_ground_truth.json (12 actions)"
-echo "Total: 4,292 events across 2 platforms"
+LINUX_VALID=true
+if [[ $LINUX_EVENT_COUNT -gt 0 ]]; then
+    LINUX_FIRST_KEYS=$(jq '[.[] | select(type == "object")] | if length > 0 then .[0] | keys else [] end' "$HANDOFF_DIR/linux_events.json" 2>/dev/null || echo '[]')
+    for field in "${REQUIRED_FIELDS[@]}"; do
+        if ! echo "$LINUX_FIRST_KEYS" | grep -q "\"$field\""; then
+            echo "    Warning: Missing required field '$field' in Linux events" >&2
+            LINUX_VALID=false
+        fi
+    done
+fi
+
+if [[ "$WINDOWS_VALID" == "true" ]] && [[ "$LINUX_VALID" == "true" ]]; then
+    echo "    Required fields present in all events    [OK]"
+else
+    echo "    Field consistency check had warnings     [WARN]"
+fi
+
+echo ""
+echo "[*] Combining ground truth..."
+
+WINDOWS_GROUND_ACTIONS=$(jq 'if type == "array" then length else (.actions // [] | length) end' "$WINDOWS_GROUND_TRUTH" 2>/dev/null || echo "0")
+if [[ "$WINDOWS_GROUND_ACTIONS" == "null" ]] || [[ -z "$WINDOWS_GROUND_ACTIONS" ]]; then
+    WINDOWS_GROUND_ACTIONS=0
+fi
+
+LINUX_GROUND_ACTIONS=$(jq 'if type == "array" then length else (.actions // [] | length) end' "$LINUX_GROUND_TRUTH" 2>/dev/null || echo "0")
+if [[ "$LINUX_GROUND_ACTIONS" == "null" ]] || [[ -z "$LINUX_GROUND_ACTIONS" ]]; then
+    LINUX_GROUND_ACTIONS=0
+fi
+
+TOTAL_GROUND_ACTIONS=$((WINDOWS_GROUND_ACTIONS + LINUX_GROUND_ACTIONS))
+
+WINDOWS_ACTIONS=$(jq 'if type == "array" then . else (.actions // []) end' "$WINDOWS_GROUND_TRUTH" 2>/dev/null || echo '[]')
+LINUX_ACTIONS=$(jq 'if type == "array" then . else (.actions // []) end' "$LINUX_GROUND_TRUTH" 2>/dev/null || echo '[]')
+
+NOW_TS=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+jq -n \
+    --arg ws "$WINDOWS_GROUND_TRUTH" \
+    --arg ls "$LINUX_GROUND_TRUTH" \
+    --arg ts "$NOW_TS" \
+    --argjson wa "$WINDOWS_ACTIONS" \
+    --argjson la "$LINUX_ACTIONS" \
+    '{
+        combined_metadata: {
+            platform: "cross-platform",
+            export_timestamp: $ts,
+            windows_source: $ws,
+            linux_source: $ls
+        },
+        windows_actions: $wa,
+        linux_actions: $la,
+        total_actions: ($wa | length) + ($la | length)
+    }' > "$HANDOFF_DIR/attack_ground_truth.json"
+
+echo "    Windows actions: $WINDOWS_GROUND_ACTIONS | Linux actions: $LINUX_GROUND_ACTIONS | Total: $TOTAL_GROUND_ACTIONS"
+
+echo ""
+echo "[*] Building handoff directory..."
+
+WINDOWS_BYTES=$(stat -c%s "$HANDOFF_DIR/windows_events.json" 2>/dev/null || stat -f%z "$HANDOFF_DIR/windows_events.json" 2>/dev/null || echo "0")
+LINUX_BYTES=$(stat -c%s "$HANDOFF_DIR/linux_events.json" 2>/dev/null || stat -f%z "$HANDOFF_DIR/linux_events.json" 2>/dev/null || echo "0")
+
+WINDOWS_MB=$(awk "BEGIN {printf \"%.1f\", $WINDOWS_BYTES / 1048576}")
+LINUX_MB=$(awk "BEGIN {printf \"%.1f\", $LINUX_BYTES / 1048576}")
+
+echo ""
+echo "telemetry_handoff/"
+echo "  windows_events.json          (${WINDOWS_EVENT_COUNT} events, ${WINDOWS_MB} MB)"
+echo "  linux_events.json            (${LINUX_EVENT_COUNT} events, ${LINUX_MB} MB)"
+echo "  attack_ground_truth.json      ($TOTAL_GROUND_ACTIONS actions)"
+
+TOTAL_EVENTS=$((WINDOWS_EVENT_COUNT + LINUX_EVENT_COUNT))
+
+echo ""
+echo "Total: $TOTAL_EVENTS events across 2 platforms"
+echo ""
+echo "[*] Handoff package complete."
