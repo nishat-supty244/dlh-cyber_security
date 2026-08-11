@@ -1,17 +1,17 @@
 #!/bin/bash
-#     This script executes a realistic attack sequence against a hardened Linux endpoint
-#     and records ground truth data for telemetry validation. The sequence includes:
+#This script executes a realistic attack sequence against a hardened Linux endpoint
+#and records ground truth data for telemetry validation. The sequence includes:
 #
-#         1. Create user account (testattacker)
-#         2. Modify sudoers file (privilege escalation)
-#         3. Execute binary from /tmp (suspicious execution)
-#         4. Attempt reverse shell to localhost (C2 simulation)
-#         5. Modify crontab for persistence
-#         6. Access sensitive files (/etc/shadow)
+#1. Create user account (testattacker)
+#2. Modify sudoers file (privilege escalation)
+#3. Execute binary from /tmp (suspicious execution)
+#4. Attempt reverse shell to localhost (C2 simulation)
+#5. Modify crontab for persistence
+#6. Access sensitive files (/etc/shadow)
 #
-#     After execution, all artifacts are cleaned up while preserving the ground truth log.
+#After execution, all artifacts are cleaned up while preserving the ground truth log.
 #
-#     Output: linux_attack_log.json with action details, timestamps, detection sources, and MITRE techniques
+#Output: linux_attack_log.json with action details, timestamps, detection sources, and MITRE techniques
 #
 set -euo pipefail
 
