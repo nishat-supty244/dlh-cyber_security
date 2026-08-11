@@ -1,9 +1,6 @@
 <#
 .Notes
-    name:        3-windows_telemetry_export.ps1
-    purpose:     Export Windows telemetry into analyst-ready JSON with normalized fields
-    author:      Steve - Cybersecurity Engineer
-    date:        August 8, 2026
+   
 
 .Purpose
     This script exports telemetry from three Windows event logs into a single
