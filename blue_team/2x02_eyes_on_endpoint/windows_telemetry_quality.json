@@ -1,25 +1,238 @@
 {
-    "TotalEvents":  1,
-    "EventDistribution":  {
-                              "":  {
-                                       "Count":  1,
-                                       "Percentage":  100
-                                   }
-                          },
-    "ChannelDistribution":  {
-                                "":  1
-                            },
-    "TimeCoverage":  {
-                         "HoursWithEvents":  "0/1",
-                         "LargestGapMinutes":  0,
-                         "EventsPerHour":  {
-
-                                           }
-                     },
+    "report_time":  "2026-08-11T15:32:13Z",
+    "source_file":  "windows_events_export.json",
+    "total_events":  437,
+    "time_window":  "24 hours",
+    "event_distribution_section":  "Event Distribution",
+    "channel_distribution_section":  "Channel Distribution",
+    "time_coverage_section":  "Time Coverage",
+    "gap_detection_section":  "Gap Detection",
+    "field_completeness_section":  "Field Completeness",
+    "quality_score_section":  "Quality Score",
+    "event_distribution":  [
+                               {
+                                   "event_id":  "4624",
+                                   "count":  394,
+                                   "percent":  90.2
+                               },
+                               {
+                                   "event_id":  "4688",
+                                   "count":  22,
+                                   "percent":  5
+                               },
+                               {
+                                   "event_id":  "4648",
+                                   "count":  10,
+                                   "percent":  2.3
+                               },
+                               {
+                                   "event_id":  "4826",
+                                   "count":  2,
+                                   "percent":  0.5
+                               },
+                               {
+                                   "event_id":  "PS-40962",
+                                   "count":  2,
+                                   "percent":  0.5
+                               },
+                               {
+                                   "event_id":  "PS-40961",
+                                   "count":  2,
+                                   "percent":  0.5
+                               },
+                               {
+                                   "event_id":  "PS-53504",
+                                   "count":  2,
+                                   "percent":  0.5
+                               },
+                               {
+                                   "event_id":  "4696",
+                                   "count":  2,
+                                   "percent":  0.5
+                               },
+                               {
+                                   "event_id":  "1100",
+                                   "count":  1,
+                                   "percent":  0.2
+                               }
+                           ],
+    "channel_distribution":  {
+                                 "Security":  {
+                                                  "count":  431,
+                                                  "percent":  98.6
+                                              },
+                                 "Sysmon":  {
+                                                "count":  0,
+                                                "percent":  0
+                                            },
+                                 "PowerShell":  {
+                                                    "count":  6,
+                                                    "percent":  1.4
+                                                }
+                             },
+    "time_coverage":  {
+                          "hours_total":  24,
+                          "hours_with_events":  4,
+                          "hours_without_events":  21,
+                          "events_per_hour":  [
+                                                  {
+                                                      "hour":  "2026-08-10T17:00",
+                                                      "count":  214
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-10T18:00",
+                                                      "count":  51
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-10T19:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-10T20:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-10T21:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-10T22:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-10T23:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T00:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T01:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T02:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T03:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T04:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T05:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T06:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T07:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T08:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T09:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T10:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T11:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T12:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T13:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T14:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T15:00",
+                                                      "count":  0
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T16:00",
+                                                      "count":  145
+                                                  },
+                                                  {
+                                                      "hour":  "2026-08-11T17:00",
+                                                      "count":  27
+                                                  }
+                                              ]
+                      },
+    "gap_detection":  {
+                          "gaps_detected":  1,
+                          "largest_gap_minutes":  1349,
+                          "gaps":  [
+                                       {
+                                           "start":  "2026-08-10T18:14:24Z",
+                                           "end":  "2026-08-11T16:43:09Z",
+                                           "minutes":  1349
+                                       }
+                                   ]
+                      },
     "FieldCompleteness":  {
-                              "CommandLineCompleteness":  "100%",
-                              "SourceIpCompleteness":  "97%",
-                              "ScriptBlockCompleteness":  "100%"
+                              "command_line":  {
+                                                   "total":  22,
+                                                   "populated":  0,
+                                                   "percent":  0
+                                               },
+                              "source_ip":  {
+                                                "total":  394,
+                                                "populated":  271,
+                                                "percent":  68.8
+                                            },
+                              "script_block":  {
+                                                   "total":  0,
+                                                   "populated":  0,
+                                                   "percent":  0
+                                               },
+                              "required_fields":  {
+                                                      "total":  3059,
+                                                      "populated":  3059,
+                                                      "percent":  100
+                                                  }
                           },
-    "QualityScore":  "99% (good)"
+    "CommandLine":  {
+                        "total":  22,
+                        "populated":  0,
+                        "percent":  0
+                    },
+    "SourceIP":  {
+                     "total":  394,
+                     "populated":  271,
+                     "percent":  68.8
+                 },
+    "ScriptBlock":  {
+                        "total":  0,
+                        "populated":  0,
+                        "percent":  0
+                    },
+    "quality_score":  {
+                          "score":  60,
+                          "assessment":  "acceptable",
+                          "components":  {
+                                             "coverage":  4.2,
+                                             "completeness":  16.9,
+                                             "continuity":  25,
+                                             "distribution":  14
+                                         }
+                      }
 }
