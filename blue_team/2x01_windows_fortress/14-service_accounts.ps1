@@ -1,16 +1,7 @@
 <#
 .Synopsis
     14-service_accounts.ps1 - Service Account Security Audit and Hardening
-.Purpose
-    Audits all MedDefense service accounts, identifies excessive privileges and
-    security weaknesses, then implements hardening measures that would have
-    prevented the svc_ehr compromise. Excessive group memberships and delegation
-    settings are detected and remediated. Detects suspicious logons like the
-    03:17 AM activity seen with svc_ehr during the Crimson Tide attack.
-.Author
-    Steve - Cybersecurity Engineer
-.Date
-    August 5, 2026
+
 #>
 
 param(
