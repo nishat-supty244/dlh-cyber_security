@@ -1,14 +1,7 @@
 <#
 .Synopsis
     16-hardened_state_export.ps1 - Hardened Windows State Export
-.Purpose
-    Exports the final hardened Windows domain state into a structured evidence
-    package (windows_hardened_state.json) that Module 3 analysts can use for
-    validation, detection planning, and weekly drift checks.
-.Author
-    Steve - Cybersecurity Engineer
-.Date
-    August 5, 2026
+
 #>
 
 Set-StrictMode -Version Latest
