@@ -1,453 +1,562 @@
 [
-  {
-    "service": "accounts-daemon.service",
-    "exec_path": "/usr/bin/accounts-daemon",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "accounts-daemon"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "alsa-restore.service",
-    "exec_path": "/usr/bin/alsa-restore",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "alsa-restore"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "auditd.service",
-    "exec_path": "/usr/bin/auditd",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "auditd"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "colord.service",
-    "exec_path": "/usr/bin/colord",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "colord"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "console-setup.service",
-    "exec_path": "/usr/bin/console-setup",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "console-setup"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "cron.service",
-    "exec_path": "/usr/bin/cron",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "cron"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "dbus.service",
-    "exec_path": "/usr/bin/dbus",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "dbus"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "getty@tty1.service",
-    "exec_path": "/usr/bin/getty@tty1",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "getty@tty1"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "haveged.service",
-    "exec_path": "/usr/bin/haveged",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "haveged"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "ifupdown-pre.service",
-    "exec_path": "/usr/bin/ifupdown-pre",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "ifupdown-pre"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "keyboard-setup.service",
-    "exec_path": "/usr/bin/keyboard-setup",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "keyboard-setup"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "kmod-static-nodes.service",
-    "exec_path": "/usr/bin/kmod-static-nodes",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "kmod-static-nodes"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "ModemManager.service",
-    "exec_path": "/usr/bin/ModemManager",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "ModemManager"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "networking.service",
-    "exec_path": "/usr/bin/networking",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "networking"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "NetworkManager.service",
-    "exec_path": "/usr/bin/NetworkManager",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "NetworkManager"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "plymouth-quit-wait.service",
-    "exec_path": "/usr/bin/plymouth-quit-wait",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "plymouth-quit-wait"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "plymouth-read-write.service",
-    "exec_path": "/usr/bin/plymouth-read-write",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "plymouth-read-write"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "plymouth-start.service",
-    "exec_path": "/usr/bin/plymouth-start",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "plymouth-start"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "polkit.service",
-    "exec_path": "/usr/bin/polkit",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "polkit"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "rpc-statd-notify.service",
-    "exec_path": "/usr/bin/rpc-statd-notify",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "rpc-statd-notify"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "rtkit-daemon.service",
-    "exec_path": "/usr/bin/rtkit-daemon",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "rtkit-daemon"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-binfmt.service",
-    "exec_path": "/usr/bin/systemd-binfmt",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-binfmt"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-journal-flush.service",
-    "exec_path": "/usr/bin/systemd-journal-flush",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-journal-flush"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-journald.service",
-    "exec_path": "/usr/bin/systemd-journald",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-journald"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-logind.service",
-    "exec_path": "/usr/bin/systemd-logind",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-logind"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-modules-load.service",
-    "exec_path": "/usr/bin/systemd-modules-load",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-modules-load"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-random-seed.service",
-    "exec_path": "/usr/bin/systemd-random-seed",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-random-seed"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-remount-fs.service",
-    "exec_path": "/usr/bin/systemd-remount-fs",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-remount-fs"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-sysctl.service",
-    "exec_path": "/usr/bin/systemd-sysctl",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-sysctl"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-timesyncd.service",
-    "exec_path": "/usr/bin/systemd-timesyncd",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-timesyncd"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-tmpfiles-setup-dev-early.service",
-    "exec_path": "/usr/bin/systemd-tmpfiles-setup-dev-early",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-tmpfiles-setup-dev-early"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-tmpfiles-setup-dev.service",
-    "exec_path": "/usr/bin/systemd-tmpfiles-setup-dev",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-tmpfiles-setup-dev"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-tmpfiles-setup.service",
-    "exec_path": "/usr/bin/systemd-tmpfiles-setup",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-tmpfiles-setup"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-udev-load-credentials.service",
-    "exec_path": "/usr/bin/systemd-udev-load-credentials",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-udev-load-credentials"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-udev-trigger.service",
-    "exec_path": "/usr/bin/systemd-udev-trigger",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-udev-trigger"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-udevd.service",
-    "exec_path": "/usr/bin/systemd-udevd",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-udevd"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-user-sessions.service",
-    "exec_path": "/usr/bin/systemd-user-sessions",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-user-sessions"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-userdb-load-credentials.service",
-    "exec_path": "/usr/bin/systemd-userdb-load-credentials",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-userdb-load-credentials"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "systemd-userdbd.service",
-    "exec_path": "/usr/bin/systemd-userdbd",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "systemd-userdbd"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "udisks2.service",
-    "exec_path": "/usr/bin/udisks2",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "udisks2"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "upower.service",
-    "exec_path": "/usr/bin/upower",
-    "owning_package": "upower",
-    "linked_packages": [
-      "libatomic1",
-      "libblkid1",
-      "libc6",
-      "libffi8",
-      "libglib2.0-0t64",
-      "libmount1",
-      "libpcre2-8-0",
-      "libselinux1",
-      "libsystemd0",
-      "libupower-glib3",
-      "upower",
-      "zlib1g"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "user-runtime-dir@1000.service",
-    "exec_path": "/usr/bin/user-runtime-dir@1000",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "user-runtime-dir@1000"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "user@1000.service",
-    "exec_path": "/usr/bin/user@1000",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "user@1000"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  },
-  {
-    "service": "virtualbox-guest-utils.service",
-    "exec_path": "/usr/bin/virtualbox-guest-utils",
-    "owning_package": "unknown",
-    "linked_packages": [
-      "virtualbox-guest-utils"
-    ],
-    "criticality": "low",
-    "restart_required_on_patch": true
-  }
+{
+  "service": "accounts-daemon.service",
+  "exec_path": "/usr/sbin/accounts-daemon",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "accounts-daemon"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "alsa-restore.service",
+  "exec_path": "/usr/sbin/alsa-restore",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "alsa-restore"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "auditd.service",
+  "exec_path": "/usr/sbin/auditd",
+  "owning_package": "auditd",
+  "linked_packages": [
+    "auditd",
+    "libaudit1",
+    "libauparse0t64",
+    "libc6",
+    "libcap-ng0",
+    "libcom-err2",
+    "libgssapi-krb5-2",
+    "libk5crypto3",
+    "libkeyutils1",
+    "libkrb5-3",
+    "libkrb5support0",
+    "libwrap0"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "colord.service",
+  "exec_path": "/usr/sbin/colord",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "colord"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "console-setup.service",
+  "exec_path": "/usr/sbin/console-setup",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "console-setup"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "cron.service",
+  "exec_path": "/usr/sbin/cron",
+  "owning_package": "cron",
+  "linked_packages": [
+    "cron",
+    "libaudit1",
+    "libc6",
+    "libcap-ng0",
+    "libpam0g",
+    "libpcre2-8-0",
+    "libselinux1"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "dbus.service",
+  "exec_path": "/usr/sbin/dbus",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "dbus"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "getty@tty1.service",
+  "exec_path": "/usr/sbin/getty@tty1",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "getty@tty1"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "haveged.service",
+  "exec_path": "/usr/sbin/haveged",
+  "owning_package": "haveged",
+  "linked_packages": [
+    "haveged",
+    "libc6",
+    "libhavege2"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "ifupdown-pre.service",
+  "exec_path": "/usr/sbin/ifupdown-pre",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "ifupdown-pre"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "keyboard-setup.service",
+  "exec_path": "/usr/sbin/keyboard-setup",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "keyboard-setup"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "kmod-static-nodes.service",
+  "exec_path": "/usr/sbin/kmod-static-nodes",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "kmod-static-nodes"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "ModemManager.service",
+  "exec_path": "/usr/sbin/ModemManager",
+  "owning_package": "modemmanager",
+  "linked_packages": [
+    "libatomic1",
+    "libblkid1",
+    "libc6",
+    "libffi8",
+    "libglib2.0-0t64",
+    "libgudev-1.0-0",
+    "libmbim-glib4",
+    "libmm-glib0",
+    "libmount1",
+    "libpcre2-8-0",
+    "libpolkit-gobject-1-0",
+    "libqmi-glib5",
+    "libqrtr-glib0",
+    "libselinux1",
+    "libsystemd0",
+    "libudev1",
+    "modemmanager",
+    "zlib1g"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "networking.service",
+  "exec_path": "/usr/sbin/networking",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "networking"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "NetworkManager.service",
+  "exec_path": "/usr/sbin/NetworkManager",
+  "owning_package": "network-manager",
+  "linked_packages": [
+    "libatomic1",
+    "libaudit1",
+    "libblkid1",
+    "libbrotli1",
+    "libc6",
+    "libcap-ng0",
+    "libcom-err2",
+    "libcurl3t64-gnutls",
+    "libffi8",
+    "libglib2.0-0t64",
+    "libgmp10",
+    "libgnutls30t64",
+    "libgssapi-krb5-2",
+    "libhogweed6t64",
+    "libidn2-0",
+    "libk5crypto3",
+    "libkeyutils1",
+    "libkrb5-3",
+    "libkrb5support0",
+    "libldap2",
+    "libmount1",
+    "libndp0",
+    "libnettle8t64",
+    "libnghttp2-14",
+    "libnghttp3-9",
+    "libngtcp2-16",
+    "libngtcp2-crypto-gnutls8",
+    "libp11-kit0",
+    "libpcre2-8-0",
+    "libpsl5t64",
+    "librtmp1",
+    "libsasl2-2",
+    "libselinux1",
+    "libssh2-1t64",
+    "libssl3t64",
+    "libsystemd0",
+    "libtasn1-6",
+    "libudev1",
+    "libunistring5",
+    "libzstd1",
+    "network-manager",
+    "zlib1g"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "plymouth-quit-wait.service",
+  "exec_path": "/usr/sbin/plymouth-quit-wait",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "plymouth-quit-wait"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "plymouth-read-write.service",
+  "exec_path": "/usr/sbin/plymouth-read-write",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "plymouth-read-write"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "plymouth-start.service",
+  "exec_path": "/usr/sbin/plymouth-start",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "plymouth-start"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "polkit.service",
+  "exec_path": "/usr/sbin/polkit",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "polkit"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "rpc-statd-notify.service",
+  "exec_path": "/usr/sbin/rpc-statd-notify",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "rpc-statd-notify"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "rtkit-daemon.service",
+  "exec_path": "/usr/sbin/rtkit-daemon",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "rtkit-daemon"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-binfmt.service",
+  "exec_path": "/usr/sbin/systemd-binfmt",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-binfmt"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-journal-flush.service",
+  "exec_path": "/usr/sbin/systemd-journal-flush",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-journal-flush"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-journald.service",
+  "exec_path": "/usr/sbin/systemd-journald",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-journald"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-logind.service",
+  "exec_path": "/usr/sbin/systemd-logind",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-logind"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-modules-load.service",
+  "exec_path": "/usr/sbin/systemd-modules-load",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-modules-load"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-random-seed.service",
+  "exec_path": "/usr/sbin/systemd-random-seed",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-random-seed"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-remount-fs.service",
+  "exec_path": "/usr/sbin/systemd-remount-fs",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-remount-fs"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-sysctl.service",
+  "exec_path": "/usr/sbin/systemd-sysctl",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-sysctl"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-timesyncd.service",
+  "exec_path": "/usr/sbin/systemd-timesyncd",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-timesyncd"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-tmpfiles-setup-dev-early.service",
+  "exec_path": "/usr/sbin/systemd-tmpfiles-setup-dev-early",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-tmpfiles-setup-dev-early"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-tmpfiles-setup-dev.service",
+  "exec_path": "/usr/sbin/systemd-tmpfiles-setup-dev",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-tmpfiles-setup-dev"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-tmpfiles-setup.service",
+  "exec_path": "/usr/sbin/systemd-tmpfiles-setup",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-tmpfiles-setup"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-udev-load-credentials.service",
+  "exec_path": "/usr/sbin/systemd-udev-load-credentials",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-udev-load-credentials"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-udev-trigger.service",
+  "exec_path": "/usr/sbin/systemd-udev-trigger",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-udev-trigger"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-udevd.service",
+  "exec_path": "/usr/sbin/systemd-udevd",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-udevd"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-user-sessions.service",
+  "exec_path": "/usr/sbin/systemd-user-sessions",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-user-sessions"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-userdb-load-credentials.service",
+  "exec_path": "/usr/sbin/systemd-userdb-load-credentials",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-userdb-load-credentials"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "systemd-userdbd.service",
+  "exec_path": "/usr/sbin/systemd-userdbd",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "systemd-userdbd"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "udisks2.service",
+  "exec_path": "/usr/sbin/udisks2",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "udisks2"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "upower.service",
+  "exec_path": "/usr/sbin/upower",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "upower"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "user-runtime-dir@1000.service",
+  "exec_path": "/usr/sbin/user-runtime-dir@1000",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "user-runtime-dir@1000"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "user@1000.service",
+  "exec_path": "/usr/sbin/user@1000",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "user@1000"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
+,
+{
+  "service": "virtualbox-guest-utils.service",
+  "exec_path": "/usr/sbin/virtualbox-guest-utils",
+  "owning_package": "unknown",
+  "linked_packages": [
+    "virtualbox-guest-utils"
+  ],
+  "criticality": "low",
+  "restart_required_on_patch": true
+}
 ]
