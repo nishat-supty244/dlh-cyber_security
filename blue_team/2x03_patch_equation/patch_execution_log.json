@@ -1,0 +1,24 @@
+{
+  "started_at": 1786571173,
+  "finished_at": 1786571174,
+  "hostname": "nishatsupty",
+  "plan_source_hash": "15f43f0c6034500ab2cbf1caa0ab2e761221211152becd1f9edecb2a0867c20c",
+  "entries": [
+    {
+      "package": "linux-image-amd64",
+      "pre": {
+        "installed_version": "7.0.12-2kali1",
+        "service_states": {}
+      },
+      "post": {
+        "installed_version": "7.0.12-2kali1",
+        "service_states": {}
+      },
+      "status": "failed",
+      "exit_status": 100,
+      "duration_seconds": 0.0827737,
+      "stdout_tail": "",
+      "stderr_tail": "E: Could not open lock file /var/lib/dpkg/lock-frontend - open (13: Permission denied)\nE: Unable to acquire the dpkg frontend lock (/var/lib/dpkg/lock-frontend), are you root?"
+    }
+  ]
+}

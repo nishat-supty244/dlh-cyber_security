@@ -1,245 +1,219 @@
 #!/bin/bash
 
-set -uo pipefail
+set -euo pipefail
 
 PLAN_FILE="patch_plan.json"
 LOG_FILE="patch_execution_log.json"
 LOCK_FILE="/var/lock/meddefense-patch.lock"
 
 if [ ! -f "$PLAN_FILE" ]; then
-    echo "Error: Plan file $PLAN_FILE not found." >&2
+    echo "Error: $PLAN_FILE not found." >&2
     exit 1
 fi
 
-python3 - "$PLAN_FILE" "$LOG_FILE" "$LOCK_FILE" << 'EOF'
-import sys
-import os
-import json
-import time
-import subprocess
-import hashlib
-import socket
-import fcntl
+# 1. Acquire an advisory lock in /var/lock/meddefense-patch.lock with backoff
+echo -n "[*] Acquiring lock $LOCK_FILE... "
+exec 200>"$LOCK_FILE"
 
-plan_path = sys.argv[1]
-log_path = sys.argv[2]
-lock_path = sys.argv[3]
+lock_acquired=0
+elapsed=0
+backoff=1
 
-# Acquire advisory lock
-lock_fd = None
-try:
-    print("[*] Acquiring lock /var/lock/meddefense-patch.lock... ", end="", flush=True)
-    lock_fd = open(lock_path, "w")
-    
-    # Try locking with exponential backoff if busy
-    acquired = False
-    delay = 1
-    total_wait = 0
-    while total_wait < 120:
-        try:
-            fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-            acquired = True
-            break
-        except BlockingIOError:
-            time.sleep(delay)
-            total_wait += delay
-            delay = min(delay * 2, 15)
-            
-    if not acquired:
-        print("FAILED (Lock busy)")
-        sys.exit(2)
-    print("OK")
-except Exception as e:
-    print(f"FAILED ({e})")
-    sys.exit(2)
-
-def cleanup_lock():
-    if lock_fd:
-        try:
-            fcntl.flock(lock_fd, fcntl.LOCK_UN)
-            lock_fd.close()
-        except Exception:
-            pass
-
-# Ensure lock is released on exit
-import atexit
-atexit.register(cleanup_lock)
-
-# Load plan
-try:
-    with open(plan_path, "r") as f:
-        plan_data = json.load(f)
-except Exception as e:
-    print(f"Error loading plan: {e}")
-    sys.exit(1)
-
-plan_entries = plan_data.get("plan", [])
-if isinstance(plan_data, list):
-    plan_entries = plan_data
-
-print(f"[*] Loading plan: {plan_path} ({len(plan_entries)} entries)")
-
-# Compute plan source hash
-plan_hash = ""
-try:
-    with open(plan_path, "rb") as f:
-        plan_hash = hashlib.sha256(f.read()).hexdigest()
-except Exception:
-    pass
-
-started_at = int(time.time())
-hostname = socket.gethostname()
-
-execution_entries = []
-succeeded_count = 0
-failed_count = 0
-any_failed = False
-
-def get_installed_version(pkg):
-    try:
-        res = subprocess.run(["dpkg-query", "-W", "-f=${Version}", pkg], capture_output=True, text=True)
-        if res.returncode == 0:
-            return res.stdout.strip()
-    except Exception:
-        pass
-    return "unknown"
-
-def get_service_state(svc):
-    try:
-        res = subprocess.run(["systemctl", "show", svc, "-p", "ActiveState,SubState,MainPID", "--no-ambiguous"], capture_output=True, text=True)
-        state = {"ActiveState": "unknown", "SubState": "unknown", "MainPID": "0"}
-        for line in res.stdout.splitlines():
-            if "=" in line:
-                k, v = line.split("=", 1)
-                state[k.strip()] = v.strip()
-        return state
-    except Exception:
-        return {"ActiveState": "unknown", "SubState": "unknown", "MainPID": "0"}
-
-for idx, entry in enumerate(plan_entries, 1):
-    pkg = entry.get("package", "")
-    bucket = entry.get("bucket", "scheduled")
-    affected_services = entry.get("affected_services", [])
-    requires_restart = entry.get("requires_restart", False)
-    
-    # Record pre block
-    pre_installed_version = get_installed_version(pkg)
-    pre_service_states = {svc: get_service_state(svc) for svc in affected_services if svc != "(kernel-wide)"}
-    
-    pre_block = {
-        "installed_version": pre_installed_version,
-        "service_states": pre_service_states
-    }
-    
-    print(f"[{idx}/{len(plan_entries)}] {pkg:<21} {bucket:<13} apt-get ... ", end="", flush=True)
-    
-    start_time = time.time()
-    
-    # Handle dpkg lock / apt run with exponential backoff for lock contention
-    apt_success = False
-    exit_status = 1
-    stdout_text = ""
-    stderr_text = ""
-    
-    apt_delay = 2
-    apt_wait = 0
-    while apt_wait < 120:
-        env = os.environ.copy()
-        env["DEBIAN_FRONTEND"] = "noninteractive"
-        
-        proc = subprocess.run(
-            ["apt-get", "install", "--only-upgrade", "-y", pkg],
-            capture_output=True, text=True, env=env
-        )
-        exit_status = proc.returncode
-        stdout_text = proc.stdout
-        stderr_text = proc.stderr
-        
-        if exit_status == 0:
-            apt_success = True
-            break
-        elif "E: Could not get lock" in stderr_text or "Resource temporarily unavailable" in stderr_text:
-            time.sleep(apt_delay)
-            apt_wait += apt_delay
-            apt_delay = min(apt_delay * 2, 30)
-        else:
-            break
-
-    duration = round(time.time() - start_time, 1)
-    
-    if apt_success:
-        print(f"OK ({duration}s)")
-    else:
-        print(f"FAILED (Exit: {exit_status})")
-        failed_count += 1
-        any_failed = True
-
-    # Restart services if required and no kernel/reboot needed
-    restart_results = {}
-    if apt_success and requires_restart and affected_services:
-        for svc in affected_services:
-            if svc == "(kernel-wide)":
-                continue
-            print(f"      try-restart {svc:<27} ", end="", flush=True)
-            try:
-                res = subprocess.run(["systemctl", "try-restart", svc], capture_output=True, text=True)
-                if res.returncode == 0:
-                    print("OK")
-                    restart_results[svc] = "OK"
-                else:
-                    print("FAILED")
-                    restart_results[svc] = "FAILED"
-            except Exception:
-                print("FAILED")
-                restart_results[svc] = "FAILED"
-
-    if apt_success:
-        succeeded_count += 1
-
-    # Record post block
-    post_installed_version = get_installed_version(pkg)
-    post_service_states = {svc: get_service_state(svc) for svc in affected_services if svc != "(kernel-wide)"}
-    
-    post_block = {
-        "installed_version": post_installed_version,
-        "service_states": post_service_states
-    }
-
-    execution_entries.append({
-        "package": pkg,
-        "pre": pre_block,
-        "post": post_block,
-        "status": "success" if apt_success else "failed",
-        "exit_status": exit_status,
-        "duration_seconds": duration,
-        "stdout_tail": "\n".join(stdout_text.splitlines()[-10:]),
-        "stderr_tail": "\n".join(stderr_text.splitlines()[-10:]),
-        "restart_results": restart_results
-    })
-
-    if not apt_success:
-        # Stop loop on failure as instructed
+while [ $elapsed -lt 120 ]; do
+    if flock -n 200; then
+        lock_acquired=1
         break
+    fi
+    sleep "$backoff"
+    elapsed=$((elapsed + backoff))
+    backoff=$((backoff * 2))
+    [ $backoff -gt 15 ] && backoff=15
+done
 
-finished_at = int(time.time())
+if [ $lock_acquired -eq 0 ]; then
+    echo "FAILED (Lock busy)"
+    exit 2
+fi
+echo "OK"
 
-log_data = {
-    "started_at": started_at,
-    "finished_at": finished_at,
-    "hostname": hostname,
-    "plan_source_hash": plan_hash,
-    "entries": execution_entries
+# Ensure lock is released via trap
+cleanup() {
+    flock -u 200 || true
 }
+trap cleanup EXIT
 
-with open(log_path, "w") as f:
-    json.dump(log_data, f, indent=2)
-    f.write("\n")
+# 2. Consume patch_plan.json
+PLAN_HASH=$(sha256sum "$PLAN_FILE" | awk '{print $1}')
+STARTED_AT=$(date +%s)
+HOSTNAME_VAL=$(hostname)
 
-print(f"Succeeded: {succeeded_count}  Failed: {failed_count}")
-print(f"Log saved to: {log_path}")
+TOTAL_ENTRIES=$(jq '.plan | length' "$PLAN_FILE" 2>/dev/null || echo "0")
+echo "[*] Loading plan: $PLAN_FILE ($TOTAL_ENTRIES entries)"
 
-if any_failed:
-    sys.exit(1)
-else:
-    sys.exit(0)
-EOF
+# Initialize execution log JSON file
+jq -n \
+    --argjson started "$STARTED_AT" \
+    --arg host "$HOSTNAME_VAL" \
+    --arg phash "$PLAN_HASH" \
+    '{started_at: $started, finished_at: 0, hostname: $host, plan_source_hash: $phash, entries: []}' > "$LOG_FILE"
+
+SUCCEEDED=0
+FAILED=0
+ANY_FAILED=0
+
+# Iterate through plan entries
+index=1
+while [ $index -le "$TOTAL_ENTRIES" ]; do
+    # Extract entry data using jq
+    PKG=$(jq -r --argjson i $((index - 1)) '.plan[$i].package' "$PLAN_FILE")
+    BUCKET=$(jq -r --argjson i $((index - 1)) '.plan[$i].bucket' "$PLAN_FILE")
+    REQ_RESTART=$(jq -r --argjson i $((index - 1)) '.plan[$i].requires_restart' "$PLAN_FILE")
+    
+    # Record pre-block package version
+    PRE_VERSION=$(dpkg-query -W -f='${Version}' "$PKG" 2>/dev/null || echo "unknown")
+    
+    # Record pre-block service states for affected services
+    PRE_SERVICES_JSON="{}"
+    AFFECTED_SVCS=$(jq -r --argjson i $((index - 1)) '.plan[$i].affected_services[]?' "$PLAN_FILE" 2>/dev/null || true)
+    for svc in $AFFECTED_SVCS; do
+        [ "$svc" = "(kernel-wide)" ] && continue
+        act=$(systemctl show -p ActiveState --value "$svc" 2>/dev/null || echo "unknown")
+        sub=$(systemctl show -p SubState --value "$svc" 2>/dev/null || echo "unknown")
+        pid=$(systemctl show -p MainPID --value "$svc" 2>/dev/null || echo "0")
+        s_json=$(jq -n --arg a "$act" --arg s "$sub" --arg p "$pid" '{ActiveState: $a, SubState: $s, MainPID: $p}')
+        PRE_SERVICES_JSON=$(jq -n --argjson obj "$PRE_SERVICES_JSON" --arg sv "$svc" --argjson val "$s_json" '$obj + {($sv): $val}')
+    done
+
+    echo -n "[$index/$TOTAL_ENTRIES] $PKG   $BUCKET   apt-get ... "
+    
+    START_TIME=$(date +%s.%N)
+    
+    # Run apt-get install --only-upgrade -y with dpkg lock backoff handling
+    APT_EXIT=1
+    APT_STDOUT=""
+    APT_STDERR=""
+    apt_elapsed=0
+    apt_backoff=2
+    
+    while [ $apt_elapsed -lt 120 ]; do
+        export DEBIAN_FRONTEND=noninteractive
+        APT_OUT=$(mktemp)
+        APT_ERR=$(mktemp)
+        
+        set +e
+        apt-get install --only-upgrade -y "$PKG" > "$APT_OUT" 2> "$APT_ERR"
+        APT_EXIT=$?
+        set -e
+        
+        APT_STDOUT=$(cat "$APT_OUT")
+        APT_STDERR=$(cat "$APT_ERR")
+        rm -f "$APT_OUT" "$APT_ERR"
+        
+        if [ $APT_EXIT -eq 0 ]; then
+            break
+        elif echo "$APT_STDERR" | grep -qE "Could not get lock|Resource temporarily unavailable"; then
+            sleep "$apt_backoff"
+            apt_elapsed=$((apt_elapsed + apt_backoff))
+            apt_backoff=$((apt_backoff * 2))
+            [ $apt_backoff -gt 30 ] && apt_backoff=30
+        else
+            break
+        fi
+    done
+
+    END_TIME=$(date +%s.%N)
+    DURATION=$(awk "BEGIN {print $END_TIME - $START_TIME}")
+
+    STATUS="success"
+    if [ $APT_EXIT -ne 0 ]; then
+        STATUS="failed"
+        FAILED=$((FAILED + 1))
+        ANY_FAILED=1
+    else
+        SUCCEEDED=$((SUCCEEDED + 1))
+    fi
+
+    if [ "$STATUS" = "success" ]; then
+        echo "OK (${DURATION}s)"
+    else
+        echo "FAILED (Exit: $APT_EXIT)"
+    fi
+
+    # Handle restarts if required
+    RESTART_RESULTS="{}"
+    if [ "$STATUS" = "success" ] && [ "$REQ_RESTART" = "true" ]; then
+        for svc in $AFFECTED_SVCS; do
+            [ "$svc" = "(kernel-wide)" ] && continue
+            echo -n "      try-restart $svc         "
+            if systemctl try-restart "$svc" 2>/dev/null; then
+                echo "OK"
+                RESTART_RESULTS=$(jq -n --argjson obj "$RESTART_RESULTS" --arg s "$svc" --arg r "OK" '$obj + {($s): $r}')
+            else
+                echo "FAILED"
+                RESTART_RESULTS=$(jq -n --argjson obj "$RESTART_RESULTS" --arg s "$svc" --arg r "FAILED" '$obj + {($s): $r}')
+            fi
+        done
+    fi
+
+    # Record post-block version and service states
+    POST_VERSION=$(dpkg-query -W -f='${Version}' "$PKG" 2>/dev/null || echo "unknown")
+    POST_SERVICES_JSON="{}"
+    for svc in $AFFECTED_SVCS; do
+        [ "$svc" = "(kernel-wide)" ] && continue
+        act=$(systemctl show -p ActiveState --value "$svc" 2>/dev/null || echo "unknown")
+        sub=$(systemctl show -p SubState --value "$svc" 2>/dev/null || echo "unknown")
+        pid=$(systemctl show -p MainPID --value "$svc" 2>/dev/null || echo "0")
+        s_json=$(jq -n --arg a "$act" --arg s "$sub" --arg p "$pid" '{ActiveState: $a, SubState: $s, MainPID: $p}')
+        POST_SERVICES_JSON=$(jq -n --argjson obj "$POST_SERVICES_JSON" --arg sv "$svc" --argjson val "$s_json" '$obj + {($sv): $val}')
+    done
+
+    STDOUT_TAIL=$(echo "$APT_STDOUT" | tail -n 10)
+    STDERR_TAIL=$(echo "$APT_STDERR" | tail -n 10)
+
+    # Append entry to patch_execution_log.json using jq
+    ENTRY_JSON=$(jq -n \
+        --arg pkg "$PKG" \
+        --arg pre_v "$PRE_VERSION" \
+        --argjson pre_s "$PRE_SERVICES_JSON" \
+        --arg post_v "$POST_VERSION" \
+        --argjson post_s "$POST_SERVICES_JSON" \
+        --arg status "$STATUS" \
+        --argjson exit_code "$APT_EXIT" \
+        --argjson dur "$DURATION" \
+        --arg stout "$STDOUT_TAIL" \
+        --arg sterr "$STDERR_TAIL" \
+        '{
+            package: $pkg,
+            pre: {installed_version: $pre_v, service_states: $pre_s},
+            post: {installed_version: $post_v, service_states: $post_s},
+            status: $status,
+            exit_status: $exit_code,
+            duration_seconds: $dur,
+            stdout_tail: $stout,
+            stderr_tail: $sterr
+        }')
+
+    # Update log file with new entry
+    TEMP_LOG=$(mktemp)
+    jq --argjson entry "$ENTRY_JSON" '.entries += [$entry]' "$LOG_FILE" > "$TEMP_LOG" && mv "$TEMP_LOG" "$LOG_FILE"
+
+    # Stop loop if package update failed
+    if [ "$STATUS" = "failed" ]; then
+        break
+    fi
+
+    index=$((index + 1))
+done
+
+FINISHED_AT=$(date +%s)
+TEMP_LOG=$(mktemp)
+jq --argjson fin "$FINISHED_AT" '.finished_at = $fin' "$LOG_FILE" > "$TEMP_LOG" && mv "$TEMP_LOG" "$LOG_FILE"
+
+echo "Succeeded: $SUCCEEDED  Failed: $FAILED"
+echo "Log saved to: $LOG_FILE"
+
+if [ $ANY_FAILED -ne 0 ]; then
+    exit 1
+else
+    exit 0
+fi
