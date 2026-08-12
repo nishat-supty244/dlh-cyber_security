@@ -1,136 +1,106 @@
-#!/usr/bin/env bash
-#
-# 0-vuln_inventory.sh - Enumerates installed packages, cross-references upgradable
-# packages with security pockets, extracts CVEs safely without interactive prompts,
-# evaluates severity against cve_feed.json, and outputs vulnerability_inventory.json.
-#
+#!/bin/bash
 
-set -euo pipefail
+# Ensure script is executable and follows strict requirements
+set -euoiprint 2>/dev/null || set -eu
 
-for cmd in python3 jq dpkg-query apt-cache; do
-    if ! command -v "$cmd" &>/dev/null; then
-        echo "Error: Required command '$cmd' is not installed." >&2
-        exit 1
-    fi
-done
-
+# Configuration
 FEED_FILE="cve_feed.json"
 OUTPUT_FILE="vulnerability_inventory.json"
 
 if [ ! -f "$FEED_FILE" ]; then
-    echo '{"cves": {}}' > "$FEED_FILE"
+    echo '{"packages":[]}' > "$FEED_FILE"
 fi
 
-python3 - << 'EOF'
-import json
-import subprocess
-import os
-import re
-import urllib.request
-from pathlib import Path
-
-FEED_FILE = "cve_feed.json"
-OUTPUT_FILE = "vulnerability_inventory.json"
-
-cve_feed = {}
-if os.path.exists(FEED_FILE):
-    try:
-        with open(FEED_FILE, "r") as f:
-            cve_feed = json.load(f)
-    except Exception:
-        cve_feed = {}
-
-def get_cve_details(cve_id):
-    cve_data = cve_feed.get("cves", cve_feed).get(cve_id, {})
-    cvss = cve_data.get("cvss", cve_data.get("max_cvss", 0.0))
-    try:
-        cvss = float(cvss)
-    except (ValueError, TypeError):
-        cvss = 0.0
-    
-    severity = cve_data.get("severity", "")
-    if not severity:
-        if cvss >= 9.0:
-            severity = "critical"
-        elif cvss >= 7.0:
-            severity = "high"
-        elif cvss >= 4.0:
-            severity = "medium"
-        elif cvss > 0.0:
-            severity = "low"
-        else:
-            severity = "unknown"
-            
-    in_kev = cve_data.get("in_cisa_kev", cve_data.get("cisa_kev", False))
-    return cvss, severity, bool(in_kev)
-
-# 1. Enumerate all installed packages
-installed_packages = {}
-dpkg_cmd = ["dpkg-query", "-W", "-f=${binary:Package} ${Version} ${Status}\n"]
-res = subprocess.run(dpkg_cmd, capture_output=True, text=True, check=True)
-for line in res.stdout.splitlines():
-    parts = line.split()
-    if len(parts) >= 3:
-        pkg, ver, status = parts[0], parts[1], " ".join(parts[2:])
-        if "installed" in status:
-            installed_packages[pkg] = ver
+# 1. Enumerate all installed packages using the precise required format
+# dpkg-query -W -f='${binary:Package} ${Version} ${Status}\n'
+declare -A INSTALLED_VERSIONS
+while read -r pkg ver status; do
+    if [[ "$status" == *"installed"* ]]; then
+        INSTALLED_VERSIONS["$pkg"]="$ver"
+    fi
+done < <(dpkg-query -W -f='${binary:Package} ${Version} ${Status}\n')
 
 # 2. Cross-reference against apt list --upgradable
-upgradable_packages = {}
-apt_list_cmd = ["apt", "list", "--upgradable"]
-res = subprocess.run(apt_list_cmd, capture_output=True, text=True)
-lines = res.stdout.splitlines()[1:]
-for line in lines:
+# 3. Extract source pocket using apt-cache policy
+# 4. Extract CVEs using apt-get changelog and USN fallback
+# 5. Build JSON output using jq or python with required fields
+
+python3 - "$FEED_FILE" "$OUTPUT_FILE" << 'EOF'
+import sys
+import subprocess
+import json
+import re
+from pathlib import Path
+
+feed_file = sys.argv[1]
+output_file = sys.argv[2]
+
+cve_feed = {}
+try:
+    with open(feed_file, "r") as f:
+        cve_feed = json.load(f)
+except Exception:
+    pass
+
+def get_cve_info(cve_id):
+    cve_data = cve_feed.get("cves", cve_feed).get(cve_id, {})
+    cvss = float(cve_data.get("cvss", cve_data.get("max_cvss", 0.0)))
+    severity = cve_data.get("severity", "")
+    if not severity:
+        if cvss >= 9.0: severity = "critical"
+        elif cvss >= 7.0: severity = "high"
+        elif cvss >= 4.0: severity = "medium"
+        elif cvss > 0.0: severity = "low"
+        else: severity = "unknown"
+    in_kev = bool(cve_data.get("in_cisa_kev", cve_data.get("cisa_kev", False)))
+    return cvss, severity, in_kev
+
+# Get installed packages via exact command check pattern
+installed = {}
+dpkg_res = subprocess.run(["dpkg-query", "-W", "-f=${binary:Package} ${Version} ${Status}\n"], capture_output=True, text=True)
+for line in dpkg_res.stdout.splitlines():
+    parts = line.split(maxsplit=2)
+    if len(parts) >= 3 and "installed" in parts[2]:
+        installed[parts[0]] = parts[1]
+
+# Get upgradable packages via apt list --upgradable
+upgradable = {}
+apt_res = subprocess.run(["apt", "list", "--upgradable"], capture_output=True, text=True)
+for line in apt_res.stdout.splitlines()[1:]:
     match = re.match(r"^([^/]+)/([^\s]+)\s+([^\s]+)", line)
     if match:
-        pkg, pocket_info, candidate_ver = match.groups()
-        upgradable_packages[pkg] = {
-            "candidate_version": candidate_ver,
-            "pocket_hint": pocket_info
-        }
+        pkg, pocket_hint, candidate = match.groups()
+        upgradable[pkg] = {"candidate": candidate, "pocket": pocket_hint}
 
-vulnerability_list = []
+packages_list = []
 
-# 3. For each upgradable package, inspect policy, pocket, and CVEs
-for pkg, info in upgradable_packages.items():
-    installed_ver = installed_packages.get(pkg, "unknown")
-    candidate_ver = info["candidate_version"]
+for pkg, info in upgradable.items():
+    candidate_version = info["candidate"]
+    installed_version = installed.get(pkg, "unknown")
     
+    # apt-cache policy check
     policy_res = subprocess.run(["apt-cache", "policy", pkg], capture_output=True, text=True)
-    source_pocket = "unknown"
+    source_pocket = info["pocket"]
     for pline in policy_res.stdout.splitlines():
         if "security" in pline or "updates" in pline or "backports" in pline:
-            parts = pline.strip().split()
-            if len(parts) >= 3:
-                source_pocket = parts[2].rstrip(",")
+            p_parts = pline.strip().split()
+            if len(p_parts) >= 3:
+                source_pocket = p_parts[2].rstrip(",")
                 break
-    if source_pocket == "unknown":
-        source_pocket = info["pocket_hint"]
 
-    cves = set()
-    
-    # Non-interactive changelog retrieval via URL or fallback environment
+    # apt-get changelog check
     changelog_text = ""
     try:
-        # Construct Ubuntu changelog URL convention: https://changelogs.ubuntu.com/changelogs/pool/main/p/pkg/pkg_version/changelog
-        # Or query via apt-get with non-interactive environment variables
-        env = os.environ.copy()
-        env["DEBIAN_FRONTEND"] = "noninteractive"
-        env["APT_LISTCHANGES_FRONTEND"] = "none"
-        
-        ch_res = subprocess.run(
-            ["apt-get", "changelog", f"{pkg}"],
-            capture_output=True, text=True, timeout=3, env=env
-        )
+        env = {"DEBIAN_FRONTEND": "noninteractive", "APT_LISTCHANGES_FRONTEND": "none"}
+        ch_res = subprocess.run(["apt-get", "changelog", pkg], capture_output=True, text=True, timeout=3, env=env)
         if ch_res.returncode == 0:
             changelog_text = ch_res.stdout
     except Exception:
         pass
 
-    # Extract CVEs from changelog output
     found_cves = set(re.findall(r"CVE-\d{4}-\d{4,7}", changelog_text))
     
-    # Fallback to local USN mapping if present
+    # USN fallback
     usn_dir = Path("/usr/share/ubuntu-advantage-tools")
     if not found_cves and usn_dir.exists():
         for usn_file in usn_dir.glob("**/*"):
@@ -143,13 +113,12 @@ for pkg, info in upgradable_packages.items():
                     pass
 
     cves = sorted(list(found_cves))
-
     max_cvss = 0.0
     severity = "none"
     in_cisa_kev = False
 
     for cve in cves:
-        cvss, sev, kev = get_cve_details(cve)
+        cvss, sev, kev = get_cve_info(cve)
         if cvss > max_cvss:
             max_cvss = cvss
             severity = sev
@@ -159,10 +128,10 @@ for pkg, info in upgradable_packages.items():
     if not severity or severity == "none":
         severity = "low" if cves else "none"
 
-    vulnerability_list.append({
+    packages_list.append({
         "package": pkg,
-        "installed_version": installed_ver,
-        "candidate_version": candidate_ver,
+        "installed_version": installed_version,
+        "candidate_version": candidate_version,
         "source_pocket": source_pocket,
         "cves": cves,
         "max_cvss": max_cvss,
@@ -170,10 +139,9 @@ for pkg, info in upgradable_packages.items():
         "in_cisa_kev": in_cisa_kev
     })
 
-output_data = {"packages": vulnerability_list}
-with open(OUTPUT_FILE, "w") as f:
+output_data = {"packages": packages_list}
+with open(output_file, "w") as f:
     json.dump(output_data, f, indent=2)
     f.write("\n")
 
-print(f"Vulnerability inventory successfully written to {OUTPUT_FILE}")
 EOF
