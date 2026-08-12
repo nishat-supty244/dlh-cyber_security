@@ -1,5 +1,5 @@
 {
-  "timestamp": 1786546711,
+  "timestamp": 1786546883,
   "hostname": "nishatsupty",
   "kernel": "6.19.14+kali-amd64",
   "packages": {
@@ -1636,227 +1636,229 @@
   },
   "services": {
     "accounts-daemon.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "499"
     },
     "alsa-restore.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "auditd.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "485"
     },
     "colord.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "1439"
     },
     "console-setup.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "cron.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "528"
     },
     "dbus.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "502"
     },
     "getty@tty1.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "728"
     },
     "haveged.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "477"
     },
     "ifupdown-pre.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "keyboard-setup.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "kmod-static-nodes.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "ModemManager.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "587"
     },
     "networking.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "NetworkManager.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "577"
     },
     "plymouth-quit-wait.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "plymouth-read-write.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "plymouth-start.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "polkit.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "509"
     },
     "rpc-statd-notify.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "rtkit-daemon.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "845"
     },
     "systemd-binfmt.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "systemd-journal-flush.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "systemd-journald.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "278"
     },
     "systemd-logind.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "511"
     },
     "systemd-modules-load.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "systemd-random-seed.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "systemd-remount-fs.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "systemd-sysctl.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "systemd-timesyncd.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "379"
     },
     "systemd-tmpfiles-setup-dev-early.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "systemd-tmpfiles-setup-dev.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "systemd-tmpfiles-setup.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "systemd-udev-load-credentials.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "systemd-udev-trigger.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "systemd-udevd.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "318"
     },
     "systemd-user-sessions.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "systemd-userdb-load-credentials.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "systemd-userdbd.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "324"
     },
     "udisks2.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "1375"
     },
     "upower.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "1243"
     },
     "user-runtime-dir@1000.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "exited",
       "MainPID": "0"
     },
     "user@1000.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
-      "MainPID": "0"
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "801"
     },
     "virtualbox-guest-utils.service": {
-      "ActiveState": "unknown",
-      "SubState": "unknown",
+      "ActiveState": "active",
+      "SubState": "running",
       "MainPID": "0"
     }
   },
-  "listening": [],
+  "listening": [
+    "Netid State Recv-Q Send-Q Local Address:Port Peer Address:PortProcess"
+  ],
   "conffile_hashes": {},
   "reboot_required": false
 }
