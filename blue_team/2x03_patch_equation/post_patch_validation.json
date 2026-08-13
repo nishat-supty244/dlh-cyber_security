@@ -1,0 +1,320 @@
+{
+  "total_checks": 45,
+  "passed": 44,
+  "failed": 1,
+  "details": [
+    {
+      "type": "service_state",
+      "target": "accounts-daemon.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "alsa-restore.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "auditd.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "colord.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "console-setup.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "cron.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "dbus.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "getty@tty1.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "haveged.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "ifupdown-pre.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "keyboard-setup.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "kmod-static-nodes.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "ModemManager.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "networking.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "NetworkManager.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "plymouth-quit-wait.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "plymouth-read-write.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "plymouth-start.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "polkit.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "rpc-statd-notify.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "rtkit-daemon.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-binfmt.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-journal-flush.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-journald.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-logind.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-modules-load.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-random-seed.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-remount-fs.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-sysctl.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-timesyncd.service",
+      "pre_state": "active",
+      "post_state": "inactive",
+      "status": "regression"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-tmpfiles-setup-dev-early.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-tmpfiles-setup-dev.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-tmpfiles-setup.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-udev-load-credentials.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-udev-trigger.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-udevd.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-user-sessions.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-userdb-load-credentials.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "systemd-userdbd.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "udisks2.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "upower.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "user-runtime-dir@1000.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "user@1000.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "service_state",
+      "target": "virtualbox-guest-utils.service",
+      "pre_state": "active",
+      "post_state": "active",
+      "status": "pass"
+    },
+    {
+      "type": "listening_socket",
+      "target": "Netid State Recv-Q Send-Q Local Address:Port Peer Address:PortProcess",
+      "status": "pass"
+    }
+  ]
+}
