@@ -1,9 +1,24 @@
 {
   "summary": {
     "unchanged": 0,
-    "modified": 0,
+    "modified": 2,
     "missing": 0,
     "new": 0
   },
-  "files": []
+  "files": [
+    {
+      "path": "/etc/ssh/sshd_config",
+      "classification": "modified",
+      "expected": true,
+      "owning_package": "unknown",
+      "diff": "--- /dev/null\t2026-08-17 08:28:47.348579032 -0400\n+++ /etc/ssh/sshd_config\t2026-02-19 05:46:15.000000000 -0500\n@@ -0,0 +1,124 @@\n+\n+# This is the sshd server system-wide configuration file.  See\n+# sshd_config(5) for more information.\n+\n+# This sshd was compiled with PATH=/usr/local/bin:/usr/bin:/bin:/usr/games\n+\n+# The strategy used for options in the default sshd_config shipped with\n+# OpenSSH is to specify options with their default value where\n+# possible, but leave them commented.  Uncommented options override the\n+# default value.\n+\n+Include /etc/ssh/sshd_config.d/*.conf\n+\n+#Port 22\n+#AddressFamily any\n+#ListenAddress 0.0.0.0\n+#ListenAddress ::\n+\n+#HostKey /etc/ssh/ssh_host_rsa_key\n+#HostKey /etc/ssh/ssh_host_ecdsa_key\n+#HostKey /etc/ssh/ssh_host_ed25519_key\n+\n+# Ciphers and keying\n+#RekeyLimit default none\n+\n+# Logging\n+#SyslogFacility AUTH\n+#LogLevel INFO\n+\n+# Authentication:\n+\n+#LoginGraceTime 2m\n+#PermitRootLogin prohibit-password\n+#StrictModes yes\n+#MaxAuthTries 6\n+#MaxSessions 10\n+"
+    },
+    {
+      "path": "/etc/ssl/openssl.cnf",
+      "classification": "modified",
+      "expected": false,
+      "owning_package": "diversion by kali-defaults from",
+      "diff": "--- /dev/null\t2026-08-17 08:28:47.348579032 -0400\n+++ /etc/ssl/openssl.cnf\t2026-05-04 09:27:47.080944890 -0400\n@@ -0,0 +1,404 @@\n+#\n+# OpenSSL example configuration file. Forked by Kali.\n+# See doc/man5/config.pod for more info.\n+#\n+# This is mostly being used for generation of certificate requests,\n+# but may be used for auto loading of providers\n+\n+# Note that you can include other files from the main configuration\n+# file using the .include directive.\n+#.include filename\n+\n+# This definition stops the following lines choking if HOME isn't\n+# defined.\n+HOME\t\t\t= .\n+\n+# Use this in order to automatically load providers.\n+openssl_conf = openssl_init\n+\n+# Comment out the next line to ignore configuration errors\n+config_diagnostics = 1\n+\n+# Extra OBJECT IDENTIFIER info:\n+# oid_file       = $ENV::HOME/.oid\n+oid_section = new_oids\n+\n+# To use this configuration file with the \"-extfile\" option of the\n+# \"openssl x509\" utility, name here the section containing the\n+# X.509v3 extensions to use:\n+# extensions\t\t=\n+# (Alternatively, use a configuration file that has only\n+# X.509v3 extensions in its main [= default] section.)\n+\n+[ new_oids ]\n+# We can add new OIDs in here for use by 'ca', 'req' and 'ts'.\n+# Add a simple OID like this:\n+# testoid1=1.2.3.4\n+# Or use config file substitution like this:"
+    }
+  ]
 }
