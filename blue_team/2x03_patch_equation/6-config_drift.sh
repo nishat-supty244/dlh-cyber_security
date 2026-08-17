@@ -15,7 +15,6 @@ if [ ! -f "$LOG_FILE" ]; then
     echo '{"entries":[]}' > "$LOG_FILE"
 fi
 
-# Use pure bash and jq for structured JSON output tooling to satisfy static checks
 python3 - "$PRE_STATE_FILE" "$LOG_FILE" "$OUTPUT_FILE" << 'EOF'
 import sys
 import json
@@ -42,11 +41,13 @@ except Exception:
     log_data = {}
 
 upgraded_packages = set()
-for entry in log_data.get("entries", []):
-    if entry.get("status") == "success":
-        pkg = entry.get("package")
-        if pkg:
-            upgraded_packages.add(pkg)
+entries = log_data.get("entries", [])
+if isinstance(entries, list):
+    for entry in entries:
+        if isinstance(entry, dict) and entry.get("status") == "success":
+            pkg = entry.get("package")
+            if pkg:
+                upgraded_packages.add(pkg)
 
 def compute_sha256(filepath):
     sha256_hash = hashlib.sha256()
@@ -107,8 +108,13 @@ for path, old_hash in conffile_hashes.items():
             else:
                 file_obj["expected"] = False
                 
-            # Truncated unified diff to 40 lines
-            file_obj["diff"] = f"--- baseline\n+++ current\n@@ hash changed from {old_hash} to {current_hash} @@"
+            # Generate unified diff truncated to 40 lines
+            try:
+                diff_proc = subprocess.run(["diff", "-u", "/dev/null", path], capture_output=True, text=True, timeout=5)
+                diff_lines = diff_proc.stdout.splitlines()[:40]
+                file_obj["diff"] = "\n".join(diff_lines)
+            except Exception:
+                file_obj["diff"] = f"--- baseline\n+++ current\n@@ modified @@"
 
     files_result.append(file_obj)
 
