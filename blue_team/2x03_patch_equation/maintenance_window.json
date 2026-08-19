@@ -1,0 +1,11 @@
+{
+  "now": "2026-08-19 12:13  (Wed)",
+  "timezone": "Europe/Paris",
+  "active_window": "emergency",
+  "next_window": {
+    "name": "standard",
+    "timestamp": "2026-08-22 02:00"
+  },
+  "seconds_until_next": 222387,
+  "decision": "defer (requires emergency override)"
+}
