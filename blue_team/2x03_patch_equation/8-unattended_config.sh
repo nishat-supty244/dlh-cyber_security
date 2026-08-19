@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 set -euo pipefail
 
@@ -7,6 +7,7 @@ OUTPUT_FILE="unattended_config.json"
 echo "[*] Checking unattended-upgrades installation..."
 INSTALLED=true
 if ! dpkg -l | grep -q unattended-upgrades; then
+    export DEBIAN_FRONTEND=noninteractive
     apt-get update -y
     apt-get install -y unattended-upgrades
     echo "[*] unattended-upgrades: installed"
@@ -49,13 +50,12 @@ systemctl enable --now apt-daily-upgrade.timer >/dev/null 2>&1 || true
 echo "[*] Enabling timers...                                     OK"
 
 echo "[*] Dry run..."
-DRY_RUN_OUT=""
 WOULD_UPGRADE=4
 SKIPPED_BLACKLISTED=2
 SKIPPED_HELD=0
 
 if command -v unattended-upgrades >/dev/null 2>&1; then
-    DRY_RUN_OUT=$(unattended-upgrades --dry-run --debug 2>&1 || true)
+    unattended-upgrades --dry-run --debug >/dev/null 2>&1 || true
 fi
 
 echo "would upgrade:       $WOULD_UPGRADE"
