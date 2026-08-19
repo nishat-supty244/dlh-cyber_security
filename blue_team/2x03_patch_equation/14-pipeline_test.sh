@@ -64,7 +64,6 @@ main() {
     local diff_array="[]"
 
     if [[ -f "$PRODUCED_PLAN" && -f "$EXPECTED_PLAN" ]]; then
-        # Normalize timestamps for comparison
         local norm_produced norm_expected
         norm_produced=$(jq 'walk(if type == "string" then sub("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})?"; "TIMESTAMP") else . end)' "$PRODUCED_PLAN" 2>/dev/null || cat "$PRODUCED_PLAN")
         norm_expected=$(jq 'walk(if type == "string" then sub("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})?"; "TIMESTAMP") else . end)' "$EXPECTED_PLAN" 2>/dev/null || cat "$EXPECTED_PLAN")
@@ -82,27 +81,42 @@ main() {
         warn "Missing produced or expected plan files for comparison."
     fi
 
+    # Validate that every stage emitted a non-empty JSON artifact if pipeline_run exists
+    local artifacts_valid=true
+    if [[ -f "$PIPELINE_RUN" ]]; then
+        local art_paths
+        art_paths=$(jq -r '.artifacts // {} | to_entries[].value' "$PIPELINE_RUN")
+        for p in $art_paths; do
+            if [[ ! -f "$p" ]] || [[ ! -s "$p" ]]; then
+                artifacts_valid=false
+                break
+            fi
+        done
+    else
+        artifacts_valid=false
+    fi
+
     # Restore cve_feed right away
     if [[ -f "$CVE_BAK" ]]; then
         mv "$CVE_BAK" "$CVE_FEED"
         log "Restoring cve_feed.json...                OK"
     fi
-    # Clear trap since we already restored
     trap - EXIT
 
     local verdict="pass"
-    if [[ "$pipeline_exit" -ne 0 ]] || [[ "$plan_matches" != "true" ]]; then
+    if [[ "$pipeline_exit" -ne 0 ]] || [[ "$plan_matches" != "true" ]] || [[ "$artifacts_valid" != "true" ]]; then
         verdict="fail"
     fi
 
     local finished_at
     finished_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-    # Build results JSON
+    # Construct complete pipeline_test_results.json matching all expected schema fields
     jq -n \
         --arg scenario "simulated CVE advisory" \
         --arg started "$started_at" \
         --arg finished "$finished_at" \
+        --argjson stages_ok $( [[ "$pipeline_exit" -eq 0 ]] && echo "true" || echo "false" ) \
         --argjson match "$plan_matches" \
         --argjson diff "$diff_array" \
         --arg verdict "$verdict" \
@@ -110,7 +124,7 @@ main() {
             scenario: $scenario,
             started_at: $started,
             finished_at: $finished,
-            stages_ok: ($verdict == "pass"),
+            stages_ok: $stages_ok,
             plan_matches_expected: $match,
             diff: $diff,
             verdict: $verdict
