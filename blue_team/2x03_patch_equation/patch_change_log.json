@@ -1,26 +1,35 @@
 {
-  "period_start": "2026-03-21T00:00:00+01:00",
-  "period_end": "2026-03-28T23:59:59+01:00",
+  "period_start": "2026-03-21T23:01:05+01:00",
+  "period_end": "2026-03-28T02:15:44+01:00",
   "events": [
     {
       "started": "2026-05-04T09:21:40-04:00",
-      "user": "unknown",
+      "user": "root",
       "within_window": "outside",
       "packages": 2442,
+      "upgrade": 0,
+      "install": 2442,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
       "started": "2026-05-04T13:21:34-04:00",
-      "user": "unknown",
+      "user": "root",
       "within_window": "outside",
       "packages": 6,
+      "upgrade": 0,
+      "install": 6,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
       "started": "2026-05-06T15:17:41-04:00",
       "user": "nishat",
       "within_window": "outside",
-      "packages": 2,
+      "packages": 3,
+      "upgrade": 2,
+      "install": 0,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -28,6 +37,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 11,
+      "upgrade": 4,
+      "install": 7,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -35,6 +47,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 7,
+      "upgrade": 0,
+      "install": 7,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -42,20 +57,29 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 185,
+      "upgrade": 8,
+      "install": 177,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
       "started": "2026-05-13T07:28:21-04:00",
       "user": "nishat",
       "within_window": "outside",
-      "packages": 3,
+      "packages": 4,
+      "upgrade": 0,
+      "install": 3,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
       "started": "2026-05-13T07:43:41-04:00",
       "user": "nishat",
       "within_window": "outside",
-      "packages": 0,
+      "packages": 1,
+      "upgrade": 0,
+      "install": 0,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -63,6 +87,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 86,
+      "upgrade": 42,
+      "install": 44,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -70,13 +97,19 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 1665,
+      "upgrade": 1616,
+      "install": 46,
+      "remove": 3,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
       "started": "2026-05-19T08:02:13-04:00",
       "user": "nishat",
       "within_window": "outside",
-      "packages": 35,
+      "packages": 36,
+      "upgrade": 0,
+      "install": 0,
+      "remove": 35,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -84,6 +117,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 3,
+      "upgrade": 0,
+      "install": 3,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -91,6 +127,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 1,
+      "upgrade": 0,
+      "install": 1,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -98,6 +137,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 1,
+      "upgrade": 0,
+      "install": 1,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -105,6 +147,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 13,
+      "upgrade": 0,
+      "install": 13,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -112,6 +157,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 7,
+      "upgrade": 0,
+      "install": 7,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -119,6 +167,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 3,
+      "upgrade": 0,
+      "install": 3,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -126,6 +177,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 273,
+      "upgrade": 268,
+      "install": 5,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -133,6 +187,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 3,
+      "upgrade": 0,
+      "install": 3,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -140,6 +197,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 13,
+      "upgrade": 0,
+      "install": 13,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -147,6 +207,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 3,
+      "upgrade": 0,
+      "install": 3,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -154,6 +217,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 1,
+      "upgrade": 0,
+      "install": 1,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -161,6 +227,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 46,
+      "upgrade": 0,
+      "install": 46,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -168,6 +237,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 45,
+      "upgrade": 0,
+      "install": 45,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -175,6 +247,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 1,
+      "upgrade": 0,
+      "install": 1,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -182,6 +257,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 9,
+      "upgrade": 8,
+      "install": 1,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -189,6 +267,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 4,
+      "upgrade": 4,
+      "install": 0,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -196,6 +277,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 3,
+      "upgrade": 0,
+      "install": 3,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -203,6 +287,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 39,
+      "upgrade": 10,
+      "install": 29,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -210,6 +297,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 21,
+      "upgrade": 0,
+      "install": 21,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -217,6 +307,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 1,
+      "upgrade": 0,
+      "install": 1,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -224,13 +317,19 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 41,
+      "upgrade": 2,
+      "install": 39,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
       "started": "2026-07-21T04:29:06-04:00",
       "user": "nishat",
       "within_window": "outside",
-      "packages": 5,
+      "packages": 6,
+      "upgrade": 2,
+      "install": 3,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -238,6 +337,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 3,
+      "upgrade": 0,
+      "install": 3,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -245,6 +347,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 3,
+      "upgrade": 0,
+      "install": 3,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -252,6 +357,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 168,
+      "upgrade": 158,
+      "install": 10,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     },
     {
@@ -259,6 +367,9 @@
       "user": "nishat",
       "within_window": "outside",
       "packages": 3,
+      "upgrade": 0,
+      "install": 3,
+      "remove": 0,
       "linked_execution_log": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_execution_log.json"
     }
   ],
