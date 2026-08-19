@@ -1,0 +1,9 @@
+{
+  "scenario": "simulated CVE advisory",
+  "started_at": "2026-08-19T16:41:32Z",
+  "finished_at": "2026-08-19T16:42:24Z",
+  "stages_ok": false,
+  "plan_matches_expected": false,
+  "diff": [],
+  "verdict": "fail"
+}
