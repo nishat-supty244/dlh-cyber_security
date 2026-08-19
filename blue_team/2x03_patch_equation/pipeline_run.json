@@ -1,0 +1,48 @@
+{
+  "started_at": "2026-08-19T16:34:30Z",
+  "finished_at": "2026-08-19T16:35:20Z",
+  "hostname": "nishatsupty",
+  "pipeline_status": "failed",
+  "stages": [
+    {
+      "name": "0-vuln_inventory.sh",
+      "status": "OK",
+      "duration": "0.0s",
+      "message": "completed",
+      "exit_code": 0
+    },
+    {
+      "name": "1-service_deps.sh",
+      "status": "OK",
+      "duration": "32.9s",
+      "message": "completed",
+      "exit_code": 0
+    },
+    {
+      "name": "2-pre_patch_snapshot.sh",
+      "status": "OK",
+      "duration": "15.3s",
+      "message": "completed",
+      "exit_code": 0
+    },
+    {
+      "name": "3-patch_plan.sh",
+      "status": "OK",
+      "duration": "0.1s",
+      "message": "completed",
+      "exit_code": 0
+    },
+    {
+      "name": "11-maintenance_window.sh --check",
+      "status": "FAIL",
+      "duration": "0.5s",
+      "message": "",
+      "exit_code": 10
+    }
+  ],
+  "artifacts": {
+    "0-vuln_inventory.sh": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/vulnerability_inventory.json",
+    "3-patch_plan.sh": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/patch_plan.json",
+    "11-maintenance_window.sh": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/maintenance_window.json"
+  }
+}
