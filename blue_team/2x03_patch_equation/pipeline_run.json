@@ -1,6 +1,6 @@
 {
-  "started_at": "2026-08-19T16:34:30Z",
-  "finished_at": "2026-08-19T16:35:20Z",
+  "started_at": "2026-08-19T16:37:33Z",
+  "finished_at": "2026-08-19T16:38:26Z",
   "hostname": "nishatsupty",
   "pipeline_status": "failed",
   "stages": [
@@ -9,35 +9,45 @@
       "status": "OK",
       "duration": "0.0s",
       "message": "completed",
-      "exit_code": 0
+      "exit_code": 0,
+      "stdout": "allexport      \toff\nbraceexpand    \ton\nemacs          \toff\nerrexit        \ton\nerrtrace       \toff\nfunctrace      \toff\nhashall        \ton\nhistexpand     \toff\nhistory        \toff\nignoreeof      \toff\ninteractive-comments\ton\nkeyword        \toff\nmonitor        \toff\nnoclobber      \toff\nnoexec         \toff\nnoglob         \toff\nnolog          \toff\nnotify         \toff\nnounset        \ton\nonecmd         \toff\nphysical       \toff\npipefail       \toff\nposix          \toff\nprivileged     \toff\nverbose        \toff\nvi             \toff\nxtrace         \toff",
+      "stderr": ""
     },
     {
       "name": "1-service_deps.sh",
       "status": "OK",
-      "duration": "32.9s",
+      "duration": "36.1s",
       "message": "completed",
-      "exit_code": 0
+      "exit_code": 0,
+      "stdout": "Service dependency map successfully written to service_dependency_map.json",
+      "stderr": ""
     },
     {
       "name": "2-pre_patch_snapshot.sh",
       "status": "OK",
-      "duration": "15.3s",
+      "duration": "15.7s",
       "message": "completed",
-      "exit_code": 0
+      "exit_code": 0,
+      "stdout": "Snapshot: pre_patch_state.json\nSize: 68 KB\nKernel: 7.0.12+kali-amd64\nReboot required: false",
+      "stderr": "Collecting packages...\nCollecting services...\nCollecting listening sockets...\nCollecting configuration file hashes..."
     },
     {
       "name": "3-patch_plan.sh",
       "status": "OK",
       "duration": "0.1s",
       "message": "completed",
-      "exit_code": 0
+      "exit_code": 0,
+      "stdout": "Emergency: 1   Urgent: 0   Scheduled: 701\nReboot required by plan: yes (kernel update present)\nReport saved to: patch_plan.json",
+      "stderr": ""
     },
     {
       "name": "11-maintenance_window.sh --check",
       "status": "FAIL",
       "duration": "0.5s",
       "message": "",
-      "exit_code": 10
+      "exit_code": 10,
+      "stdout": "now:            2026-08-19 18:38 Wed\nactive window:  emergency\nnext window:    emergency at 2026-08-19 18:38\nseconds until:  0\ndecision:       emergency_requires_override\n[*] Report saved to: /home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x03_patch_equation/maintenance_window.json",
+      "stderr": ""
     }
   ],
   "artifacts": {

@@ -31,7 +31,6 @@ warn() {
     echo "[!] $*" >&2
 }
 
-# Helper to format duration nicely
 format_duration() {
     local start_ns="$1"
     local end_ns="$2"
@@ -71,14 +70,17 @@ main() {
         local stage_start_ns
         stage_start_ns=$(date +%s%N)
 
-        # Check special handling for maintenance window check
+        local stdout_file stderr_file
+        stdout_file=$(mktemp)
+        stderr_file=$(mktemp)
+
         if [[ "$script_name" == "11-maintenance_window.sh" ]]; then
             if [[ -f "$script_path" ]]; then
                 set +e
                 if [[ -n "$stage_args" ]]; then
-                    bash "$script_path" $stage_args
+                    bash "$script_path" $stage_args >"$stdout_file" 2>"$stderr_file"
                 else
-                    bash "$script_path"
+                    bash "$script_path" >"$stdout_file" 2>"$stderr_file"
                 fi
                 stage_code=$?
                 set -e
@@ -103,10 +105,9 @@ main() {
                 stage_msg="skipped (script missing)"
             fi
         else
-            # Execute standard stage script if present
             if [[ -f "$script_path" ]]; then
                 set +e
-                bash "$script_path" >/dev/null 2>&1
+                bash "$script_path" >"$stdout_file" 2>"$stderr_file"
                 stage_code=$?
                 set -e
 
@@ -128,25 +129,31 @@ main() {
         local duration_str
         duration_str=$(format_duration "$stage_start_ns" "$stage_end_ns")
 
-        # Print standard runner message format
+        local stage_stdout stage_stderr
+        stage_stdout=$(cat "$stdout_file")
+        stage_stderr=$(cat "$stderr_file")
+        rm -f "$stdout_file" "$stderr_file"
+
         if [[ -n "$stage_msg" ]]; then
             printf "[%d/%d] %-28s %-6s (%s, %s)\n" "$step_num" "$total_stages" "$stage_cmd" "$stage_status" "$duration_str" "$stage_msg"
         else
             printf "[%d/%d] %-28s %-6s (%s)\n" "$step_num" "$total_stages" "$stage_cmd" "$stage_status" "$duration_str"
         fi
 
-        # Track stage result in JSON array
+        # Comprehensive stage telemetry matching test schema requirements
         local stage_json_entry
         stage_json_entry=$(jq -n \
             --arg name "$stage_cmd" \
             --arg status "$stage_status" \
             --arg duration "$duration_str" \
             --arg message "$stage_msg" \
+            --arg stdout "$stage_stdout" \
+            --arg stderr "$stage_stderr" \
             --argjson code "$stage_code" \
-            '{name: $name, status: $status, duration: $duration, message: $message, exit_code: $code}')
+            '{name: $name, status: $status, duration: $duration, message: $message, exit_code: $code, stdout: $stdout, stderr: $stderr}')
         stages_json=$(jq --argjson entry "$stage_json_entry" '. + [$entry]' <<< "$stages_json")
 
-        # Associate artifacts if they exist
+        # Map artifacts
         case "$script_name" in
             "0-vuln_inventory.sh")
                 [[ -f "${BASE_DIR}/vulnerability_inventory.json" ]] && artifacts_json=$(jq --arg k "$script_name" --arg v "${BASE_DIR}/vulnerability_inventory.json" '. + {($k): $v}' <<< "$artifacts_json")
@@ -177,22 +184,19 @@ main() {
                 ;;
         esac
 
-        # Break loop if stage failed or if deferred due to maintenance window
         if [[ "$stage_status" == "FAIL" ]]; then
             break
         fi
 
         if [[ "$stage_status" == "DEFERRED" ]]; then
             log "Maintenance window check returned out-of-window. Skipping stages 4 through 6."
-            # Fill remaining skipped stages for accurate reporting
             for ((j=i+1; j<total_stages; j++)); do
                 local skip_cmd="${STAGES[$j]}"
-                local skip_name="${skip_cmd%% *}"
                 local skip_num=$((j + 1))
                 printf "[%d/%d] %-28s %-6s (%s)\n" "$skip_num" "$total_stages" "$skip_cmd" "SKIP" "deferred by maintenance window"
                 
                 local skip_entry
-                skip_entry=$(jq -n --arg name "$skip_cmd" --arg status "SKIP" --arg duration "0.0s" --arg message "deferred" --argjson code 0 '{name: $name, status: $status, duration: $duration, message: $message, exit_code: $code}')
+                skip_entry=$(jq -n --arg name "$skip_cmd" --arg status "SKIP" --arg duration "0.0s" --arg message "deferred" --arg stdout "" --arg stderr "" --argjson code 0 '{name: $name, status: $status, duration: $duration, message: $message, exit_code: $code, stdout: $stdout, stderr: $stderr}')
                 stages_json=$(jq --argjson entry "$skip_entry" '. + [$entry]' <<< "$stages_json")
             done
             break
@@ -206,7 +210,6 @@ main() {
     local total_duration_str
     total_duration_str=$(format_duration "$pipeline_start_ns" "$pipeline_end_ns")
 
-    # Construct final pipeline_run.json artifact securely without overwriting unchanged content needlessly (idempotency support)
     local new_content
     new_content=$(jq -n \
         --arg started "$started_at" \
