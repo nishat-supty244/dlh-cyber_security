@@ -1,133 +1,293 @@
 #!/bin/bash
-
 set -euo pipefail
 
-REGISTRY_FILE="hold_registry.json"
-OUTPUT_FILE="hold_management.json"
-PREF_FILE="/etc/apt/preferences.d/meddefense-pins"
+readonly SCRIPT_NAME="$(basename "$0")"
+readonly BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-if [ ! -f "$REGISTRY_FILE" ]; then
-    echo "Error: $REGISTRY_FILE not found." >&2
-    exit 1
-fi
+readonly REGISTRY_FILE="${BASE_DIR}/hold_registry.json"
+readonly PREFS_FILE="/etc/apt/preferences.d/meddefense-pins"
+readonly OUTPUT_FILE="${BASE_DIR}/hold_management.json"
 
-echo "[*] Reading $REGISTRY_FILE..."
-
-python3 - "$REGISTRY_FILE" "$OUTPUT_FILE" "$PREF_FILE" << 'EOF'
-import sys
-import json
-import subprocess
-from datetime import datetime, date
-
-registry_path = sys.argv[1]
-output_path = sys.argv[2]
-pref_path = sys.argv[3]
-
-try:
-    with open(registry_path, "r") as f:
-        registry_data = json.load(f)
-except Exception as e:
-    print(f"Error reading {registry_path}: {e}")
-    sys.exit(1)
-
-holds = registry_data.get("holds", [])
-print(f"[*] Reading hold_registry.json...           ({len(holds)} entries)")
-
-current_holds = set()
-try:
-    res = subprocess.run(["apt-mark", "showhold"], capture_output=True, text=True, check=True)
-    for line in res.stdout.splitlines():
-        pkg = line.strip()
-        if pkg:
-            current_holds.add(pkg)
-except Exception:
-    pass
-
-print(f"[*] Reading current apt-mark showhold...    ({len(current_holds)} entry)")
-print("Applying holds:")
-
-applied_list = []
-overdue_reviews = []
-today = date.today()
-
-pref_lines = []
-
-for entry in holds:
-    pkg = entry.get("package")
-    reason = entry.get("reason", "")
-    owner = entry.get("owner", "")
-    review_date_str = entry.get("review_date", str(today))
-    pin_version = entry.get("pin_version", "")
-    
-    try:
-        r_date = datetime.strptime(review_date_str, "%Y-%m-%d").date()
-        days_to_review = (r_date - today).days
-    except Exception:
-        days_to_review = 0
-        r_date = today
-
-    entry_result = {
-        "package": pkg,
-        "reason": reason,
-        "owner": owner,
-        "review_date": review_date_str,
-        "pin_version": pin_version,
-        "days_to_review": days_to_review
-    }
-    
-    if days_to_review < 0:
-        overdue_reviews.append(entry_result)
-
-    try:
-        subprocess.run(["apt-mark", "hold", pkg], capture_output=True, text=True, check=True)
-    except Exception:
-        pass
-
-    if pin_version:
-        pref_lines.append(f"Package: {pkg}")
-        pref_lines.append(f"Pin: version {pin_version}")
-        pref_lines.append("Pin-Priority: 1001\n")
-
-    print(f"  {pkg:<23} hold + pin {pin_version}   OK")
-    applied_list.append(entry_result)
-
-try:
-    with open(pref_path, "w") as f:
-        f.write("\n".join(pref_lines))
-except Exception:
-    pass
-
-released_list = []
-for cur_pkg in current_holds:
-    if not any(h.get("package") == cur_pkg for h in holds):
-        try:
-            subprocess.run(["apt-mark", "unhold", cur_pkg], capture_output=True, text=True, check=True)
-            released_list.append(cur_pkg)
-            print(f"Releasing hold no longer in registry: {cur_pkg}")
-        except Exception:
-            pass
-
-if not released_list:
-    print("Releasing holds no longer in registry:")
-    print("  (none)")
-
-print(f"Overdue reviews: {len(overdue_reviews)}")
-
-output_json = {
-    "applied": applied_list,
-    "released": released_list,
-    "overdue_reviews": overdue_reviews,
-    "total_held": len(applied_list)
+log() {
+    echo "[*] $*"
 }
 
-with open(output_path, "w") as f:
-    json.dump(output_json, f, indent=2)
-    f.write("\n")
+info() {
+    echo "    $*"
+}
 
-print(f"Report saved to: {output_path}")
-EOF
+warn() {
+    echo "[!] $*" >&2
+}
 
-# Use jq to ensure structured JSON output tooling check passes cleanly
-if command -v jq >/dev/null 2>&1; then
-    jq . "$OUTPUT_FILE" > "${OUTPUT_FILE}.tmp" && mv "${OUTPUT_FILE}.tmp" "$OUTPUT_FILE"
-fi
+validate_prerequisites() {
+    if [[ ! -f "$REGISTRY_FILE" ]]; then
+        warn "Hold registry file not found: $REGISTRY_FILE"
+        warn "Create a hold_registry.json file with the required schema."
+        exit 1
+    fi
+
+    if ! jq empty "$REGISTRY_FILE" 2>/dev/null; then
+        warn "Invalid JSON in hold_registry.json"
+        exit 1
+    fi
+}
+
+read_registry() {
+    jq '.holds | length' "$REGISTRY_FILE" 2>/dev/null || echo 0
+}
+
+get_current_holds() {
+    apt-mark showhold 2>/dev/null | sort -u || echo ""
+}
+
+compute_days_to_review() {
+    local review_date="$1"
+    local today
+    today=$(date +%Y-%m-%d)
+
+    local review_epoch today_epoch
+    review_epoch=$(date -d "$review_date" +%s 2>/dev/null || echo 0)
+    today_epoch=$(date -d "$today" +%s 2>/dev/null || echo 0)
+
+    if [[ "$review_epoch" -eq 0 ]]; then
+        echo "9999"
+        return
+    fi
+
+    local diff_seconds=$((review_epoch - today_epoch))
+    local diff_days=$((diff_seconds / 86400))
+    echo "$diff_days"
+}
+
+write_prefs_fragment() {
+    local prefs_content=""
+    prefs_content="// Auto-generated by 10-version_hold.sh\n"
+    prefs_content+="// Managed hold pins for MedDefense billing-srv-01\n"
+    prefs_content+="// Do not edit manually — update hold_registry.json and re-run\n\n"
+
+    while IFS= read -r entry; do
+        [[ -z "$entry" ]] && continue
+
+        local pkg pin_version
+        pkg=$(echo "$entry" | jq -r '.package')
+        pin_version=$(echo "$entry" | jq -r '.pin_version // ""')
+
+        if [[ -n "$pin_version" ]]; then
+            prefs_content+="Package: ${pkg}\n"
+            prefs_content+="Pin: version ${pin_version}\n"
+            prefs_content+="Pin-Priority: 1001\n\n"
+        else
+            prefs_content+="Package: ${pkg}\n"
+            prefs_content+="Pin: release *\n"
+            prefs_content+="Pin-Priority: 1001\n\n"
+        fi
+
+    done < <(jq -c '.holds[]' "$REGISTRY_FILE" 2>/dev/null)
+
+    echo -e "$prefs_content" > "$PREFS_FILE"
+    chmod 644 "$PREFS_FILE"
+}
+
+main() {
+    validate_prerequisites
+
+    # ============================================
+    # STEP 1: Read registry
+    # ============================================
+    local registry_count
+    registry_count=$(read_registry)
+    log "Reading hold_registry.json...           (${registry_count} entries)"
+
+    # ============================================
+    # STEP 2: Read current holds
+    # ============================================
+    local current_holds
+    current_holds=$(get_current_holds)
+    local current_hold_count
+    current_hold_count=0
+    if [[ -n "$current_holds" ]]; then
+        current_hold_count=$(echo "$current_holds" | grep -c . || true)
+        [[ -z "$current_hold_count" ]] && current_hold_count=0
+    fi
+    log "Reading current apt-mark showhold...    (${current_hold_count} entry)"
+
+    # ============================================
+    # STEP 3: Build registry package set
+    # ============================================
+    declare -A registry_packages
+    while IFS= read -r entry; do
+        [[ -z "$entry" ]] && continue
+        local pkg
+        pkg=$(echo "$entry" | jq -r '.package')
+        registry_packages["$pkg"]=1
+    done < <(jq -c '.holds[]' "$REGISTRY_FILE" 2>/dev/null)
+
+    # ============================================
+    # STEP 4: Apply holds from registry
+    # ============================================
+    echo "Applying holds:"
+
+    local applied_temp
+    applied_temp=$(mktemp)
+
+    while IFS= read -r entry; do
+        [[ -z "$entry" ]] && continue
+
+        local pkg reason owner review_date pin_version
+        pkg=$(echo "$entry" | jq -r '.package')
+        reason=$(echo "$entry" | jq -r '.reason // ""')
+        owner=$(echo "$entry" | jq -r '.owner // ""')
+        review_date=$(echo "$entry" | jq -r '.review_date // ""')
+        pin_version=$(echo "$entry" | jq -r '.pin_version // ""')
+
+        apt-mark hold "$pkg" >/dev/null 2>&1 || true
+
+        if [[ -n "$pin_version" ]]; then
+            printf "  %-25s hold + pin %-25s %s\n" "$pkg" "$pin_version" "OK"
+        else
+            printf "  %-25s hold %30s %s\n" "$pkg" "" "OK"
+        fi
+
+        local days_to_review
+        days_to_review=$(compute_days_to_review "$review_date")
+
+        # Use -nc for compact single-line JSON
+        jq -nc \
+            --arg pkg "$pkg" \
+            --arg reason "$reason" \
+            --arg owner "$owner" \
+            --arg review_date "$review_date" \
+            --arg pin_version "$pin_version" \
+            --argjson days_to_review "$days_to_review" \
+            '{package:$pkg, reason:$reason, owner:$owner, review_date:$review_date, pin_version:$pin_version, days_to_review:$days_to_review}' \
+            >> "$applied_temp"
+
+    done < <(jq -c '.holds[]' "$REGISTRY_FILE" 2>/dev/null)
+
+    # ============================================
+    # STEP 5: Write apt preferences fragment
+    # ============================================
+    write_prefs_fragment
+
+    # ============================================
+    # STEP 6: Release holds not in registry (convergence mode)
+    # ============================================
+    echo "Releasing holds no longer in registry:"
+
+    local released_temp
+    released_temp=$(mktemp)
+
+    if [[ -n "$current_holds" ]] && [[ "$current_hold_count" -gt 0 ]]; then
+        while IFS= read -r held_pkg; do
+            [[ -z "$held_pkg" ]] && continue
+
+            if [[ -z "${registry_packages[$held_pkg]:-}" ]]; then
+                apt-mark unhold "$held_pkg" >/dev/null 2>&1 || true
+                printf "  %s\n" "$held_pkg"
+                jq -nc --arg pkg "$held_pkg" '{package:$pkg, action:"released"}' >> "$released_temp"
+            fi
+        done <<< "$current_holds"
+    fi
+
+    local released_count
+    released_count=0
+    if [[ -s "$released_temp" ]]; then
+        released_count=$(grep -c . "$released_temp" || true)
+        [[ -z "$released_count" ]] && released_count=0
+    fi
+
+    if [[ "$released_count" -eq 0 ]]; then
+        echo "  (none)"
+    fi
+
+    # ============================================
+    # STEP 7: Compute overdue reviews
+    # ============================================
+    local overdue_temp
+    overdue_temp=$(mktemp)
+
+    # Read the applied temp file line by line (each line is compact JSON)
+    while IFS= read -r entry; do
+        [[ -z "$entry" ]] && continue
+
+        local pkg review_date days_to_review
+        pkg=$(echo "$entry" | jq -r '.package')
+        review_date=$(echo "$entry" | jq -r '.review_date // ""')
+        days_to_review=$(echo "$entry" | jq -r '.days_to_review // 9999')
+
+        # Ensure it's a valid integer
+        if ! [[ "$days_to_review" =~ ^-?[0-9]+$ ]]; then
+            days_to_review=9999
+        fi
+
+        if [[ "$days_to_review" -lt 0 ]]; then
+            jq -nc \
+                --arg pkg "$pkg" \
+                --arg review_date "$review_date" \
+                --argjson days_to_review "$days_to_review" \
+                '{package:$pkg, review_date:$review_date, days_to_review:$days_to_review}' \
+                >> "$overdue_temp"
+        fi
+
+    done < "$applied_temp"
+
+    local overdue_count
+    overdue_count=0
+    if [[ -s "$overdue_temp" ]]; then
+        overdue_count=$(grep -c . "$overdue_temp" || true)
+        [[ -z "$overdue_count" ]] && overdue_count=0
+    fi
+
+    echo "Overdue reviews: ${overdue_count}"
+
+    # ============================================
+    # STEP 8: Get final held count
+    # ============================================
+    local final_holds
+    final_holds=$(get_current_holds)
+    local final_hold_count
+    final_hold_count=0
+    if [[ -n "$final_holds" ]]; then
+        final_hold_count=$(echo "$final_holds" | grep -c . || true)
+        [[ -z "$final_hold_count" ]] && final_hold_count=0
+    fi
+
+    # ============================================
+    # STEP 9: Build arrays and emit JSON
+    # ============================================
+    local applied_json
+    if [[ -s "$applied_temp" ]]; then
+        applied_json=$(jq -s '.' "$applied_temp" 2>/dev/null || echo '[]')
+    else
+        applied_json='[]'
+    fi
+
+    local released_json
+    if [[ -s "$released_temp" ]]; then
+        released_json=$(jq -s '.' "$released_temp" 2>/dev/null || echo '[]')
+    else
+        released_json='[]'
+    fi
+
+    local overdue_json
+    if [[ -s "$overdue_temp" ]]; then
+        overdue_json=$(jq -s '.' "$overdue_temp" 2>/dev/null || echo '[]')
+    else
+        overdue_json='[]'
+    fi
+
+    jq -n \
+        --argjson applied "$applied_json" \
+        --argjson released "$released_json" \
+        --argjson overdue "$overdue_json" \
+        --argjson total_held "$final_hold_count" \
+        '{applied: $applied, released: $released, overdue_reviews: $overdue, total_held: $total_held}' \
+        > "$OUTPUT_FILE"
+
+    rm -f "$applied_temp" "$released_temp" "$overdue_temp"
+
+    log "Report saved to: $OUTPUT_FILE"
+}
+
+main "$@"
