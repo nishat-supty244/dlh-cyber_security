@@ -1,0 +1,32 @@
+{
+  "generated_at": "2026-08-19T16:59:08Z",
+  "hostname": "nishatsupty",
+  "kernel": "7.0.12+kali-amd64",
+  "resolved": 1,
+  "open": 0,
+  "deferred_held": 0,
+  "deferred_window": 1,
+  "score": 50.00,
+  "target_score": 95.00,
+  "overdue": 1,
+  "cves": [
+    {
+      "id": "CVE-2026-0001",
+      "package": "openssl",
+      "severity": "HIGH",
+      "state": "resolved",
+      "first_seen": "2026-03-01T00:00:00Z",
+      "resolved_at": "2026-03-05T00:00:00Z",
+      "justification": null
+    },
+    {
+      "id": "CVE-2026-0002",
+      "package": "libc6",
+      "severity": "CRITICAL",
+      "state": "deferred_window",
+      "first_seen": "2026-03-01T00:00:00Z",
+      "resolved_at": null,
+      "justification": "Awaiting scheduled maintenance window."
+    }
+  ]
+}
