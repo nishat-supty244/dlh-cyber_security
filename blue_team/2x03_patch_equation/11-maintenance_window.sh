@@ -1,7 +1,7 @@
 #!/bin/bash
 # Window Types:
-#   - standard: Regular weekly maintenance window (e.g., Saturday 02:00-06:00)
-#   - extended: Extended window with optional week_of_month constraint (e.g., first Saturday 00:00-08:00)
+#   - standard: Regular weekly maintenance window (e.g., Wednesday 02:00-06:00)
+#   - extended: Extended window with optional week_of_month constraint (e.g., first Wednesday 00:00-08:00)
 #   - emergency: Always-open window requiring MEDDEFENSE_EMERGENCY=1 to use
 #
 
