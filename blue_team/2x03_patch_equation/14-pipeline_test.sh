@@ -18,14 +18,15 @@ readonly TEST_RESULTS_FILE="${BASE_DIR}/pipeline_test_results.json"
 log() { echo "[*] $*"; }
 warn() { echo "[!] $*" >&2; }
 
-cleanup() {
+restore_feed() {
     if [[ -f "$CVE_BAK" ]]; then
-        mv "$CVE_BAK" "$CVE_FEED"
+        cp "$CVE_BAK" "$CVE_FEED"
+        rm -f "$CVE_BAK"
         log "Restoring cve_feed.json...                OK"
     fi
 }
 
-trap cleanup EXIT
+trap restore_feed EXIT
 
 main() {
     local started_at
@@ -81,7 +82,6 @@ main() {
         warn "Missing produced or expected plan files for comparison."
     fi
 
-    # Validate that every stage emitted a non-empty JSON artifact if pipeline_run exists
     local artifacts_valid=true
     if [[ -f "$PIPELINE_RUN" ]]; then
         local art_paths
@@ -96,11 +96,7 @@ main() {
         artifacts_valid=false
     fi
 
-    # Restore cve_feed right away
-    if [[ -f "$CVE_BAK" ]]; then
-        mv "$CVE_BAK" "$CVE_FEED"
-        log "Restoring cve_feed.json...                OK"
-    fi
+    restore_feed
     trap - EXIT
 
     local verdict="pass"
@@ -111,7 +107,6 @@ main() {
     local finished_at
     finished_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-    # Construct complete pipeline_test_results.json matching all expected schema fields
     jq -n \
         --arg scenario "simulated CVE advisory" \
         --arg started "$started_at" \
