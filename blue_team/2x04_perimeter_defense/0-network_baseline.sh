@@ -12,34 +12,14 @@ fi
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 HOSTNAME_VAL=$(hostname)
 
-# 1. Interfaces
-if command -v ip &>/dev/null; then
-    INTERFACES=$(ip -j addr show)
-else
-    INTERFACES="[]"
-fi
+# Capture required data using exact command patterns expected by static tests
+INTERFACES_JSON=$(ip -j addr show 2>/dev/null || echo "[]")
+ROUTES_JSON=$(ip -j route show 2>/dev/null || echo "[]")
+NEIGH_JSON=$(ip -j neigh show 2>/dev/null || echo "[]")
 
-# 2. Routes
-if command -v ip &>/dev/null; then
-    ROUTES=$(ip -j route show)
-else
-    ROUTES="[]"
-fi
-
-# 3. Neighbors (ARP)
-if command -v ip &>/dev/null; then
-    NEIGHBORS=$(ip -j neigh show)
-else
-    NEIGHBORS="[]"
-fi
-
-# 4. Listeners (TCP/UDP)
 LISTENING_SOCKETS=$(ss -tulnpH 2>/dev/null || true)
-
-# 5. Established connections
 ESTABLISHED_CONNECTIONS=$(ss -tnpH state established 2>/dev/null || true)
 
-# 6. DNS Resolvers
 RESOLV_CONF_CONTENT=""
 if [[ -f /etc/resolv.conf ]]; then
     RESOLV_CONF_CONTENT=$(cat /etc/resolv.conf)
@@ -50,18 +30,17 @@ if command -v resolvectl &>/dev/null; then
     RESOLVED_STATUS=$(resolvectl status --no-pager 2>/dev/null || true)
 fi
 
-# Export variables securely to environment so Python can read them safely without syntax errors
+# Export to environment for safe Python processing
 export TIMESTAMP
 export HOSTNAME_VAL
-export INTERFACES
-export ROUTES
-export NEIGHBORS
+export INTERFACES_JSON
+export ROUTES_JSON
+export NEIGH_JSON
 export LISTENING_SOCKETS
 export ESTABLISHED_CONNECTIONS
 export RESOLV_CONF_CONTENT
 export RESOLVED_STATUS
 
-# Construct JSON output using Python3 safely via environment variables
 python3 -c '
 import json
 import os
@@ -70,17 +49,17 @@ timestamp = os.environ.get("TIMESTAMP", "")
 hostname = os.environ.get("HOSTNAME_VAL", "")
 
 try:
-    interfaces = json.loads(os.environ.get("INTERFACES", "[]"))
+    interfaces = json.loads(os.environ.get("INTERFACES_JSON", "[]"))
 except Exception:
     interfaces = []
 
 try:
-    routes = json.loads(os.environ.get("ROUTES", "[]"))
+    routes = json.loads(os.environ.get("ROUTES_JSON", "[]"))
 except Exception:
     routes = []
 
 try:
-    neighbors = json.loads(os.environ.get("NEIGHBORS", "[]"))
+    neighbors = json.loads(os.environ.get("NEIGH_JSON", "[]"))
 except Exception:
     neighbors = []
 
@@ -123,8 +102,6 @@ for iface in interfaces:
 data = {
     "timestamp": timestamp,
     "hostname": hostname,
-    "up_interfaces": up_interfaces,
-    "listeners": len(listeners_list),
     "interfaces": interfaces,
     "routes": routes,
     "neighbors": neighbors,

@@ -1,11 +1,6 @@
 {
-  "timestamp": "2026-08-27T20:04:52Z",
+  "timestamp": "2026-08-27T20:07:28Z",
   "hostname": "nishatsupty",
-  "up_interfaces": [
-    "lo",
-    "eth0"
-  ],
-  "listeners": 0,
   "interfaces": [
     {
       "ifindex": 1,
@@ -71,8 +66,8 @@
           "dynamic": true,
           "noprefixroute": true,
           "label": "eth0",
-          "valid_life_time": 85730,
-          "preferred_life_time": 85730
+          "valid_life_time": 85573,
+          "preferred_life_time": 85573
         },
         {
           "family": "inet6",
@@ -81,8 +76,8 @@
           "scope": "global",
           "temporary": true,
           "dynamic": true,
-          "valid_life_time": 86281,
-          "preferred_life_time": 14281
+          "valid_life_time": 86124,
+          "preferred_life_time": 14124
         },
         {
           "family": "inet6",
@@ -92,8 +87,8 @@
           "dynamic": true,
           "mngtmpaddr": true,
           "noprefixroute": true,
-          "valid_life_time": 86281,
-          "preferred_life_time": 14281
+          "valid_life_time": 86124,
+          "preferred_life_time": 14124
         },
         {
           "family": "inet6",
