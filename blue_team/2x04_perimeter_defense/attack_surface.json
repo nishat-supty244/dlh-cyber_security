@@ -1,12 +1,16 @@
 {
-  "generated_at": "2026-08-27T20:20:11Z",
+  "generated_at": "2026-08-27T20:23:49Z",
   "hostname": "nishatsupty",
   "sockets": [],
   "summary": {
-    "critical": 0,
-    "high": 0,
-    "medium": 0,
-    "low": 0,
-    "unknown_function": 0
+    "total_sockets": 0,
+    "flagged_sockets": 0,
+    "unknown_functions": 0,
+    "by_severity": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
   }
 }
