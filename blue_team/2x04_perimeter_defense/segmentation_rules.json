@@ -1,4 +1,5 @@
 {
+  "generated_at": "2026-08-28T13:09:36Z",
   "zones": [
     {
       "name": "DMZ",
@@ -26,113 +27,119 @@
       "cidr": "10.0.4.0/24",
       "purpose": "Medical device VLAN",
       "default_inbound": "drop",
-      "default_outbound": "drop"
+      "default_outbound": "drop",
+      "outbound_restrictions": [
+        "no_dmz_access",
+        "no_public_internet_access"
+      ]
     }
   ],
   "flows": [
     {
+      "action": "allow",
       "src_zone": "MGMT",
       "dst_zone": "INTERNAL",
       "proto": "tcp",
       "dport": 22,
-      "justification": "Administration",
-      "exception_for": null
+      "justification": "Administration"
     },
     {
+      "action": "allow",
       "src_zone": "MGMT",
       "dst_zone": "DMZ",
       "proto": "tcp",
       "dport": 22,
-      "justification": "Administration",
-      "exception_for": null
+      "justification": "Administration"
     },
     {
+      "action": "allow",
       "src_zone": "INTERNAL",
       "dst_zone": "INTERNAL",
       "proto": "tcp",
       "dport": 443,
-      "justification": "Clinical workstations to internal server hosts",
-      "exception_for": null
+      "justification": "Clinical workstations to internal server hosts"
     },
     {
+      "action": "allow",
       "src_zone": "INTERNAL",
       "dst_zone": "INTERNAL",
       "proto": "tcp",
       "dport": 3306,
-      "justification": "Clinical workstations to internal server hosts",
-      "exception_for": null
+      "justification": "Clinical workstations to internal server hosts"
     },
     {
+      "action": "allow",
       "src_zone": "DMZ",
       "dst_zone": "INTERNAL",
       "proto": "tcp",
       "dport": 3306,
       "justification": "Named DMZ application hosts to internal databases",
-      "exception_for": null
+      "exception_for": "dmz_app_hosts_only",
+      "src_restriction": "named_dmz_application_hosts"
     },
     {
+      "action": "allow",
       "src_zone": "MEDDEV",
       "dst_zone": "INTERNAL",
       "proto": "tcp",
       "dport": 4242,
-      "justification": "DICOM imaging to PACS",
-      "exception_for": null
+      "justification": "DICOM imaging to PACS"
     },
     {
+      "action": "allow",
       "src_zone": "MEDDEV",
       "dst_zone": "INTERNAL",
       "proto": "tcp",
       "dport": 443,
-      "justification": "EHR web integration for device display",
-      "exception_for": null
+      "justification": "EHR web integration for device display"
     },
     {
+      "action": "allow",
       "src_zone": "ALL",
       "dst_zone": "MGMT",
       "proto": "udp",
       "dport": 53,
-      "justification": "DNS resolver",
-      "exception_for": null
+      "justification": "DNS resolver"
     },
     {
+      "action": "allow",
       "src_zone": "ALL",
       "dst_zone": "MGMT",
       "proto": "tcp",
       "dport": 53,
-      "justification": "DNS resolver",
-      "exception_for": null
+      "justification": "DNS resolver"
     },
     {
+      "action": "allow",
       "src_zone": "MGMT",
       "dst_zone": "MEDDEV",
       "proto": "tcp",
       "dport": 22,
-      "justification": "Administration access",
-      "exception_for": null
+      "justification": "Administration access"
     },
     {
+      "action": "allow",
       "src_zone": "MGMT",
       "dst_zone": "MEDDEV",
       "proto": "tcp",
       "dport": 4242,
-      "justification": "Management access",
-      "exception_for": null
+      "justification": "Management access"
     },
     {
+      "action": "deny_all",
       "src_zone": "MEDDEV",
       "dst_zone": "DMZ",
-      "proto": "deny_all",
+      "proto": "any",
       "dport": 0,
-      "justification": "Explicit deny_all for unauthorized cross-zone path",
-      "exception_for": null
+      "justification": "No flows from MEDDEV to DMZ"
     },
     {
+      "action": "deny_all",
       "src_zone": "MEDDEV",
       "dst_zone": "INTERNET",
-      "proto": "deny_all",
+      "proto": "any",
       "dport": 0,
-      "justification": "Explicit deny_all for unauthorized public Internet path",
-      "exception_for": null
+      "justification": "No flows from MEDDEV to the public Internet"
     }
   ],
   "summary": {
