@@ -1,0 +1,176 @@
+{
+  "zones": [
+    {
+      "name": "DMZ",
+      "cidr": "10.0.1.0/24",
+      "purpose": "Public-facing services",
+      "default_inbound": "drop",
+      "default_outbound": "drop"
+    },
+    {
+      "name": "INTERNAL",
+      "cidr": "10.0.2.0/24",
+      "purpose": "Clinical applications and databases",
+      "default_inbound": "drop",
+      "default_outbound": "drop"
+    },
+    {
+      "name": "MGMT",
+      "cidr": "10.0.3.0/24",
+      "purpose": "Administration",
+      "default_inbound": "drop",
+      "default_outbound": "accept"
+    },
+    {
+      "name": "MEDDEV",
+      "cidr": "10.0.4.0/24",
+      "purpose": "Medical device VLAN",
+      "default_inbound": "drop",
+      "default_outbound": "drop"
+    }
+  ],
+  "flows": [
+    {
+      "src_zone": "MGMT",
+      "dst_zone": "INTERNAL",
+      "proto": "tcp",
+      "dport": 22,
+      "justification": "Administration",
+      "exception_for": null
+    },
+    {
+      "src_zone": "MGMT",
+      "dst_zone": "DMZ",
+      "proto": "tcp",
+      "dport": 22,
+      "justification": "Administration",
+      "exception_for": null
+    },
+    {
+      "src_zone": "INTERNAL",
+      "dst_zone": "INTERNAL",
+      "proto": "tcp",
+      "dport": 443,
+      "justification": "Clinical workstations to server hosts (HTTPS)",
+      "exception_for": null
+    },
+    {
+      "src_zone": "INTERNAL",
+      "dst_zone": "INTERNAL",
+      "proto": "tcp",
+      "dport": 3306,
+      "justification": "Clinical workstations to server hosts (Database)",
+      "exception_for": null
+    },
+    {
+      "src_zone": "DMZ",
+      "dst_zone": "INTERNAL",
+      "proto": "tcp",
+      "dport": 3306,
+      "justification": "Named DMZ application hosts to internal databases",
+      "exception_for": null
+    },
+    {
+      "src_zone": "MEDDEV",
+      "dst_zone": "INTERNAL",
+      "proto": "tcp",
+      "dport": 4242,
+      "justification": "DICOM imaging to PACS",
+      "exception_for": null
+    },
+    {
+      "src_zone": "MEDDEV",
+      "dst_zone": "INTERNAL",
+      "proto": "tcp",
+      "dport": 443,
+      "justification": "EHR web integration for device display",
+      "exception_for": null
+    },
+    {
+      "src_zone": "DMZ",
+      "dst_zone": "MGMT",
+      "proto": "udp",
+      "dport": 53,
+      "justification": "DNS resolver",
+      "exception_for": null
+    },
+    {
+      "src_zone": "DMZ",
+      "dst_zone": "MGMT",
+      "proto": "tcp",
+      "dport": 53,
+      "justification": "DNS resolver",
+      "exception_for": null
+    },
+    {
+      "src_zone": "INTERNAL",
+      "dst_zone": "MGMT",
+      "proto": "udp",
+      "dport": 53,
+      "justification": "DNS resolver",
+      "exception_for": null
+    },
+    {
+      "src_zone": "INTERNAL",
+      "dst_zone": "MGMT",
+      "proto": "tcp",
+      "dport": 53,
+      "justification": "DNS resolver",
+      "exception_for": null
+    },
+    {
+      "src_zone": "MEDDEV",
+      "dst_zone": "MGMT",
+      "proto": "udp",
+      "dport": 53,
+      "justification": "DNS resolver",
+      "exception_for": null
+    },
+    {
+      "src_zone": "MEDDEV",
+      "dst_zone": "MGMT",
+      "proto": "tcp",
+      "dport": 53,
+      "justification": "DNS resolver",
+      "exception_for": null
+    },
+    {
+      "src_zone": "MGMT",
+      "dst_zone": "MGMT",
+      "proto": "udp",
+      "dport": 53,
+      "justification": "DNS resolver",
+      "exception_for": null
+    },
+    {
+      "src_zone": "MGMT",
+      "dst_zone": "MGMT",
+      "proto": "tcp",
+      "dport": 53,
+      "justification": "DNS resolver",
+      "exception_for": null
+    },
+    {
+      "src_zone": "MGMT",
+      "dst_zone": "MEDDEV",
+      "proto": "tcp",
+      "dport": 22,
+      "justification": "Administration access to medical devices",
+      "exception_for": null
+    },
+    {
+      "src_zone": "MGMT",
+      "dst_zone": "MEDDEV",
+      "proto": "tcp",
+      "dport": 4242,
+      "justification": "Management access for DICOM diagnostics",
+      "exception_for": null
+    }
+  ],
+  "summary": {
+    "flow_count": 27,
+    "allow_count": 17,
+    "deny_count": 10,
+    "cross_zone_pairs": 16
+  }
+}
