@@ -2,29 +2,30 @@
 .SYNOPSIS
     Aligns Windows Firewall to the MedDefense segmentation design using segmentation_rules.json.
 .DESCRIPTION
-    Reads segmentation_rules.json, sets profile defaults, enables logging, cleans up old rules,
-    and creates new inbound rules matching the flow matrix.
+    Reads segmentation_rules.json, sets profile defaults, enables dropped packet logging to meddefense.log,
+    cleans up old MedDefense rules, creates inbound flow rules, and exports resulting rules as structured JSON.
 #>
 
 $ErrorActionPreference = "Stop"
 $RulesJsonPath = "segmentation_rules.json"
+$ExportJsonPath = "windows_firewall_rules.json"
 
 if (-not (Test-Path -Path $RulesJsonPath)) {
     Write-Error "[-] Error: $RulesJsonPath not found in the current directory. Run task 2 first."
     exit 1
 }
 
-Write-Host "[*] Reading $RulesJsonPath..." -ForegroundColor Cyan
+Write-Host "[*] Reading $RulesJsonPath..."
 $Config = Get-Content -Path $RulesJsonPath -Raw | ConvertFrom-Json
 
-Write-Host "[*] Setting profile defaults..." -ForegroundColor Cyan
+Write-Host "[*] Setting profile defaults..."
 $Profiles = @("Domain", "Private", "Public")
 foreach ($Profile in $Profiles) {
     Set-NetFirewallProfile -Profile $Profile -DefaultInboundAction Block -DefaultOutboundAction Allow -LogBlocked True -LogFileName "%systemroot%\system32\LogFiles\Firewall\meddefense.log"
     Write-Host "  $Profile`:  DefaultInboundAction=Block  LogBlocked=True   [SET]"
 }
 
-Write-Host "[*] Clearing previous MedDefense-* rules..." -ForegroundColor Cyan
+Write-Host "[*] Clearing previous MedDefense-* rules..."
 $ExistingRules = Get-NetFirewallRule -DisplayName "MedDefense-*" -ErrorAction SilentlyContinue
 $RemovedCount = 0
 if ($ExistingRules) {
@@ -33,19 +34,16 @@ if ($ExistingRules) {
 }
 Write-Host "  [$RemovedCount removed]"
 
-Write-Host "[*] Creating rules from flow matrix..." -ForegroundColor Cyan
+Write-Host "[*] Creating rules from flow matrix..."
 
 # Create a lookup table for zone CIDRs
 $ZoneCidrs = @{}
 foreach ($Zone in $Config.zones) {
     $ZoneCidrs[$Zone.name] = $Zone.cidr
 }
-
-# Also map 'ALL' to any/all or loop through zones
 $ZoneCidrs["ALL"] = "Any"
 
 foreach ($Flow in $Config.flows) {
-    # We care about inbound flows that terminate on this host / specific rules
     if ($Flow.action -eq "allow") {
         $SrcZone = $Flow.src_zone
         $Proto = $Flow.proto
@@ -53,13 +51,11 @@ foreach ($Flow in $Config.flows) {
         
         $DisplayName = "MedDefense-$SrcZone-$($Proto.ToUpper())-$DPort"
         
-        # Determine RemoteAddress based on source zone CIDR
         $RemoteAddr = if ($ZoneCidrs.ContainsKey($SrcZone)) { $ZoneCidrs[$SrcZone] } else { "Any" }
         if ($RemoteAddr -eq "Any") {
             $RemoteAddr = $null
         }
 
-        # Build parameters for New-NetFirewallRule
         $RuleParams = @{
             DisplayName  = $DisplayName
             Direction    = "Inbound"
@@ -69,17 +65,20 @@ foreach ($Flow in $Config.flows) {
             Profile      = "Any"
         }
 
-        if ($RemoteAddr) {
+        if ($RemoteAddr -and $RemoteAddr -ne "0.0.0.0/0") {
             $RuleParams["RemoteAddress"] = $RemoteAddr
         }
 
         try {
             New-NetFirewallRule @RuleParams -ErrorAction Stop | Out-Null
-            Write-Host "  $DisplayName`  Inbound Allow $Proto $DPort    [CREATED]" -ForegroundColor Green
+            Write-Host "  $DisplayName    Inbound Allow $Proto $DPort    [CREATED]"
         } catch {
             Write-Warning "  Failed to create rule $DisplayName`: $_"
         }
     }
 }
 
-Write-Host "[*] Windows firewall alignment completed successfully." -ForegroundColor Green
+Write-Host "[*] Exporting resulting Windows Firewall rules as JSON to $ExportJsonPath..."
+Get-NetFirewallRule -DisplayName "MedDefense-*" | Get-NetFirewallPortFilter | Select-Object Name, Protocol, LocalPort | ConvertTo-Json | Set-Content -Path $ExportJsonPath
+
+Write-Host "[*] Windows firewall alignment and export completed successfully."
