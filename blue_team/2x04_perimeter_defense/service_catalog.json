@@ -1,0 +1,33 @@
+{
+  "ports": {
+    "3306": "database",
+    "5432": "database",
+    "80": "web",
+    "443": "web",
+    "22": "ssh",
+    "53": "dns",
+    "123": "ntp",
+    "111": "rpc",
+    "2049": "nfs",
+    "445": "smb",
+    "139": "smb",
+    "631": "print",
+    "161": "snmpv2c",
+    "23": "telnet",
+    "21": "ftp",
+    "513": "rlogin"
+  },
+  "processes": {
+    "mysqld": "database",
+    "postgres": "database",
+    "nginx": "web",
+    "apache2": "web",
+    "sshd": "ssh",
+    "named": "dns",
+    "ntpd": "ntp",
+    "rpcbind": "rpc",
+    "smbd": "smb",
+    "snmpd": "snmpv2c",
+    "in.telnetd": "telnet"
+  }
+}
