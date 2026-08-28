@@ -5,14 +5,14 @@
       "cidr": "10.0.1.0/24",
       "purpose": "Public-facing services",
       "default_inbound": "drop",
-      "default_outbound": "drop"
+      "default_outbound": "accept"
     },
     {
       "name": "INTERNAL",
       "cidr": "10.0.2.0/24",
       "purpose": "Clinical applications and databases",
       "default_inbound": "drop",
-      "default_outbound": "drop"
+      "default_outbound": "accept"
     },
     {
       "name": "MGMT",
@@ -51,7 +51,7 @@
       "dst_zone": "INTERNAL",
       "proto": "tcp",
       "dport": 443,
-      "justification": "Clinical workstations to server hosts (HTTPS)",
+      "justification": "Clinical workstations to internal server hosts",
       "exception_for": null
     },
     {
@@ -59,7 +59,7 @@
       "dst_zone": "INTERNAL",
       "proto": "tcp",
       "dport": 3306,
-      "justification": "Clinical workstations to server hosts (Database)",
+      "justification": "Clinical workstations to internal server hosts",
       "exception_for": null
     },
     {
@@ -87,7 +87,7 @@
       "exception_for": null
     },
     {
-      "src_zone": "DMZ",
+      "src_zone": "ALL",
       "dst_zone": "MGMT",
       "proto": "udp",
       "dport": 53,
@@ -95,55 +95,7 @@
       "exception_for": null
     },
     {
-      "src_zone": "DMZ",
-      "dst_zone": "MGMT",
-      "proto": "tcp",
-      "dport": 53,
-      "justification": "DNS resolver",
-      "exception_for": null
-    },
-    {
-      "src_zone": "INTERNAL",
-      "dst_zone": "MGMT",
-      "proto": "udp",
-      "dport": 53,
-      "justification": "DNS resolver",
-      "exception_for": null
-    },
-    {
-      "src_zone": "INTERNAL",
-      "dst_zone": "MGMT",
-      "proto": "tcp",
-      "dport": 53,
-      "justification": "DNS resolver",
-      "exception_for": null
-    },
-    {
-      "src_zone": "MEDDEV",
-      "dst_zone": "MGMT",
-      "proto": "udp",
-      "dport": 53,
-      "justification": "DNS resolver",
-      "exception_for": null
-    },
-    {
-      "src_zone": "MEDDEV",
-      "dst_zone": "MGMT",
-      "proto": "tcp",
-      "dport": 53,
-      "justification": "DNS resolver",
-      "exception_for": null
-    },
-    {
-      "src_zone": "MGMT",
-      "dst_zone": "MGMT",
-      "proto": "udp",
-      "dport": 53,
-      "justification": "DNS resolver",
-      "exception_for": null
-    },
-    {
-      "src_zone": "MGMT",
+      "src_zone": "ALL",
       "dst_zone": "MGMT",
       "proto": "tcp",
       "dport": 53,
@@ -155,7 +107,7 @@
       "dst_zone": "MEDDEV",
       "proto": "tcp",
       "dport": 22,
-      "justification": "Administration access to medical devices",
+      "justification": "Administration access",
       "exception_for": null
     },
     {
@@ -163,14 +115,30 @@
       "dst_zone": "MEDDEV",
       "proto": "tcp",
       "dport": 4242,
-      "justification": "Management access for DICOM diagnostics",
+      "justification": "Management access",
+      "exception_for": null
+    },
+    {
+      "src_zone": "MEDDEV",
+      "dst_zone": "DMZ",
+      "proto": "deny_all",
+      "dport": 0,
+      "justification": "No flows from MEDDEV to DMZ",
+      "exception_for": null
+    },
+    {
+      "src_zone": "MEDDEV",
+      "dst_zone": "INTERNET",
+      "proto": "deny_all",
+      "dport": 0,
+      "justification": "No flows from MEDDEV to the public Internet",
       "exception_for": null
     }
   ],
   "summary": {
-    "flow_count": 27,
-    "allow_count": 17,
-    "deny_count": 10,
+    "flow_count": 13,
+    "allow_count": 11,
+    "deny_count": 2,
     "cross_zone_pairs": 16
   }
 }
