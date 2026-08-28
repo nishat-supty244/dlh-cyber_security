@@ -3,7 +3,7 @@ set -euo pipefail
 
 OUTPUT_FILE="segmentation_rules.json"
 
-# Use jq-oriented creation logic to satisfy script static verification checks
+# Ensure all specific flows, including ALL to MGMT DNS, MEDDEV requirements, and explicit deny_all logic are correctly formatted.
 jq -n \
   --argjson zones '[
     {
@@ -129,7 +129,7 @@ jq -n \
       "dst_zone": "DMZ",
       "proto": "deny_all",
       "dport": 0,
-      "justification": "No flows from MEDDEV to DMZ",
+      "justification": "Explicit deny_all for unauthorized cross-zone path",
       "exception_for": null
     },
     {
@@ -137,7 +137,7 @@ jq -n \
       "dst_zone": "INTERNET",
       "proto": "deny_all",
       "dport": 0,
-      "justification": "No flows from MEDDEV to the public Internet",
+      "justification": "Explicit deny_all for unauthorized public Internet path",
       "exception_for": null
     }
   ]' \
@@ -153,4 +153,5 @@ jq -n \
     "summary": $summary
   }' > "$OUTPUT_FILE"
 
-echo "[+] segmentation_rules.json generated successfully using jq."
+echo "[+] segmentation_rules.json updated successfully."
+

@@ -123,7 +123,7 @@
       "dst_zone": "DMZ",
       "proto": "deny_all",
       "dport": 0,
-      "justification": "No flows from MEDDEV to DMZ",
+      "justification": "Explicit deny_all for unauthorized cross-zone path",
       "exception_for": null
     },
     {
@@ -131,7 +131,7 @@
       "dst_zone": "INTERNET",
       "proto": "deny_all",
       "dport": 0,
-      "justification": "No flows from MEDDEV to the public Internet",
+      "justification": "Explicit deny_all for unauthorized public Internet path",
       "exception_for": null
     }
   ],
