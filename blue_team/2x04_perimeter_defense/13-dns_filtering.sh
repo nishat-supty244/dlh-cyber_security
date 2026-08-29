@@ -1,8 +1,4 @@
 #!/bin/bash
-#
-# Name:        13-dns_filtering.sh
-# Purpose:     Configure local DNS filtering via dnsmasq and validate allow/block/upstream paths
-#
 
 set -euo pipefail
 
