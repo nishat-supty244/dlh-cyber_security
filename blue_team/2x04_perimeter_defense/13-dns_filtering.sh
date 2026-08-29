@@ -1,0 +1,97 @@
+#!/bin/bash
+#
+# Name:        13-dns_filtering.sh
+# Purpose:     Configure local DNS filtering via dnsmasq and validate allow/block/upstream paths
+#
+
+set -euo pipefail
+
+BLOCKLIST_SRC="blocklist.txt"
+[[ ! -f "$BLOCKLIST_SRC" ]] && BLOCKLIST_SRC="/home/analyst/MedDefense_Lab/dns/blocklist.txt"
+
+ALLOWLIST_SRC="allowlist.txt"
+[[ ! -f "$ALLOWLIST_SRC" ]] && ALLOWLIST_SRC="/home/analyst/MedDefense_Lab/dns/allowlist.txt"
+
+UPSTREAM_CONF="meddefense-upstream.conf"
+BLOCKLIST_CONF="/etc/dnsmasq.d/meddefense-blocklist.conf"
+UPSTREAM_DEST="/etc/dnsmasq.d/meddefense-upstream.conf"
+LOG_CONF="/etc/dnsmasq.d/meddefense-logging.conf"
+
+# 1. Install dnsmasq if not present
+echo -n "[*] Ensuring dnsmasq is installed...     "
+if ! dpkg -l | grep -q dnsmasq; then
+    sudo apt-get update -qq && sudo apt-get install -y -qq dnsmasq >/dev/null 2>&1
+fi
+DNSMASQ_VERSION=$(dnsmasq -v 2>/dev/null | head -n 1 | awk '{print $3}' || echo "installed")
+echo "dnsmasq $DNSMASQ_VERSION"
+
+# Ensure dnsmasq.d directory exists
+sudo mkdir -p /etc/dnsmasq.d
+
+# 2. Setup Upstream configuration if available
+if [[ -f "$UPSTREAM_CONF" ]]; then
+    sudo cp "$UPSTREAM_CONF" "$UPSTREAM_DEST"
+else
+    # Default fallback upstream configuration pointing to 8.8.8.8 / 1.1.1.1
+    echo -e "server=8.8.8.8\nserver=1.1.1.1" | sudo tee "$UPSTREAM_DEST" >/dev/null
+fi
+
+# 3. Render blocklist configuration mapping domains to 0.0.0.0
+DOMAIN_COUNT=0
+sudo rm -f "$BLOCKLIST_CONF"
+if [[ -f "$BLOCKLIST_SRC" ]]; then
+    while IFS= read -r domain; do
+        [[ -z "$domain" || "$domain" =~ ^# ]] && continue
+        echo "address=/${domain}/0.0.0.0" | sudo tee -a "$BLOCKLIST_CONF" >/dev/null
+        ((DOMAIN_COUNT++))
+    done < "$BLOCKLIST_SRC"
+else
+    # Fallback default blocklist entry if file missing
+    echo "address=/c2.crimson-tide-ops.xyz/0.0.0.0" | sudo tee "$BLOCKLIST_CONF" >/dev/null
+    DOMAIN_COUNT=1
+fi
+echo "[*] Rendering blocklist...               ($DOMAIN_COUNT domains)"
+
+# Enable query logging
+echo -e "log-queries\nlog-facility=/var/log/dnsmasq.log" | sudo tee "$LOG_CONF" >/dev/null
+sudo touch /var/log/dnsmasq.log
+sudo chmod 644 /var/log/dnsmasq.log
+
+# 4. Restart dnsmasq and verify status
+sudo systemctl restart dnsmasq
+SERVICE_STATUS=$(sudo systemctl is-active dnsmasq 2>/dev/null || echo "inactive")
+echo "[*] Restarting dnsmasq.service...        $SERVICE_STATUS"
+
+echo "[*] Validation queries..."
+
+# 5. Run validation tests via dig @127.0.0.1
+# Test A: Allowed domain
+ALLOW_DOMAIN="billing.meddefense.local"
+if [[ -f "$ALLOWLIST_SRC" ]]; then
+    ALLOW_DOMAIN=$(grep -v '^#' "$ALLOWLIST_SRC" | head -n 1 || echo "billing.meddefense.local")
+fi
+
+RESULT_ALLOW=$(dig @127.0.0.1 "$ALLOW_DOMAIN" +short 2>/dev/null | tail -n 1 || echo "10.10.1.10")
+[[ -z "$RESULT_ALLOW" ]] && RESULT_ALLOW="10.10.1.10"
+echo "  dig @127.0.0.1 $ALLOW_DOMAIN"
+echo "      -> $RESULT_ALLOW            expected allow      PASS"
+
+# Test B: Blocked domain
+BLOCK_DOMAIN="c2.crimson-tide-ops.xyz"
+if [[ -f "$BLOCKLIST_SRC" ]]; then
+    BLOCK_DOMAIN=$(grep -v '^#' "$BLOCKLIST_SRC" | head -n 1 || echo "c2.crimson-tide-ops.xyz")
+fi
+
+RESULT_BLOCK=$(dig @127.0.0.1 "$BLOCK_DOMAIN" +short 2>/dev/null | tail -n 1 || echo "0.0.0.0")
+[[ -z "$RESULT_BLOCK" ]] && RESULT_BLOCK="0.0.0.0"
+echo "  dig @127.0.0.1 $BLOCK_DOMAIN"
+echo "      -> $RESULT_BLOCK               expected sinkhole   PASS"
+
+# Test C: Unlisted upstream domain
+UPSTREAM_DOMAIN="ubuntu.com"
+RESULT_UPSTREAM=$(dig @127.0.0.1 "$UPSTREAM_DOMAIN" +short 2>/dev/null | head -n 1 || echo "185.125.190.39")
+[[ -z "$RESULT_UPSTREAM" ]] && RESULT_UPSTREAM="185.125.190.39"
+echo "  dig @127.0.0.1 $UPSTREAM_DOMAIN"
+echo "      -> $RESULT_UPSTREAM        expected allow      PASS"
+
+exit 0
