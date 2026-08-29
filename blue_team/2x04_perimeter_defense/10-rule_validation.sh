@@ -5,6 +5,7 @@ RULES_FILE="meddefense.rules"
 CONFIG_FILE="./suricata.yaml"
 LAB_LABELS_DIR="/home/analyst/MedDefense_Lab/PCAPs/labels"
 LOG_DIR="/tmp/suricata-rule-validation"
+OUTPUT_JSON="rule_validation.json"
 
 if [[ ! -f "$RULES_FILE" ]]; then
     echo "Error: $RULES_FILE not found." >&2
@@ -15,7 +16,6 @@ RULE_COUNT=$(grep -cE '^alert' "$RULES_FILE")
 echo "[*] Loading $RULES_FILE...          $RULE_COUNT rules"
 echo "[*] Running validation against labeled PCAPs..."
 
-# Define mapping array of SID -> Name -> PCAP filename -> Expected behavior
 declare -A RULE_MAP=(
     [9000001]="MEDDEV to Internet|meddev_egress.pcap"
     [9000002]="Guest to SMB|guest_smb.pcap"
@@ -27,13 +27,7 @@ declare -A RULE_MAP=(
 
 PASSED=0
 FAILED=0
-
-# Ensure custom rules are part of rules path or config if necessary
-# We can run suricata referencing our custom rules via command-line or config file overrides.
-# Suricata allows loading extra rules or we can ensure meddefense.rules is inside /var/lib/suricata/rules/
-RULES_DST="/var/lib/suricata/rules"
-mkdir -p "$RULES_DST"
-cp -f "$RULES_FILE" "$RULES_DST/"
+RESULTS_JSON="[]"
 
 for sid in 9000001 9000002 9000003 9000004 9000005 9000006; do
     IFS='|' read -r rule_name pcap_name <<< "${RULE_MAP[$sid]}"
@@ -48,7 +42,6 @@ for sid in 9000001 9000002 9000003 9000004 9000005 9000006; do
         rm -rf "$LOG_DIR"
         mkdir -p "$LOG_DIR"
         
-        # Run suricata with the rules file explicitly loaded
         suricata -c "$CONFIG_FILE" -S "$RULES_FILE" -r "$PCAP_PATH" -l "$LOG_DIR" >/dev/null 2>&1 || true
         
         if [[ -f "${LOG_DIR}/eve.json" ]]; then
@@ -57,14 +50,35 @@ for sid in 9000001 9000002 9000003 9000004 9000005 9000006; do
         fi
     fi
 
+    STATUS="FAIL"
     if [[ "$HIT_COUNT" -gt 0 ]]; then
         echo "  observed: fire ($HIT_COUNT hits)                PASS"
         ((PASSED++))
+        STATUS="PASS"
     else
         echo "  observed: no hits                      FAIL"
         ((FAILED++))
     fi
+
+    # Build result item for JSON
+    ITEM=$(jq -n \
+        --argjson sid "$sid" \
+        --arg name "$rule_name" \
+        --arg pcap "$pcap_name" \
+        --arg status "$STATUS" \
+        --argjson hits "$HIT_COUNT" \
+        '{sid: $sid, name: $name, target: $pcap, expected: "fire", observed: $status, hits: $hits}')
+    
+    RESULTS_JSON=$(echo "$RESULTS_JSON" | jq --argjson item "$ITEM" '. + [$item]')
 done
+
+# Write out rule_validation.json as required by the test checks
+jq -n \
+    --argjson rules "$RULE_COUNT" \
+    --argjson passed "$PASSED" \
+    --argjson failed "$FAILED" \
+    --argjson results "$RESULTS_JSON" \
+    '{total_rules: $rules, passed: $passed, failed: $failed, results: $results}' > "$OUTPUT_JSON"
 
 echo ""
 echo "Rules:  $RULE_COUNT"
@@ -75,6 +89,3 @@ if [[ "$FAILED" -gt 0 ]]; then
     exit 1
 fi
 exit 0
-EOF
-
-chmod +x 10-rule_validation.sh
