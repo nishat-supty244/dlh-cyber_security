@@ -6,12 +6,8 @@
 
 set -uo pipefail
 
-BLOCKLIST_SRC="/home/analyst/MedDefense_Lab/dns/blocklist.txt"
-[[ ! -f "$BLOCKLIST_SRC" ]] && BLOCKLIST_SRC="blocklist.txt"
-
-ALLOWLIST_SRC="/home/analyst/MedDefense_Lab/dns/allowlist.txt"
-[[ ! -f "$ALLOWLIST_SRC" ]] && ALLOWLIST_SRC="allowlist.txt"
-
+BLOCKLIST_SRC="blocklist.txt"
+ALLOWLIST_SRC="allowlist.txt"
 UPSTREAM_CONF="meddefense-upstream.conf"
 BLOCKLIST_CONF="/etc/dnsmasq.d/meddefense-blocklist.conf"
 UPSTREAM_DEST="/etc/dnsmasq.d/meddefense-upstream.conf"
@@ -19,7 +15,6 @@ LOG_CONF="/etc/dnsmasq.d/meddefense-logging.conf"
 REPORT_JSON="dnsfilter_report.json"
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-# 1. Install dnsmasq idempotently
 echo -n "[*] Ensuring dnsmasq is installed...     "
 if ! dpkg -l | grep -q dnsmasq; then
     sudo apt-get update -qq && sudo apt-get install -y -qq dnsmasq >/dev/null 2>&1
@@ -29,14 +24,12 @@ echo "dnsmasq $DNSMASQ_VERSION"
 
 sudo mkdir -p /etc/dnsmasq.d
 
-# 2. Read upstream configuration
 if [[ -f "$UPSTREAM_CONF" ]]; then
     sudo cp "$UPSTREAM_CONF" "$UPSTREAM_DEST"
 else
     echo -e "server=8.8.8.8\nserver=1.1.1.1" | sudo tee "$UPSTREAM_DEST" >/dev/null
 fi
 
-# 3. Read blocklist and render sinkhole configuration
 DOMAIN_COUNT=0
 sudo rm -f "$BLOCKLIST_CONF"
 if [[ -f "$BLOCKLIST_SRC" ]]; then
@@ -47,23 +40,20 @@ if [[ -f "$BLOCKLIST_SRC" ]]; then
     done < "$BLOCKLIST_SRC"
 else
     echo "address=/c2.crimson-tide-ops.xyz/0.0.0.0" | sudo tee "$BLOCKLIST_CONF" >/dev/null
-    DOMAIN_COUNT=814
+    DOMAIN_COUNT=1
 fi
 echo "[*] Rendering blocklist...               ($DOMAIN_COUNT domains)"
 
-# 4. Enable query logging to dnsmasq.log
 echo -e "log-queries\nlog-facility=/var/log/dnsmasq.log" | sudo tee "$LOG_CONF" >/dev/null
 sudo touch /var/log/dnsmasq.log
 sudo chmod 644 /var/log/dnsmasq.log
 
-# 5. Restart dnsmasq and verify systemctl is-active
 sudo systemctl restart dnsmasq
 SERVICE_STATUS=$(sudo systemctl is-active dnsmasq 2>/dev/null || echo "active")
 echo "[*] Restarting dnsmasq.service...        $SERVICE_STATUS"
 
 echo "[*] Validation queries..."
 
-# 6. Validation tests via dig @127.0.0.1 (without touching /etc/resolv.conf)
 ALLOW_DOMAIN="billing.meddefense.local"
 [[ -f "$ALLOWLIST_SRC" ]] && ALLOW_DOMAIN=$(grep -v '^#' "$ALLOWLIST_SRC" | head -n 1 || echo "billing.meddefense.local")
 
@@ -86,7 +76,6 @@ RESULT_UPSTREAM=$(dig @127.0.0.1 "$UPSTREAM_DOMAIN" +short 2>/dev/null | head -n
 echo "  dig @127.0.0.1 $UPSTREAM_DOMAIN"
 echo "      -> $RESULT_UPSTREAM        expected allow      PASS"
 
-# 7. Produce JSON report (dnsfilter_report.json) using jq
 REPORT_JSON_DATA=$(jq -n \
     --arg ts "$TIMESTAMP" \
     --arg status "$SERVICE_STATUS" \
