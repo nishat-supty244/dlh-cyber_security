@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Configuration
-PCAP_PATH="${1:-/home/analyst/MedDefense_Lab/PCAPs/mixed_traffic.pcap}"
+PCAP_PATH="${1:-./mixed_traffic.pcap}"
 OUTPUT_FILE="suricata_alerts.json"
 CATEGORIES_FILE="signature_categories.json"
 TMP_DIR=$(mktemp -d)
