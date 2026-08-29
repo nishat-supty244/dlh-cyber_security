@@ -5,7 +5,7 @@ set -euo pipefail
 LAB_DIR="/home/analyst/MedDefense_Lab"
 RULES_FILE="meddefense.rules"
 # Labeled PCAPs directory: /home/analyst/MedDefense_Lab/PCAPs/labels
-PCAPS_DIR="${LAB_DIR}/PCAPs/labels"
+PCAPS_DIR="."
 CONFIG_FILE="./suricata.yaml"
 OUTPUT_DIR="/tmp/meddefense-validation-$$"
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
