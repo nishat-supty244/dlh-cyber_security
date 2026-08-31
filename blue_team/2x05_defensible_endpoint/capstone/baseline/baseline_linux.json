@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-08-31T08:31:11Z",
+  "hostname": "nishatsupty",
+  "lynis_version": "3.1.6",
+  "hardening_index": 63,
+  "warnings_count": 0,
+  "suggestions_count": 38,
+  "log_path": "/home/nishat/Desktop/dlh_projects/dlh-cyber_security/blue_team/2x05_defensible_endpoint/capstone/baseline/lynis_baseline.log"
+}
