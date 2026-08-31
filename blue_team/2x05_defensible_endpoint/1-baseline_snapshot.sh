@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Exit Codes: 0=success, 1=controlled failure, 2=environment error
+#
+# Outputs (relative to script directory):
+#   capstone/baseline/lynis_baseline.log  - raw lynis audit output
+#   capstone/baseline/baseline_linux.json - extracted Hardening Index and metadata
+#
 
 set -euo pipefail
 
