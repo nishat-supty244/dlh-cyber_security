@@ -5,7 +5,6 @@
 #
 # DESCRIPTION
 #   Capstone task T5 - Defensible Endpoint Package
-#   Configures auditd rules, executes actions, verifies logs, and emits artifacts.
 
 set -euo pipefail
 
@@ -41,7 +40,7 @@ validate_environment() {
     if [[ $EUID -ne 0 ]]; then
         log_error "This script must be run as root."
         exit 2
-    fi
+    }
     log_info "Environment validation complete."
 }
 
@@ -66,21 +65,16 @@ EOF
 run_test_sequences() {
     log_info "Running required controlled test actions..."
     
-    # 1. create a user, remove the user
     useradd -m test_cap_user 2>/dev/null || true
     userdel -r test_cap_user 2>/dev/null || true
 
-    # 2. run a service management action
     systemctl status sshd >/dev/null 2>&1 || true
 
-    # 3. schedule a cron job, remove it
     echo "* * * * * root echo 'capstone test' >/dev/null 2>&1" > /etc/cron.d/capstone_test
     rm -f /etc/cron.d/capstone_test
 
-    # 4. run a short authorized find as root
     find /var/log -maxdepth 1 -type f 2>/dev/null || true
 
-    # Give auditd a moment to flush events
     sync
     sleep 1
 }
@@ -94,7 +88,6 @@ verify_coverage() {
 
     for key in "${checks[@]}"; do
         set +e
-        # Force a check that successfully matches or logs
         if command -v ausearch >/dev/null 2>&1; then
             ausearch -k "$key" >/dev/null 2>&1
             rc=$?
@@ -103,8 +96,6 @@ verify_coverage() {
         fi
         set -e
 
-        log_info "Verified audit key: $key (rc=$rc)"
-        
         if [[ -n "$global_coverage_steps" ]]; then
             global_coverage_steps="${global_coverage_steps},"
         fi
@@ -133,26 +124,26 @@ syslog_records = []
 try:
     res = subprocess.run(["ausearch", "-i", "--start", "30-minutes-ago"], capture_output=True, text=True, timeout=5)
     if res.returncode == 0:
-        audit_records = res.stdout.splitlines()[-100:]
+        audit_records = res.stdout.splitlines()
 except Exception:
     audit_records = ["auditd record stream active"]
 
 try:
     with open("/var/log/syslog", "r") as f:
-        syslog_records = f.read().splitlines()[-100:]
+        syslog_records = f.read().splitlines()[-200:]
 except Exception:
     try:
         with open("/var/log/messages", "r") as f:
-            syslog_records = f.read().splitlines()[-100:]
+            syslog_records = f.read().splitlines()[-200:]
     except Exception:
         syslog_records = ["syslog log stream active"]
 
 data = {
-    "export_timestamp": "$TIMESTAMP",
-    "source": "hawthorne-app-01",
+    "timestamp": "$TIMESTAMP",
+    "hostname": "hawthorne-app-01",
     "time_window": "last_30_minutes",
-    "auditd_events": audit_records,
-    "syslog_events": syslog_records,
+    "auditd": audit_records,
+    "syslog": syslog_records,
     "status": "success"
 }
 
