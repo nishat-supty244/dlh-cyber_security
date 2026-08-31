@@ -41,6 +41,10 @@ validate_environment() {
         log_error "This script must be run as root."
         exit 2
     }
+    if ! command -v ausearch >/dev/null 2>&1; then
+        log_error "ausearch utility is required but not installed."
+        exit 2
+    fi
     log_info "Environment validation complete."
 }
 
@@ -65,22 +69,26 @@ EOF
 run_test_sequences() {
     log_info "Running required controlled test actions..."
     
+    # 1. create a user, remove the user
     useradd -m test_cap_user 2>/dev/null || true
     userdel -r test_cap_user 2>/dev/null || true
 
+    # 2. run a service management action
     systemctl status sshd >/dev/null 2>&1 || true
 
+    # 3. schedule a cron job, remove it
     echo "* * * * * root echo 'capstone test' >/dev/null 2>&1" > /etc/cron.d/capstone_test
     rm -f /etc/cron.d/capstone_test
 
+    # 4. run a short authorized find as root
     find /var/log -maxdepth 1 -type f 2>/dev/null || true
 
     sync
-    sleep 1
+    sleep 2
 }
 
 verify_coverage() {
-    log_info "Verifying test actions via audit keys..."
+    log_info "Verifying test actions via audit keys using ausearch..."
     
     checks=("meddefense-user-mgmt" "meddefense-exec")
     global_coverage_steps=""
@@ -88,13 +96,18 @@ verify_coverage() {
 
     for key in "${checks[@]}"; do
         set +e
-        if command -v ausearch >/dev/null 2>&1; then
-            ausearch -k "$key" >/dev/null 2>&1
-            rc=$?
-        else
-            rc=0
-        fi
+        ausearch -k "$key" --start recent >/dev/null 2>&1
+        rc=$?
         set -e
+
+        verified=true
+        if [[ $rc -ne 0 ]]; then
+            # If strictly missing records, flag failure to support the failure check requirement
+            verified=false
+            all_found=false
+        fi
+
+        log_info "Checked audit key '$key': exit_code=$rc, verified=$verified"
 
         if [[ -n "$global_coverage_steps" ]]; then
             global_coverage_steps="${global_coverage_steps},"
@@ -102,7 +115,7 @@ verify_coverage() {
         global_coverage_steps="${global_coverage_steps}
     {
       \"control_key\": \"${key}\",
-      \"verified\": true,
+      \"verified\": ${verified},
       \"exit_code\": ${rc}
     }"
     done
@@ -122,21 +135,21 @@ audit_records = []
 syslog_records = []
 
 try:
-    res = subprocess.run(["ausearch", "-i", "--start", "30-minutes-ago"], capture_output=True, text=True, timeout=5)
+    res = subprocess.run(["ausearch", "--start", "recent"], capture_output=True, text=True, timeout=5)
     if res.returncode == 0:
-        audit_records = res.stdout.splitlines()
+        audit_records = res.stdout.splitlines()[-100:]
 except Exception:
-    audit_records = ["auditd record stream active"]
+    audit_records = ["auditd telemetry stream active"]
 
 try:
     with open("/var/log/syslog", "r") as f:
-        syslog_records = f.read().splitlines()[-200:]
+        syslog_records = f.read().splitlines()[-100:]
 except Exception:
     try:
         with open("/var/log/messages", "r") as f:
-            syslog_records = f.read().splitlines()[-200:]
+            syslog_records = f.read().splitlines()[-100:]
     except Exception:
-        syslog_records = ["syslog log stream active"]
+        syslog_records = ["syslog telemetry stream active"]
 
 data = {
     "timestamp": "$TIMESTAMP",
@@ -166,7 +179,7 @@ with open("$JSON_COVERAGE", "w") as f:
     json.dump(data, f, indent=2)
 EOF
 
-    log_info "Telemetry and coverage JSON artifacts successfully emitted."
+    log_info "Linux telemetry and coverage artifacts emitted successfully."
 }
 
 main() {
@@ -181,7 +194,7 @@ main() {
         log_info "Linux telemetry deployment and coverage verification completed successfully."
         exit 0
     else
-        log_error "Telemetry coverage verification failed."
+        log_error "Telemetry coverage verification failed: expected audit records not found."
         exit 1
     fi
 }
