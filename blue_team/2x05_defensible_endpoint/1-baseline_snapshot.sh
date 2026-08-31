@@ -1,4 +1,6 @@
 #!/bin/bash
+# Purpose: Run lynis baseline audit and persist raw output + hardening score
+#          Capstone task T1 - Defensible Endpoint Package
 
 # Exit Codes: 0=success, 1=controlled failure, 2=environment error
 #
