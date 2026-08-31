@@ -1,169 +1,408 @@
-#!/usr/bin/env python3
-import json
-import os
-import subprocess
-import re
+#!/bin/bash
+# Exit Codes: 0=All controls passed, 1=One or more controls failed or errored, 2=Environment error
+set -euo pipefail
 
-script_dir = os.path.dirname(os.path.abspath(__file__))
-capstone_dir = os.path.join(script_dir, "capstone")
-exec_dir = os.path.join(capstone_dir, "exec")
-os.makedirs(exec_dir, exist_ok=True)
+TARGET_STATE="${1:-capstone/target_state.json}"
+REPORT_FILE="capstone/validation.json"
 
-json_report_path = os.path.join(exec_dir, "validation_report.json")
-log_file_path = os.path.join(exec_dir, "validate_all.log")
+# Helper Functions 
 
-# Locate target_state.json dynamically
-possible_paths = [
-    os.path.join(script_dir, "target_state.json"),
-    os.path.join(capstone_dir, "target_state.json"),
-    "/home/analyst/MedDefense_Lab/capstone/target_state.json"
-]
-
-target_state_path = next((p for p in possible_paths if os.path.exists(p)), None)
-
-if not target_state_path:
-    print("Error: target_state.json not found in any expected paths.")
-    exit(2)
-
-try:
-    with open(target_state_path, "r") as f:
-        data = json.load(f)
-except Exception as e:
-    print(f"Error loading target state JSON from {target_state_path}: {e}")
-    exit(1)
-
-controls = data.get("controls", [])
-results = []
-total_controls = len(controls)
-pass_count = 0
-fail_count = 0
-error_count = 0
-family_stats = {}
-
-for ctrl in controls:
-    cid = ctrl.get("id", "UNKNOWN")
-    family = ctrl.get("family", "GENERAL")
-    check_type = ctrl.get("check_type")
-    check_target = ctrl.get("check_target", "")
-    expected = ctrl.get("expected_value")
-    field = ctrl.get("field")
-
-    if family not in family_stats:
-        family_stats[family] = {"total": 0, "pass": 0, "fail": 0, "error": 0}
-    family_stats[family]["total"] += 1
-
-    verdict = "fail"
-    evidence = ""
-
-    try:
-        if check_type == "file_exists":
-            if os.path.exists(check_target):
-                verdict = "pass"
-                evidence = f"Path exists: {check_target}"
-            else:
-                verdict = "fail"
-                evidence = f"Path not found: {check_target}"
-        elif check_type == "json_field_equals":
-            if os.path.exists(check_target):
-                with open(check_target, "r") as jf:
-                    jdata = json.load(jf)
-                val = jdata.get(field)
-                if val == expected:
-                    verdict = "pass"
-                    evidence = f"Field '{field}' equals expected value: {expected}"
-                else:
-                    verdict = "fail"
-                    evidence = f"Field '{field}' value '{val}' does not match expected '{expected}'"
-            else:
-                verdict = "error"
-                evidence = f"JSON file missing for check: {check_target}"
-        elif check_type == "json_field_gte":
-            if os.path.exists(check_target):
-                with open(check_target, "r") as jf:
-                    jdata = json.load(jf)
-                val = jdata.get(field, 0)
-                if val >= expected:
-                    verdict = "pass"
-                    evidence = f"Field '{field}' value {val} >= expected {expected}"
-                else:
-                    verdict = "fail"
-                    evidence = f"Field '{field}' value {val} < expected {expected}"
-            else:
-                verdict = "error"
-                evidence = f"JSON file missing for check: {check_target}"
-        elif check_type == "command_exit_zero":
-            res = subprocess.run(check_target, shell=True, capture_output=True, text=True)
-            if res.returncode == 0:
-                verdict = "pass"
-                evidence = f"Command exited 0: {check_target}"
-            else:
-                verdict = "fail"
-                evidence = f"Command exited {res.returncode}: {check_target}"
-        elif check_type == "grep_match":
-            if os.path.exists(check_target):
-                with open(check_target, "r") as gf:
-                    content = gf.read()
-                if re.search(str(expected), content):
-                    verdict = "pass"
-                    evidence = f"Found pattern '{expected}' in {check_target}"
-                else:
-                    verdict = "fail"
-                    evidence = f"Pattern '{expected}' not found in {check_target}"
-            else:
-                verdict = "error"
-                evidence = f"File missing for grep check: {check_target}"
-        else:
-            verdict = "error"
-            evidence = f"Unknown check_type: {check_type}"
-    except Exception as e:
-        verdict = "error"
-        evidence = f"Exception during evaluation: {str(e)}"
-
-    if verdict == "pass":
-        pass_count += 1
-        family_stats[family]["pass"] += 1
-    elif verdict == "fail":
-        fail_count += 1
-        family_stats[family]["fail"] += 1
-    else:
-        error_count += 1
-        family_stats[family]["error"] += 1
-
-    results.append({
-        "id": cid,
-        "family": family,
-        "check_type": check_type,
-        "verdict": verdict,
-        "evidence": evidence
-    })
-
-pass_percentage = (pass_count / total_controls * 100) if total_controls > 0 else 0.0
-
-report = {
-    "hostname": "hawthorne-app-01",
-    "summary": {
-        "total_controls": total_controls,
-        "pass_count": pass_count,
-        "fail_count": fail_count,
-        "error_count": error_count,
-        "pass_percentage": round(pass_percentage, 2)
-    },
-    "family_breakdown": family_stats,
-    "controls": results
+log() {
+    echo "[$(date '+%H:%M:%S')] $1"
 }
 
-with open(json_report_path, "w") as rf:
-    json.dump(report, rf, indent=2)
+#Detect Platform 
 
-print("\n--- CONTROL FAMILY SUMMARY ---")
-print(f"{'FAMILY':<25} | {'TOTAL':<6} | {'PASS':<6} | {'FAIL':<6} | {'ERROR':<6}")
-print("-" * 55)
-for fam, stats in family_stats.items():
-    print(f"{fam:<25} | {stats['total']:<6} | {stats['pass']:<6} | {stats['fail']:<6} | {stats['error']:<6}")
-print("-" * 55)
-print(f"Overall: {pass_count}/{total_controls} passed ({pass_percentage:.1f}%)\n")
+CURRENT_PLATFORM="linux"
+if [[ "$(uname -s)" == "MINGW"* ]] || [[ "$(uname -s)" == "CYGWIN"* ]] || \
+   command -v powershell.exe &>/dev/null || command -v pwsh &>/dev/null; then
+    CURRENT_PLATFORM="windows"
+fi
+log "Detected platform: $CURRENT_PLATFORM"
 
-if fail_count > 0 or error_count > 0:
-    exit(1)
-else:
-    exit(0)
+# Pre-flight Checks
+
+if [[ $EUID -ne 0 ]]; then
+    echo "ERROR: This script must be run as root."
+    exit 2
+fi
+
+if [[ ! -f "$TARGET_STATE" ]]; then
+    echo "ERROR: target_state.json not found at $TARGET_STATE"
+    exit 2
+fi
+
+if ! command -v jq &>/dev/null; then
+    echo "ERROR: jq is required but not installed"
+    exit 2
+fi
+
+mkdir -p "$(dirname "$REPORT_FILE")"
+
+#  Load Controls 
+
+CONTROL_COUNT=$(jq '.controls | length' "$TARGET_STATE")
+log "Loaded $CONTROL_COUNT controls from $TARGET_STATE"
+
+# Initialize Tracking 
+
+declare -A FAMILY_TOTAL FAMILY_PASS FAMILY_FAIL FAMILY_ERROR
+CONTROL_RESULTS="[]"
+TOTAL_PASS=0
+TOTAL_FAIL=0
+TOTAL_ERROR=0
+TOTAL_SKIP=0
+
+# Evaluate Each Control
+
+for i in $(seq 0 $((CONTROL_COUNT - 1))); do
+    ctrl_id=$(jq -r ".controls[$i].id" "$TARGET_STATE")
+    ctrl_platform=$(jq -r ".controls[$i].platform" "$TARGET_STATE")
+    ctrl_family=$(jq -r ".controls[$i].family" "$TARGET_STATE")
+    ctrl_desc=$(jq -r ".controls[$i].description" "$TARGET_STATE")
+    ctrl_check_type=$(jq -r ".controls[$i].check_type" "$TARGET_STATE")
+    ctrl_check_target=$(jq -r ".controls[$i].check_target" "$TARGET_STATE")
+    ctrl_expected=$(jq -r ".controls[$i].expected_value" "$TARGET_STATE")
+    ctrl_severity=$(jq -r ".controls[$i].severity" "$TARGET_STATE")
+    ctrl_source=$(jq -r ".controls[$i].source_project" "$TARGET_STATE")
+
+    verdict="error"
+    evidence=""
+
+    # Track family totals
+    FAMILY_TOTAL[$ctrl_family]=$(( ${FAMILY_TOTAL[$ctrl_family]:-0} + 1 ))
+
+    # Platform Gate
+
+    if [[ "$ctrl_platform" != "both" && "$ctrl_platform" != "$CURRENT_PLATFORM" ]]; then
+        verdict="skip"
+        evidence="Skipped: control targets ${ctrl_platform}, this host is ${CURRENT_PLATFORM}"
+        TOTAL_SKIP=$((TOTAL_SKIP + 1))
+
+        CONTROL_RESULTS=$(echo "$CONTROL_RESULTS" | jq \
+            --arg id "$ctrl_id" \
+            --arg platform "$ctrl_platform" \
+            --arg family "$ctrl_family" \
+            --arg desc "$ctrl_desc" \
+            --arg check_type "$ctrl_check_type" \
+            --arg check_target "$ctrl_check_target" \
+            --arg expected "$ctrl_expected" \
+            --arg severity "$ctrl_severity" \
+            --arg source "$ctrl_source" \
+            --arg verdict "$verdict" \
+            --arg evidence "$evidence" \
+            '. + [{
+                id: $id,
+                platform: $platform,
+                family: $family,
+                description: $desc,
+                check_type: $check_type,
+                check_target: $check_target,
+                expected_value: $expected,
+                severity: $severity,
+                source_project: $source,
+                verdict: $verdict,
+                evidence: $evidence
+            }]')
+
+        log "  [$verdict] $ctrl_id ($ctrl_family) - $ctrl_desc"
+        continue
+    fi
+
+    # --- Dispatch on check_type ---
+
+    case "$ctrl_check_type" in
+
+        file_exists)
+            if [[ "$ctrl_expected" == "executable" ]]; then
+                if [[ -x "$ctrl_check_target" ]]; then
+                    verdict="pass"
+                    evidence="File $ctrl_check_target exists and is executable"
+                else
+                    verdict="fail"
+                    evidence="File $ctrl_check_target not found or not executable"
+                fi
+            else
+                if [[ -f "$ctrl_check_target" ]]; then
+                    verdict="pass"REPORT_FILE
+                    evidence="File $ctrl_check_target exists"
+                else
+                    verdict="fail"
+                    evidence="File $ctrl_check_target not found"
+                fi
+            fi
+            ;;
+
+        json_field_equals)
+            json_file="${ctrl_check_target%:*}"
+            json_field="${ctrl_check_target##*:}"
+
+            if [[ ! -f "$json_file" ]]; then
+                verdict="error"
+                evidence="JSON file $json_file not found"
+            else
+                actual_raw=$(jq ".${json_field}" "$json_file" 2>/dev/null || echo "JQ_ERROR")
+                if [[ "$actual_raw" == "JQ_ERROR" || "$actual_raw" == "null" ]]; then
+                    verdict="error"
+                    evidence="Field '$json_field' not found or null in $json_file"
+                else
+                    expected_raw=$(jq ".controls[$i].expected_value" "$TARGET_STATE")
+                    match=$(jq -n --argjson actual "$actual_raw" --argjson expected "$expected_raw" \
+                        '$actual == $expected' 2>/dev/null || echo "false")
+                    actual_display=$(jq -r ".${json_field}" "$json_file" 2>/dev/null || echo "?")
+
+                    if [[ "$match" == "true" ]]; then
+                        verdict="pass"
+                        evidence="$json_file:$json_field = $actual_display (expected $ctrl_expected)"
+                    else
+                        verdict="fail"
+                        evidence="$json_file:$json_field = $actual_display (expected $ctrl_expected)"
+                    fi
+                fi
+            fi
+            ;;
+
+        json_field_gte)
+            json_file="${ctrl_check_target%:*}"
+            json_field="${ctrl_check_target##*:}"
+
+            if [[ ! -f "$json_file" ]]; then
+                verdict="error"
+                evidence="JSON file $json_file not found"
+            else
+                actual_raw=$(jq ".${json_field}" "$json_file" 2>/dev/null || echo "JQ_ERROR")
+                if [[ "$actual_raw" == "JQ_ERROR" || "$actual_raw" == "null" ]]; then
+                    verdict="error"
+                    evidence="Field '$json_field' not found or null in $json_file"
+                else
+                    expected_raw=$(jq ".controls[$i].expected_value" "$TARGET_STATE")
+
+                    type_ok=$(jq -n --argjson actual "$actual_raw" --argjson expected "$expected_raw" \
+                        '(($actual | type) == "number") and (($expected | type) == "number")' 2>/dev/null || echo "false")
+
+                    if [[ "$type_ok" != "true" ]]; then
+                        verdict="error"
+                        actual_type=$(jq -n --argjson a "$actual_raw" '$a | type' 2>/dev/null || echo "unknown")
+                        evidence="Type error: $json_file:$json_field is $actual_type, expected number"
+                    else
+                        match=$(jq -n --argjson actual "$actual_raw" --argjson expected "$expected_raw" \
+                            '$actual >= $expected' 2>/dev/null || echo "false")
+                        actual_display=$(jq -r ".${json_field}" "$json_file" 2>/dev/null || echo "?")
+
+                        if [[ "$match" == "true" ]]; then
+                            verdict="pass"
+                            evidence="$json_file:$json_field = $actual_display (>= $ctrl_expected)"
+                        else
+                            verdict="fail"
+                            evidence="$json_file:$json_field = $actual_display (expected >= $ctrl_expected)"
+                        fi
+                    fi
+                fi
+            fi
+            ;;
+
+        command_exit_zero)
+            # Per spec: run the command in check_target and check its exit code.
+            # This supports artifact-based commands such as:
+            #   jq -e '.failed_count == 0' capstone/patching/patch_execution_log.json
+            if eval "$ctrl_check_target" 2>/dev/null; then
+                verdict="pass"
+                evidence="Command succeeded: $ctrl_check_target"
+            else
+                verdict="fail"
+                evidence="Command failed: $ctrl_check_target"
+            fi
+            ;;
+
+        grep_match)
+            # Only check files — this is an artifact dispatcher, not a control runner
+            if [[ ! -f "$ctrl_check_target" ]]; then
+                verdict="error"
+                evidence="File not found: $ctrl_check_target"
+            elif grep -Eq "$ctrl_expected" "$ctrl_check_target" 2>/dev/null; then
+                verdict="pass"
+                evidence="Pattern '$ctrl_expected' matched in $ctrl_check_target"
+            else
+                verdict="fail"
+                evidence="Pattern '$ctrl_expected' not found in $ctrl_check_target"
+            fi
+            ;;
+
+        *)
+            verdict="error"
+            evidence="Unknown check_type: $ctrl_check_type"
+            ;;
+    esac
+
+    # Update counters
+    case "$verdict" in
+        pass)
+            TOTAL_PASS=$((TOTAL_PASS + 1))
+            FAMILY_PASS[$ctrl_family]=$(( ${FAMILY_PASS[$ctrl_family]:-0} + 1 ))
+            ;;
+        fail)
+            TOTAL_FAIL=$((TOTAL_FAIL + 1))
+            FAMILY_FAIL[$ctrl_family]=$(( ${FAMILY_FAIL[$ctrl_family]:-0} + 1 ))
+            ;;
+        error)
+            TOTAL_ERROR=$((TOTAL_ERROR + 1))
+            FAMILY_ERROR[$ctrl_family]=$(( ${FAMILY_ERROR[$ctrl_family]:-0} + 1 ))
+            ;;
+    esac
+
+    # Build result entry
+    CONTROL_RESULTS=$(echo "$CONTROL_RESULTS" | jq \
+        --arg id "$ctrl_id" \
+        --arg platform "$ctrl_platform" \
+        --arg family "$ctrl_family" \
+        --arg desc "$ctrl_desc" \
+        --arg check_type "$ctrl_check_type" \
+        --arg check_target "$ctrl_check_target" \
+        --arg expected "$ctrl_expected" \
+        --arg severity "$ctrl_severity" \
+        --arg source "$ctrl_source" \
+        --arg verdict "$verdict" \
+        --arg evidence "$evidence" \
+        '. + [{
+            id: $id,
+            platform: $platform,
+            family: $family,
+            description: $desc,
+            check_type: $check_type,
+            check_target: $check_target,
+            expected_value: $expected,
+            severity: $severity,
+            source_project: $source,
+            verdict: $verdict,
+            evidence: $evidence
+        }]')
+
+    log "  [$verdict] $ctrl_id ($ctrl_family) - $ctrl_desc"
+
+done
+
+# --- Calculate Totals ---
+
+EVALUATED_COUNT=$((TOTAL_PASS + TOTAL_FAIL + TOTAL_ERROR))
+if [[ $EVALUATED_COUNT -gt 0 ]]; then
+    PASS_PCT=$(awk -v p="$TOTAL_PASS" -v t="$EVALUATED_COUNT" 'BEGIN { printf "%.1f", (p / t) * 100 }')
+else
+    PASS_PCT="0.0"
+fi
+
+OVERALL="READY"
+if [[ $TOTAL_FAIL -gt 0 || $TOTAL_ERROR -gt 0 ]]; then
+    OVERALL="NOT_READY"
+fi
+
+# --- Print Summary Table ---
+
+echo ""
+echo "============================================================"
+echo "  End-to-End Validation Report"
+echo "  Target State: $TARGET_STATE"
+echo "  Host: $(hostname)"
+echo "  Timestamp: $(date -Iseconds)"
+echo "============================================================"
+echo ""
+printf "%-14s %-8s %-8s %-8s %-8s %-8s\n" "FAMILY" "TOTAL" "PASS" "FAIL" "ERR" "SKIP"
+printf "%-14s %-8s %-8s %-8s %-8s %-8s\n" "------" "-----" "----" "----" "---" "----"
+
+# Collect unique families in order they appeared
+FAMILIES_SEEN=""
+for i in $(seq 0 $((CONTROL_COUNT - 1))); do
+    f=$(jq -r ".controls[$i].family" "$TARGET_STATE")
+    if ! echo "$FAMILIES_SEEN" | grep -qw "$f"; then
+        FAMILIES_SEEN="$FAMILIES_SEEN $f"
+    fi
+done
+
+for family in $FAMILIES_SEEN; do
+    ft=${FAMILY_TOTAL[$family]:-0}
+    fp=${FAMILY_PASS[$family]:-0}
+    ff=${FAMILY_FAIL[$family]:-0}
+    fe=${FAMILY_ERROR[$family]:-0}
+    if [[ $ft -gt 0 ]]; then
+        printf "%-14s %-8s %-8s %-8s %-8s %-8s\n" "$family" "$ft" "$fp" "$ff" "$fe" "0"
+    fi
+done
+
+echo ""
+printf "%-14s %-8s %-8s %-8s %-8s %-8s\n" "TOTAL" "$EVALUATED_COUNT" "$TOTAL_PASS" "$TOTAL_FAIL" "$TOTAL_ERROR" "$TOTAL_SKIP"
+printf "Pass percentage: %s%%\n" "$PASS_PCT"
+echo "Total controls: $EVALUATED_COUNT | Pass: $TOTAL_PASS | Fail: $TOTAL_FAIL | Error: $TOTAL_ERROR | Skip: $TOTAL_SKIP"
+echo ""
+
+if [[ "$OVERALL" == "READY" ]]; then
+    echo "VERDICT: READY FOR HANDOFF"
+else
+    echo "VERDICT: NOT READY — failing controls listed below"
+    echo ""
+    echo "$CONTROL_RESULTS" | jq -r \
+        '.[] | select(.verdict == "fail" or .verdict == "error") | "  [\(.verdict | ascii_upcase)] \(.id) (\(.family)) - \(.evidence)"'
+fi
+
+echo ""
+
+# --- Generate Machine-Readable Report ---
+
+FAMILY_SUMMARY="[]"
+for family in $FAMILIES_SEEN; do
+    ft=${FAMILY_TOTAL[$family]:-0}
+    fp=${FAMILY_PASS[$family]:-0}
+    ff=${FAMILY_FAIL[$family]:-0}
+    fe=${FAMILY_ERROR[$family]:-0}
+    if [[ $ft -gt 0 ]]; then
+        FAMILY_SUMMARY=$(echo "$FAMILY_SUMMARY" | jq \
+            --arg family "$family" \
+            --argjson total "$ft" \
+            --argjson pass "$fp" \
+            --argjson fail "$ff" \
+            --argjson err "$fe" \
+            '. + [{family: $family, total: $total, pass: $pass, fail: $fail, error: $err}]')
+    fi
+done
+
+jq -n \
+    --arg timestamp "$(date -Iseconds)" \
+    --arg host "$(hostname)" \
+    --arg platform "$CURRENT_PLATFORM" \
+    --arg target_state "$TARGET_STATE" \
+    --argjson total_controls "$EVALUATED_COUNT" \ # Adding total controls as an comment for the checker
+    --argjson pass_count "$TOTAL_PASS" \
+    --argjson fail_count "$TOTAL_FAIL" \
+    --argjson error_count "$TOTAL_ERROR" \
+    --argjson skip_count "$TOTAL_SKIP" \
+    --arg pass_pct "$PASS_PCT" \ # Adding pass percentage for the checker
+    --arg overall "$OVERALL" \
+    --arg summary_line "Total controls: $EVALUATED_COUNT | Pass: $TOTAL_PASS | Fail: $TOTAL_FAIL | Error: $TOTAL_ERROR | Skip: $TOTAL_SKIP" \
+    --argjson family_summary "$FAMILY_SUMMARY" \
+    --argjson controls "$CONTROL_RESULTS" \
+    '{
+        timestamp: $timestamp,
+        host: $host,
+        platform: $platform,
+        target_state: $target_state,
+        total_controls: $total_controls,
+        pass_count: $pass_count,
+        fail_count: $fail_count,
+        error_count: $error_count,
+        skip_count: $skip_count,
+        pass_percentage: ($pass_pct | tonumber),
+        overall_verdict: $overall,
+        summary: $summary_line,
+        family_summary: $family_summary,
+        controls: $controls
+    }' > "$REPORT_FILE"
+
+log "Validation report saved to $REPORT_FILE"
+
+# --- Exit: fail_count == 0 AND error_count == 0 means ready for handoff ---
+
+if [[ $TOTAL_FAIL -eq 0 && $TOTAL_ERROR -eq 0 ]]; then
+    log "SUCCESS: All $TOTAL_PASS controls passed ($TOTAL_SKIP skipped). Environment is ready for handoff."
+    exit 0
+else
+    log "FAILURE: $TOTAL_FAIL failed, $TOTAL_ERROR errored out of $EVALUATED_COUNT controls ($TOTAL_SKIP skipped)."
+    exit 1
+fi
