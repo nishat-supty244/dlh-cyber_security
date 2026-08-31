@@ -1,0 +1,572 @@
+=== SYSTEM INFO ===
+nishatsupty
+7.0.12+kali-amd64
+PRETTY_NAME="Kali GNU/Linux Rolling"
+VERSION="2026.3"
+
+=== INSTALLED PACKAGE COUNT ===
+1672
+
+=== LISTENING SOCKETS ===
+
+=== ACTIVE SYSTEMD SERVICES ===
+  UNIT                                     LOAD   ACTIVE SUB     DESCRIPTION
+  accounts-daemon.service                  loaded active running Accounts Service
+  alsa-restore.service                     loaded active exited  Save/Restore Sound Card State
+  auditd.service                           loaded active running Security Audit Logging Service
+  colord.service                           loaded active running Manage, Install and Generate Color Profiles
+  console-setup.service                    loaded active exited  Set console font and keymap
+  cron.service                             loaded active running Regular background program processing daemon
+  dbus.service                             loaded active running D-Bus System Message Bus
+  getty@tty1.service                       loaded active running Getty on tty1
+  haveged.service                          loaded active running Entropy Daemon based on the HAVEGE algorithm
+  ifupdown-pre.service                     loaded active exited  Helper to synchronize boot up for ifupdown
+  keyboard-setup.service                   loaded active exited  Set the console keyboard layout
+  kmod-static-nodes.service                loaded active exited  Create List of Static Device Nodes
+  ModemManager.service                     loaded active running Modem Manager
+  networking.service                       loaded active exited  Raise network interfaces
+  NetworkManager.service                   loaded active running Network Manager
+  plymouth-quit-wait.service               loaded active exited  Hold until boot process finishes up
+  plymouth-read-write.service              loaded active exited  Tell Plymouth To Write Out Runtime Data
+  plymouth-start.service                   loaded active exited  Show Plymouth Boot Screen
+  polkit.service                           loaded active running Authorization Manager
+  rpc-statd-notify.service                 loaded active exited  Notify NFS peers of a restart
+  rtkit-daemon.service                     loaded active running RealtimeKit Scheduling Policy Service
+  systemd-binfmt.service                   loaded active exited  Set Up Additional Binary Formats
+  systemd-journal-flush.service            loaded active exited  Flush Journal to Persistent Storage
+  systemd-journald.service                 loaded active running Journal Service
+  systemd-logind.service                   loaded active running User Login Management
+  systemd-modules-load.service             loaded active exited  Load Kernel Modules
+  systemd-random-seed.service              loaded active exited  Load/Save OS Random Seed
+  systemd-remount-fs.service               loaded active exited  Remount Root and Kernel File Systems
+  systemd-sysctl.service                   loaded active exited  Apply Kernel Variables
+  systemd-timesyncd.service                loaded active running Network Time Synchronization
+  systemd-tmpfiles-setup-dev-early.service loaded active exited  Create Static Device Nodes in /dev gracefully
+  systemd-tmpfiles-setup-dev.service       loaded active exited  Create Static Device Nodes in /dev
+  systemd-tmpfiles-setup.service           loaded active exited  Create System Files and Directories
+  systemd-udev-load-credentials.service    loaded active exited  Load udev Rules from Credentials
+  systemd-udev-trigger.service             loaded active exited  Coldplug All udev Devices
+  systemd-udevd.service                    loaded active running Rule-based Manager for Device Events and Files
+  systemd-user-sessions.service            loaded active exited  Permit User Sessions
+  systemd-userdb-load-credentials.service  loaded active exited  Load JSON user/group Records from Credentials
+  systemd-userdbd.service                  loaded active running User Database Manager
+  udisks2.service                          loaded active running Disk Manager
+  unattended-upgrades.service              loaded active running Unattended Upgrades Shutdown
+  upower.service                           loaded active running Daemon for power management
+  user-runtime-dir@1000.service            loaded active exited  User Runtime Directory /run/user/1000
+  user@1000.service                        loaded active running User Manager for UID 1000
+  virtualbox-guest-utils.service           loaded active running Virtualbox guest utils
+
+Legend: LOAD   → Reflects whether the unit definition was properly loaded.
+        ACTIVE → The high-level unit activation state, i.e. generalization of SUB.
+        SUB    → The low-level unit activation state, values depend on unit type.
+
+45 loaded units listed.
+
+=== CURRENT SSHD CONFIG ===
+port 22
+addressfamily any
+listenaddress [::]:22
+listenaddress 0.0.0.0:22
+usepam yes
+pamservicename sshd
+logingracetime 120
+x11displayoffset 10
+maxauthtries 6
+maxsessions 10
+clientaliveinterval 0
+clientalivecountmax 3
+requiredrsasize 1024
+streamlocalbindmask 0177
+unusedconnectiontimeout none
+permitrootlogin prohibit-password
+ignorerhosts yes
+ignoreuserknownhosts no
+hostbasedauthentication no
+hostbasedusesnamefrompacketonly no
+pubkeyauthentication yes
+kerberosauthentication no
+kerberosorlocalpasswd yes
+kerberosticketcleanup yes
+gssapiauthentication no
+gssapicleanupcredentials yes
+gssapidelegatecredentials yes
+gssapistrictacceptorcheck yes
+gssapikeyexchange no
+gssapistorecredentialsonrekey no
+gssapikexalgorithms gss-group14-sha256-,gss-group16-sha512-,gss-nistp256-sha256-,gss-curve25519-sha256-
+passwordauthentication yes
+kbdinteractiveauthentication no
+printmotd no
+printlastlog yes
+x11forwarding yes
+x11uselocalhost yes
+permittty yes
+permituserrc yes
+strictmodes yes
+tcpkeepalive yes
+permitemptypasswords no
+compression yes
+gatewayports no
+usedns no
+allowtcpforwarding yes
+allowagentforwarding yes
+disableforwarding no
+allowstreamlocalforwarding yes
+streamlocalbindunlink no
+fingerprinthash SHA256
+exposeauthinfo no
+refuseconnection no
+debianbanner yes
+pidfile /run/sshd.pid
+modulifile /etc/ssh/moduli
+xauthlocation /usr/bin/xauth
+ciphers chacha20-poly1305@openssh.com,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr
+macs umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+banner none
+forcecommand none
+chrootdirectory none
+trustedusercakeys none
+securitykeyprovider internal
+authorizedprincipalsfile none
+versionaddendum none
+authorizedkeyscommand /usr/bin/userdbctl ssh-authorized-keys %u
+authorizedkeyscommanduser root
+authorizedprincipalscommand none
+authorizedprincipalscommanduser none
+hostkeyagent none
+kexalgorithms mlkem768x25519-sha256,sntrup761x25519-sha512,sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521
+casignaturealgorithms ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ssh-ed25519@openssh.com,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com,rsa-sha2-512,rsa-sha2-256
+hostbasedacceptedalgorithms ssh-ed25519-cert-v01@openssh.com,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,webauthn-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ssh-ed25519@openssh.com,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com,rsa-sha2-512,rsa-sha2-256
+hostkeyalgorithms ssh-ed25519-cert-v01@openssh.com,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,webauthn-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ssh-ed25519@openssh.com,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com,rsa-sha2-512,rsa-sha2-256
+pubkeyacceptedalgorithms ssh-ed25519-cert-v01@openssh.com,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,webauthn-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ssh-ed25519@openssh.com,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com,rsa-sha2-512,rsa-sha2-256
+sshdsessionpath /usr/lib/openssh/sshd-session
+sshdauthpath /usr/lib/openssh/sshd-auth
+persourcepenaltyexemptlist none
+loglevel INFO
+syslogfacility AUTH
+authorizedkeysfile .ssh/authorized_keys .ssh/authorized_keys2
+hostkey /etc/ssh/ssh_host_rsa_key
+hostkey /etc/ssh/ssh_host_ecdsa_key
+hostkey /etc/ssh/ssh_host_ed25519_key
+acceptenv LANG
+acceptenv LC_*
+acceptenv COLORTERM
+acceptenv NO_COLOR
+authenticationmethods any
+channeltimeout none
+subsystem sftp /usr/lib/openssh/sftp-server
+maxstartups 10:30:100
+persourcemaxstartups none
+persourcenetblocksize 32:128
+permittunnel no
+ipqos ef cs0
+rekeylimit 0 0
+permitopen any
+permitlisten any
+permituserenvironment no
+pubkeyauthoptions none
+persourcepenalties crash:90.000000 authfail:5.000000 noauth:1.000000 invaliduser:5.000000 grace-exceeded:10.000000 refuseconnection:10.000000 max:600.000000 min:15.000000 max-sources4:65536 max-sources6:65536 overflow:permissive overflow6:permissive
+
+=== SYSCTL SECURITY PARAMETERS ===
+kernel.dmesg_restrict = 0
+kernel.kptr_restrict = 0
+kernel.randomize_va_space = 2
+kernel.unprivileged_bpf_disabled = 2
+kernel.yama.ptrace_scope = 0
+net.ipv4.conf.all.accept_local = 0
+net.ipv4.conf.all.accept_redirects = 1
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv4.conf.all.arp_accept = 0
+net.ipv4.conf.all.arp_announce = 0
+net.ipv4.conf.all.arp_evict_nocarrier = 1
+net.ipv4.conf.all.arp_filter = 0
+net.ipv4.conf.all.arp_ignore = 0
+net.ipv4.conf.all.arp_notify = 0
+net.ipv4.conf.all.bc_forwarding = 0
+net.ipv4.conf.all.bootp_relay = 0
+net.ipv4.conf.all.disable_policy = 0
+net.ipv4.conf.all.disable_xfrm = 0
+net.ipv4.conf.all.drop_gratuitous_arp = 0
+net.ipv4.conf.all.drop_unicast_in_l2_multicast = 0
+net.ipv4.conf.all.force_igmp_version = 0
+net.ipv4.conf.all.forwarding = 0
+net.ipv4.conf.all.igmpv2_unsolicited_report_interval = 10000
+net.ipv4.conf.all.igmpv3_unsolicited_report_interval = 1000
+net.ipv4.conf.all.ignore_routes_with_linkdown = 0
+net.ipv4.conf.all.log_martians = 0
+net.ipv4.conf.all.mc_forwarding = 0
+net.ipv4.conf.all.medium_id = 0
+net.ipv4.conf.all.promote_secondaries = 0
+net.ipv4.conf.all.proxy_arp = 0
+net.ipv4.conf.all.proxy_arp_pvlan = 0
+net.ipv4.conf.all.route_localnet = 0
+net.ipv4.conf.all.rp_filter = 0
+net.ipv4.conf.all.secure_redirects = 1
+net.ipv4.conf.all.send_redirects = 1
+net.ipv4.conf.all.shared_media = 1
+net.ipv4.conf.all.src_valid_mark = 0
+net.ipv4.conf.all.tag = 0
+net.ipv4.conf.default.accept_local = 0
+net.ipv4.conf.default.accept_redirects = 1
+net.ipv4.conf.default.accept_source_route = 0
+net.ipv4.conf.default.arp_accept = 0
+net.ipv4.conf.default.arp_announce = 0
+net.ipv4.conf.default.arp_evict_nocarrier = 1
+net.ipv4.conf.default.arp_filter = 0
+net.ipv4.conf.default.arp_ignore = 0
+net.ipv4.conf.default.arp_notify = 0
+net.ipv4.conf.default.bc_forwarding = 0
+net.ipv4.conf.default.bootp_relay = 0
+net.ipv4.conf.default.disable_policy = 0
+net.ipv4.conf.default.disable_xfrm = 0
+net.ipv4.conf.default.drop_gratuitous_arp = 0
+net.ipv4.conf.default.drop_unicast_in_l2_multicast = 0
+net.ipv4.conf.default.force_igmp_version = 0
+net.ipv4.conf.default.forwarding = 0
+net.ipv4.conf.default.igmpv2_unsolicited_report_interval = 10000
+net.ipv4.conf.default.igmpv3_unsolicited_report_interval = 1000
+net.ipv4.conf.default.ignore_routes_with_linkdown = 0
+net.ipv4.conf.default.log_martians = 0
+net.ipv4.conf.default.mc_forwarding = 0
+net.ipv4.conf.default.medium_id = 0
+net.ipv4.conf.default.promote_secondaries = 1
+net.ipv4.conf.default.proxy_arp = 0
+net.ipv4.conf.default.proxy_arp_pvlan = 0
+net.ipv4.conf.default.route_localnet = 0
+net.ipv4.conf.default.rp_filter = 2
+net.ipv4.conf.default.secure_redirects = 1
+net.ipv4.conf.default.send_redirects = 1
+net.ipv4.conf.default.shared_media = 1
+net.ipv4.conf.default.src_valid_mark = 0
+net.ipv4.conf.default.tag = 0
+net.ipv4.conf.eth0.accept_local = 0
+net.ipv4.conf.eth0.accept_redirects = 1
+net.ipv4.conf.eth0.accept_source_route = 0
+net.ipv4.conf.eth0.arp_accept = 0
+net.ipv4.conf.eth0.arp_announce = 0
+net.ipv4.conf.eth0.arp_evict_nocarrier = 1
+net.ipv4.conf.eth0.arp_filter = 0
+net.ipv4.conf.eth0.arp_ignore = 0
+net.ipv4.conf.eth0.arp_notify = 0
+net.ipv4.conf.eth0.bc_forwarding = 0
+net.ipv4.conf.eth0.bootp_relay = 0
+net.ipv4.conf.eth0.disable_policy = 0
+net.ipv4.conf.eth0.disable_xfrm = 0
+net.ipv4.conf.eth0.drop_gratuitous_arp = 0
+net.ipv4.conf.eth0.drop_unicast_in_l2_multicast = 0
+net.ipv4.conf.eth0.force_igmp_version = 0
+net.ipv4.conf.eth0.forwarding = 0
+net.ipv4.conf.eth0.igmpv2_unsolicited_report_interval = 10000
+net.ipv4.conf.eth0.igmpv3_unsolicited_report_interval = 1000
+net.ipv4.conf.eth0.ignore_routes_with_linkdown = 0
+net.ipv4.conf.eth0.log_martians = 0
+net.ipv4.conf.eth0.mc_forwarding = 0
+net.ipv4.conf.eth0.medium_id = 0
+net.ipv4.conf.eth0.promote_secondaries = 1
+net.ipv4.conf.eth0.proxy_arp = 0
+net.ipv4.conf.eth0.proxy_arp_pvlan = 0
+net.ipv4.conf.eth0.route_localnet = 0
+net.ipv4.conf.eth0.rp_filter = 2
+net.ipv4.conf.eth0.secure_redirects = 1
+net.ipv4.conf.eth0.send_redirects = 1
+net.ipv4.conf.eth0.shared_media = 1
+net.ipv4.conf.eth0.src_valid_mark = 0
+net.ipv4.conf.eth0.tag = 0
+net.ipv4.conf.lo.accept_local = 0
+net.ipv4.conf.lo.accept_redirects = 1
+net.ipv4.conf.lo.accept_source_route = 0
+net.ipv4.conf.lo.arp_accept = 0
+net.ipv4.conf.lo.arp_announce = 0
+net.ipv4.conf.lo.arp_evict_nocarrier = 1
+net.ipv4.conf.lo.arp_filter = 0
+net.ipv4.conf.lo.arp_ignore = 0
+net.ipv4.conf.lo.arp_notify = 0
+net.ipv4.conf.lo.bc_forwarding = 0
+net.ipv4.conf.lo.bootp_relay = 0
+net.ipv4.conf.lo.disable_policy = 1
+net.ipv4.conf.lo.disable_xfrm = 1
+net.ipv4.conf.lo.drop_gratuitous_arp = 0
+net.ipv4.conf.lo.drop_unicast_in_l2_multicast = 0
+net.ipv4.conf.lo.force_igmp_version = 0
+net.ipv4.conf.lo.forwarding = 0
+net.ipv4.conf.lo.igmpv2_unsolicited_report_interval = 10000
+net.ipv4.conf.lo.igmpv3_unsolicited_report_interval = 1000
+net.ipv4.conf.lo.ignore_routes_with_linkdown = 0
+net.ipv4.conf.lo.log_martians = 0
+net.ipv4.conf.lo.mc_forwarding = 0
+net.ipv4.conf.lo.medium_id = 0
+net.ipv4.conf.lo.promote_secondaries = 1
+net.ipv4.conf.lo.proxy_arp = 0
+net.ipv4.conf.lo.proxy_arp_pvlan = 0
+net.ipv4.conf.lo.route_localnet = 0
+net.ipv4.conf.lo.rp_filter = 2
+net.ipv4.conf.lo.secure_redirects = 1
+net.ipv4.conf.lo.send_redirects = 1
+net.ipv4.conf.lo.shared_media = 1
+net.ipv4.conf.lo.src_valid_mark = 0
+net.ipv4.conf.lo.tag = 0
+net.ipv6.conf.all.accept_dad = 0
+net.ipv6.conf.all.accept_ra = 1
+net.ipv6.conf.all.accept_ra_defrtr = 1
+net.ipv6.conf.all.accept_ra_from_local = 0
+net.ipv6.conf.all.accept_ra_min_hop_limit = 1
+net.ipv6.conf.all.accept_ra_min_lft = 0
+net.ipv6.conf.all.accept_ra_mtu = 1
+net.ipv6.conf.all.accept_ra_pinfo = 1
+net.ipv6.conf.all.accept_ra_rt_info_max_plen = 0
+net.ipv6.conf.all.accept_ra_rt_info_min_plen = 0
+net.ipv6.conf.all.accept_ra_rtr_pref = 1
+net.ipv6.conf.all.accept_redirects = 1
+net.ipv6.conf.all.accept_source_route = 0
+net.ipv6.conf.all.accept_untracked_na = 0
+net.ipv6.conf.all.addr_gen_mode = 0
+net.ipv6.conf.all.autoconf = 1
+net.ipv6.conf.all.dad_transmits = 1
+net.ipv6.conf.all.disable_ipv6 = 0
+net.ipv6.conf.all.disable_policy = 0
+net.ipv6.conf.all.drop_unicast_in_l2_multicast = 0
+net.ipv6.conf.all.drop_unsolicited_na = 0
+net.ipv6.conf.all.enhanced_dad = 1
+net.ipv6.conf.all.force_forwarding = 0
+net.ipv6.conf.all.force_mld_version = 0
+net.ipv6.conf.all.force_tllao = 0
+net.ipv6.conf.all.forwarding = 0
+net.ipv6.conf.all.hop_limit = 64
+net.ipv6.conf.all.ignore_routes_with_linkdown = 0
+net.ipv6.conf.all.ioam6_enabled = 0
+net.ipv6.conf.all.ioam6_id = 65535
+net.ipv6.conf.all.ioam6_id_wide = 4294967295
+net.ipv6.conf.all.keep_addr_on_down = 0
+net.ipv6.conf.all.max_addresses = 16
+net.ipv6.conf.all.max_desync_factor = 600
+net.ipv6.conf.all.mc_forwarding = 0
+net.ipv6.conf.all.mldv1_unsolicited_report_interval = 10000
+net.ipv6.conf.all.mldv2_unsolicited_report_interval = 1000
+net.ipv6.conf.all.mtu = 1280
+net.ipv6.conf.all.ndisc_evict_nocarrier = 1
+net.ipv6.conf.all.ndisc_notify = 0
+net.ipv6.conf.all.ndisc_tclass = 0
+net.ipv6.conf.all.optimistic_dad = 0
+net.ipv6.conf.all.proxy_ndp = 0
+net.ipv6.conf.all.ra_defrtr_metric = 1024
+net.ipv6.conf.all.ra_honor_pio_life = 0
+net.ipv6.conf.all.ra_honor_pio_pflag = 0
+net.ipv6.conf.all.regen_max_retry = 3
+net.ipv6.conf.all.regen_min_advance = 2
+net.ipv6.conf.all.router_probe_interval = 60
+net.ipv6.conf.all.router_solicitation_delay = 1
+net.ipv6.conf.all.router_solicitation_interval = 4
+net.ipv6.conf.all.router_solicitation_max_interval = 3600
+net.ipv6.conf.all.router_solicitations = -1
+net.ipv6.conf.all.rpl_seg_enabled = 0
+net.ipv6.conf.all.seg6_enabled = 0
+net.ipv6.conf.all.seg6_require_hmac = 0
+net.ipv6.conf.all.suppress_frag_ndisc = 1
+net.ipv6.conf.all.temp_prefered_lft = 86400
+net.ipv6.conf.all.temp_valid_lft = 172800
+net.ipv6.conf.all.use_oif_addrs_only = 0
+net.ipv6.conf.all.use_optimistic = 0
+net.ipv6.conf.all.use_tempaddr = 0
+net.ipv6.conf.default.accept_dad = 1
+net.ipv6.conf.default.accept_ra = 1
+net.ipv6.conf.default.accept_ra_defrtr = 1
+net.ipv6.conf.default.accept_ra_from_local = 0
+net.ipv6.conf.default.accept_ra_min_hop_limit = 1
+net.ipv6.conf.default.accept_ra_min_lft = 0
+net.ipv6.conf.default.accept_ra_mtu = 1
+net.ipv6.conf.default.accept_ra_pinfo = 1
+net.ipv6.conf.default.accept_ra_rt_info_max_plen = 0
+net.ipv6.conf.default.accept_ra_rt_info_min_plen = 0
+net.ipv6.conf.default.accept_ra_rtr_pref = 1
+net.ipv6.conf.default.accept_redirects = 1
+net.ipv6.conf.default.accept_source_route = 0
+net.ipv6.conf.default.accept_untracked_na = 0
+net.ipv6.conf.default.addr_gen_mode = 0
+net.ipv6.conf.default.autoconf = 1
+net.ipv6.conf.default.dad_transmits = 1
+net.ipv6.conf.default.disable_ipv6 = 0
+net.ipv6.conf.default.disable_policy = 0
+net.ipv6.conf.default.drop_unicast_in_l2_multicast = 0
+net.ipv6.conf.default.drop_unsolicited_na = 0
+net.ipv6.conf.default.enhanced_dad = 1
+net.ipv6.conf.default.force_forwarding = 0
+net.ipv6.conf.default.force_mld_version = 0
+net.ipv6.conf.default.force_tllao = 0
+net.ipv6.conf.default.forwarding = 0
+net.ipv6.conf.default.hop_limit = 64
+net.ipv6.conf.default.ignore_routes_with_linkdown = 0
+net.ipv6.conf.default.ioam6_enabled = 0
+net.ipv6.conf.default.ioam6_id = 65535
+net.ipv6.conf.default.ioam6_id_wide = 4294967295
+net.ipv6.conf.default.keep_addr_on_down = 0
+net.ipv6.conf.default.max_addresses = 16
+net.ipv6.conf.default.max_desync_factor = 600
+net.ipv6.conf.default.mc_forwarding = 0
+net.ipv6.conf.default.mldv1_unsolicited_report_interval = 10000
+net.ipv6.conf.default.mldv2_unsolicited_report_interval = 1000
+net.ipv6.conf.default.mtu = 1280
+net.ipv6.conf.default.ndisc_evict_nocarrier = 1
+net.ipv6.conf.default.ndisc_notify = 0
+net.ipv6.conf.default.ndisc_tclass = 0
+net.ipv6.conf.default.optimistic_dad = 0
+net.ipv6.conf.default.proxy_ndp = 0
+net.ipv6.conf.default.ra_defrtr_metric = 1024
+net.ipv6.conf.default.ra_honor_pio_life = 0
+net.ipv6.conf.default.ra_honor_pio_pflag = 0
+net.ipv6.conf.default.regen_max_retry = 3
+net.ipv6.conf.default.regen_min_advance = 2
+net.ipv6.conf.default.router_probe_interval = 60
+net.ipv6.conf.default.router_solicitation_delay = 1
+net.ipv6.conf.default.router_solicitation_interval = 4
+net.ipv6.conf.default.router_solicitation_max_interval = 3600
+net.ipv6.conf.default.router_solicitations = -1
+net.ipv6.conf.default.rpl_seg_enabled = 0
+net.ipv6.conf.default.seg6_enabled = 0
+net.ipv6.conf.default.seg6_require_hmac = 0
+net.ipv6.conf.default.suppress_frag_ndisc = 1
+net.ipv6.conf.default.temp_prefered_lft = 86400
+net.ipv6.conf.default.temp_valid_lft = 172800
+net.ipv6.conf.default.use_oif_addrs_only = 0
+net.ipv6.conf.default.use_optimistic = 0
+net.ipv6.conf.default.use_tempaddr = 0
+net.ipv6.conf.eth0.accept_dad = 1
+net.ipv6.conf.eth0.accept_ra = 0
+net.ipv6.conf.eth0.accept_ra_defrtr = 1
+net.ipv6.conf.eth0.accept_ra_from_local = 0
+net.ipv6.conf.eth0.accept_ra_min_hop_limit = 1
+net.ipv6.conf.eth0.accept_ra_min_lft = 0
+net.ipv6.conf.eth0.accept_ra_mtu = 1
+net.ipv6.conf.eth0.accept_ra_pinfo = 1
+net.ipv6.conf.eth0.accept_ra_rt_info_max_plen = 0
+net.ipv6.conf.eth0.accept_ra_rt_info_min_plen = 0
+net.ipv6.conf.eth0.accept_ra_rtr_pref = 1
+net.ipv6.conf.eth0.accept_redirects = 1
+net.ipv6.conf.eth0.accept_source_route = 0
+net.ipv6.conf.eth0.accept_untracked_na = 0
+net.ipv6.conf.eth0.addr_gen_mode = 1
+net.ipv6.conf.eth0.autoconf = 1
+net.ipv6.conf.eth0.dad_transmits = 1
+net.ipv6.conf.eth0.disable_ipv6 = 0
+net.ipv6.conf.eth0.disable_policy = 0
+net.ipv6.conf.eth0.drop_unicast_in_l2_multicast = 0
+net.ipv6.conf.eth0.drop_unsolicited_na = 0
+net.ipv6.conf.eth0.enhanced_dad = 1
+net.ipv6.conf.eth0.force_forwarding = 0
+net.ipv6.conf.eth0.force_mld_version = 0
+net.ipv6.conf.eth0.force_tllao = 0
+net.ipv6.conf.eth0.forwarding = 0
+net.ipv6.conf.eth0.hop_limit = 64
+net.ipv6.conf.eth0.ignore_routes_with_linkdown = 0
+net.ipv6.conf.eth0.ioam6_enabled = 0
+net.ipv6.conf.eth0.ioam6_id = 65535
+net.ipv6.conf.eth0.ioam6_id_wide = 4294967295
+net.ipv6.conf.eth0.keep_addr_on_down = 0
+net.ipv6.conf.eth0.max_addresses = 16
+net.ipv6.conf.eth0.max_desync_factor = 600
+net.ipv6.conf.eth0.mc_forwarding = 0
+net.ipv6.conf.eth0.mldv1_unsolicited_report_interval = 10000
+net.ipv6.conf.eth0.mldv2_unsolicited_report_interval = 1000
+net.ipv6.conf.eth0.mtu = 1500
+net.ipv6.conf.eth0.ndisc_evict_nocarrier = 1
+net.ipv6.conf.eth0.ndisc_notify = 0
+net.ipv6.conf.eth0.ndisc_tclass = 0
+net.ipv6.conf.eth0.optimistic_dad = 0
+net.ipv6.conf.eth0.proxy_ndp = 0
+net.ipv6.conf.eth0.ra_defrtr_metric = 1024
+net.ipv6.conf.eth0.ra_honor_pio_life = 0
+net.ipv6.conf.eth0.ra_honor_pio_pflag = 0
+net.ipv6.conf.eth0.regen_max_retry = 3
+net.ipv6.conf.eth0.regen_min_advance = 2
+net.ipv6.conf.eth0.router_probe_interval = 60
+net.ipv6.conf.eth0.router_solicitation_delay = 1
+net.ipv6.conf.eth0.router_solicitation_interval = 4
+net.ipv6.conf.eth0.router_solicitation_max_interval = 3600
+net.ipv6.conf.eth0.router_solicitations = -1
+net.ipv6.conf.eth0.rpl_seg_enabled = 0
+net.ipv6.conf.eth0.seg6_enabled = 0
+net.ipv6.conf.eth0.seg6_require_hmac = 0
+net.ipv6.conf.eth0.suppress_frag_ndisc = 1
+net.ipv6.conf.eth0.temp_prefered_lft = 86400
+net.ipv6.conf.eth0.temp_valid_lft = 172800
+net.ipv6.conf.eth0.use_oif_addrs_only = 0
+net.ipv6.conf.eth0.use_optimistic = 0
+net.ipv6.conf.eth0.use_tempaddr = 2
+net.ipv6.conf.lo.accept_dad = -1
+net.ipv6.conf.lo.accept_ra = 1
+net.ipv6.conf.lo.accept_ra_defrtr = 1
+net.ipv6.conf.lo.accept_ra_from_local = 0
+net.ipv6.conf.lo.accept_ra_min_hop_limit = 1
+net.ipv6.conf.lo.accept_ra_min_lft = 0
+net.ipv6.conf.lo.accept_ra_mtu = 1
+net.ipv6.conf.lo.accept_ra_pinfo = 1
+net.ipv6.conf.lo.accept_ra_rt_info_max_plen = 0
+net.ipv6.conf.lo.accept_ra_rt_info_min_plen = 0
+net.ipv6.conf.lo.accept_ra_rtr_pref = 1
+net.ipv6.conf.lo.accept_redirects = 1
+net.ipv6.conf.lo.accept_source_route = 0
+net.ipv6.conf.lo.accept_untracked_na = 0
+net.ipv6.conf.lo.addr_gen_mode = 0
+net.ipv6.conf.lo.autoconf = 1
+net.ipv6.conf.lo.dad_transmits = 1
+net.ipv6.conf.lo.disable_ipv6 = 0
+net.ipv6.conf.lo.disable_policy = 0
+net.ipv6.conf.lo.drop_unicast_in_l2_multicast = 0
+net.ipv6.conf.lo.drop_unsolicited_na = 0
+net.ipv6.conf.lo.enhanced_dad = 1
+net.ipv6.conf.lo.force_forwarding = 0
+net.ipv6.conf.lo.force_mld_version = 0
+net.ipv6.conf.lo.force_tllao = 0
+net.ipv6.conf.lo.forwarding = 0
+net.ipv6.conf.lo.hop_limit = 64
+net.ipv6.conf.lo.ignore_routes_with_linkdown = 0
+net.ipv6.conf.lo.ioam6_enabled = 0
+net.ipv6.conf.lo.ioam6_id = 65535
+net.ipv6.conf.lo.ioam6_id_wide = 4294967295
+net.ipv6.conf.lo.keep_addr_on_down = 0
+net.ipv6.conf.lo.max_addresses = 16
+net.ipv6.conf.lo.max_desync_factor = 600
+net.ipv6.conf.lo.mc_forwarding = 0
+net.ipv6.conf.lo.mldv1_unsolicited_report_interval = 10000
+net.ipv6.conf.lo.mldv2_unsolicited_report_interval = 1000
+net.ipv6.conf.lo.mtu = 65536
+net.ipv6.conf.lo.ndisc_evict_nocarrier = 1
+net.ipv6.conf.lo.ndisc_notify = 0
+net.ipv6.conf.lo.ndisc_tclass = 0
+net.ipv6.conf.lo.optimistic_dad = 0
+net.ipv6.conf.lo.proxy_ndp = 0
+net.ipv6.conf.lo.ra_defrtr_metric = 1024
+net.ipv6.conf.lo.ra_honor_pio_life = 0
+net.ipv6.conf.lo.ra_honor_pio_pflag = 0
+net.ipv6.conf.lo.regen_max_retry = 3
+net.ipv6.conf.lo.regen_min_advance = 2
+net.ipv6.conf.lo.router_probe_interval = 60
+net.ipv6.conf.lo.router_solicitation_delay = 1
+net.ipv6.conf.lo.router_solicitation_interval = 4
+net.ipv6.conf.lo.router_solicitation_max_interval = 3600
+net.ipv6.conf.lo.router_solicitations = -1
+net.ipv6.conf.lo.rpl_seg_enabled = 0
+net.ipv6.conf.lo.seg6_enabled = 0
+net.ipv6.conf.lo.seg6_require_hmac = 0
+net.ipv6.conf.lo.suppress_frag_ndisc = 1
+net.ipv6.conf.lo.temp_prefered_lft = 86400
+net.ipv6.conf.lo.temp_valid_lft = 172800
+net.ipv6.conf.lo.use_oif_addrs_only = 0
+net.ipv6.conf.lo.use_optimistic = 0
+net.ipv6.conf.lo.use_tempaddr = -1
+
+=== SUID & SGID BINARIES COUNT ===
+13
+
+=== WORLD-WRITABLE FILES COUNT ===
+0
+
+=== FIREWALL STATUS (nft ruleset length) ===
+0
+
+=== TELEMETRY STATUS ===
+auditd: active
+rsyslog: inactive
+not active
+sysmon: inactive
+not active
