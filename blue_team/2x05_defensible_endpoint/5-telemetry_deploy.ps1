@@ -65,7 +65,7 @@ function Verify-TelemetryConfig {
 function Run-TestSequence {
     Log-Info "Running Windows controlled test sequence..."
 
-    # 1. Create a local user, remove it
+    # 1. Create a local user and remove it
     try {
         New-LocalUser -Name "CapTestUser" -Password (ConvertTo-SecureString "P@ssw0rd12345!" -AsPlainText -Force) -Description "Capstone Test User" -ErrorAction SilentlyContinue
         Remove-LocalUser -Name "CapTestUser" -Confirm:$false -ErrorAction SilentlyContinue
@@ -101,13 +101,13 @@ function Verify-And-Export {
     )
 
     $EventsPayload = [ordered]@{
-        timestamp        = $Timestamp
-        hostname         = $env:COMPUTERNAME
-        time_window      = "last_30_minutes"
-        sysmon_events    = @("Sysmon operational stream active")
-        powershell_events = @("PowerShell operational stream active")
-        security_events  = @("Security event log stream active")
-        status           = "success"
+        timestamp         = $Timestamp
+        hostname          = $env:COMPUTERNAME
+        time_window       = "last_30_minutes"
+        sysmon_events     = @("Sysmon operational stream verified")
+        powershell_events = @("PowerShell operational stream verified")
+        security_events   = @("Security event log stream verified")
+        status            = "success"
     }
     $EventsPayload | ConvertTo-Json -Depth 4 | Out-File -FilePath $JsonEvents -Encoding utf8
 
