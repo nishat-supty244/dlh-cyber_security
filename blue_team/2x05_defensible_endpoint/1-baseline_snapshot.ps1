@@ -1,11 +1,6 @@
 <#
 .SYNOPSIS
     Runs the CIS Level 1 audit helper and persists the baseline score.
-.DESCRIPTION
-    Capstone task T1 - Defensible Endpoint Package
-    Runs capstone\win_audit.ps1, captures full output to
-    capstone\baseline\windows_baseline.log, and emits
-    capstone\baseline\baseline_windows.json with the pass rate.
 #>
 
 Set-StrictMode -Version Latest
