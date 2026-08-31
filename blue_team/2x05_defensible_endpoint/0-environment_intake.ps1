@@ -6,6 +6,7 @@
     Collects host info, installed features, running services, local users,
     firewall state, audit policy, Sysmon presence, PowerShell logging state,
     and account/password policy into a structured JSON intake record.
+.NOTES
     Exit Codes: 0=success, 1=controlled failure, 2=environment error
 #>
 
