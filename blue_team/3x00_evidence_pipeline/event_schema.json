@@ -1,0 +1,126 @@
+{
+  "version": "1.0.0",
+  "author": "Nishat",
+  "fields": [
+    {
+      "name": "timestamp",
+      "type": "timestamp",
+      "required": true,
+      "description": "Standardized ISO 8601 timestamp representing when the event occurred.",
+      "justification": "Allows analysts to accurately order events chronologically across mixed operating systems.",
+      "source_mapping": {
+        "windows_json": "timestamp_raw",
+        "linux_text": "timestamp_raw",
+        "network_csv": "timestamp"
+      }
+    },
+    {
+      "name": "hostname",
+      "type": "string",
+      "required": true,
+      "description": "Name or identifier of the host machine where the event was logged.",
+      "justification": "Enables isolation of compromised assets during incident response triage.",
+      "source_mapping": {
+        "windows_json": "hostname",
+        "linux_text": "hostname",
+        "network_csv": null
+      }
+    },
+    {
+      "name": "source_type",
+      "type": "string",
+      "required": true,
+      "description": "Classification label indicating the original log format or ingestion pipeline source.",
+      "justification": "Allows parsing validation and traceability back to raw evidence files.",
+      "source_mapping": {
+        "windows_json": "source_origin",
+        "linux_text": "source_origin",
+        "network_csv": "source_origin"
+      }
+    },
+    {
+      "name": "event_category",
+      "type": "string",
+      "required": true,
+      "description": "High-level grouping class describing the nature of the security event.",
+      "justification": "Needed by detection rules and triage filters to group events independently of source vendor.",
+      "source_mapping": {
+        "windows_json": "channel + event_id mapping table",
+        "linux_text": "program or audit_type mapping table",
+        "network_csv": "constant: network"
+      }
+    },
+    {
+      "name": "severity",
+      "type": "string",
+      "required": true,
+      "description": "Calculated or logged importance level of the event indicating potential risk.",
+      "justification": "Helps analysts prioritize high-risk alerts over routine telemetry noise.",
+      "source_mapping": {
+        "windows_json": "derived from event importance",
+        "linux_text": "derived from log level",
+        "network_csv": "derived from alert flags"
+      }
+    },
+    {
+      "name": "user",
+      "type": "string",
+      "required": false,
+      "description": "Account name associated with the execution or initiation of the event.",
+      "justification": "Tracks identity-based access patterns during credential-access investigations.",
+      "source_mapping": {
+        "windows_json": "event_data.TargetUserName",
+        "linux_text": "user",
+        "network_csv": null
+      }
+    },
+    {
+      "name": "process_name",
+      "type": "string",
+      "required": false,
+      "description": "Name or filename of the executable file involved in the event action.",
+      "justification": "Identifies malicious process execution or binary abuse in endpoint logs.",
+      "source_mapping": {
+        "windows_json": "event_data.Image",
+        "linux_text": "parsed_fields.comm",
+        "network_csv": null
+      }
+    },
+    {
+      "name": "src_ip",
+      "type": "string",
+      "required": false,
+      "description": "Originating IPv4 or IPv6 address for network or connection events.",
+      "justification": "Tracks external connections and lateral movement source endpoints.",
+      "source_mapping": {
+        "windows_json": "event_data.SourceIp",
+        "linux_text": null,
+        "network_csv": "src_ip"
+      }
+    },
+    {
+      "name": "dst_ip",
+      "type": "string",
+      "required": false,
+      "description": "Destination IPv4 or IPv6 address for network communications or traffic.",
+      "justification": "Identifies target servers or external command-and-control infrastructure.",
+      "source_mapping": {
+        "windows_json": "event_data.DestinationIp",
+        "linux_text": null,
+        "network_csv": "dst_ip"
+      }
+    },
+    {
+      "name": "raw_message",
+      "type": "string",
+      "required": true,
+      "description": "Complete original string line or log message prior to field extraction.",
+      "justification": "Preserves forensic authenticity and provides full context when parsed fields are ambiguous.",
+      "source_mapping": {
+        "windows_json": "raw_message",
+        "linux_text": "raw_message",
+        "network_csv": "raw_message"
+      }
+    }
+  ]
+}
