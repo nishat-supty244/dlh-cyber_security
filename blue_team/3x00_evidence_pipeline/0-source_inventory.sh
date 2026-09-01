@@ -1,164 +1,122 @@
-# Task 0 — Evidence Pack Inventory
-
-## Script: `0-source_inventory.sh`
-
-```bash
-#!/usr/bin/env bash
-
+#!/bin/bash
 set -euo pipefail
 
-EVIDENCE_ROOT="$HOME/evidence_pack_primary"
-OUTPUT_FILE="source_inventory.json"
+EVIDENCE_DIR="${1:-$HOME/evidence_pack_primary}"
+MANIFEST_FILE="source_inventory.json"
 
-# Check that the evidence pack exists
-if [[ ! -d "$EVIDENCE_ROOT" ]]; then
-    echo "ERROR: Evidence pack not found: $EVIDENCE_ROOT" >&2
+if [ ! -d "$EVIDENCE_DIR" ]; then
+    echo "Error: Evidence directory $EVIDENCE_DIR does not exist." >&2
     exit 1
 fi
 
-# Temporary file for JSON records
-TMP_FILE=$(mktemp)
+TEMP_JSON=$(mktemp)
+echo "[]" > "$TEMP_JSON"
 
-# Cleanup temporary file on exit
-trap 'rm -f "$TMP_FILE"' EXIT
+total_files=0
+total_bytes=0
+declare -A category_counts
+declare -A category_bytes
 
-# Start JSON array
-echo "[" > "$TMP_FILE"
-
-first_record=true
-
-# Process files under the three required directories
-while IFS= read -r -d '' file; do
-
-    relative_path="${file#$EVIDENCE_ROOT/}"
-    category="${relative_path%%/*}"
-    filename="${relative_path##*/}"
-
-    # Determine source type from directory and extension
-    case "$category" in
-        windows)
-            source_type="windows_json"
-            ;;
-        linux)
-            source_type="linux_text"
-            ;;
-        network)
-            case "${filename##*.}" in
-                csv|CSV)
-                    source_type="network_csv"
-                    ;;
-                json|JSON)
-                    source_type="network_json"
-                    ;;
-                *)
-                    continue
-                    ;;
-            esac
-            ;;
-        *)
-            continue
-            ;;
-    esac
-
-    # File size
-    size_bytes=$(stat -c '%s' "$file")
-
-    # SHA-256
-    sha256=$(sha256sum "$file" | awk '{print $1}')
-
-    # Extract record/line count and event timestamps
-    first_event_time=""
-    last_event_time=""
-
-    if [[ "$source_type" == "windows_json" || "$source_type" == "network_json" ]]; then
-
-        record_count=$(wc -l < "$file" | tr -d ' ')
-
-        # Best-effort timestamp extraction from common JSON timestamp fields
-        mapfile -t timestamps < <(
-            grep -Eo '"(timestamp|time|event_time|TimeCreated|@timestamp)"[[:space:]]*:[[:space:]]*"[^"]+"' "$file" 2>/dev/null |
-            sed -E 's/.*:[[:space:]]*"([^"]+)".*/\1/' |
-            sort
-        )
-
-        if [[ ${#timestamps[@]} -gt 0 ]]; then
-            first_event_time="${timestamps[0]}"
-            last_event_time="${timestamps[${#timestamps[@]}-1]}"
-        fi
-
-    else
-        line_count=$(wc -l < "$file" | tr -d ' ')
-
-        # Best-effort extraction of timestamps from common text log formats
-        mapfile -t timestamps < <(
-            grep -Eo \
-                '([0-9]{4}-[0-9]{2}-[0-9]{2}[T ][0-9]{2}:[0-9]{2}:[0-9]{2}([.,][0-9]+)?([+-][0-9]{2}:[0-9]{2}|Z)?)' \
-                "$file" 2>/dev/null |
-            sort
-        )
-
-        if [[ ${#timestamps[@]} -gt 0 ]]; then
-            first_event_time="${timestamps[0]}"
-            last_event_time="${timestamps[${#timestamps[@]}-1]}"
-        fi
+for category in windows linux network; do
+    cat_dir="$EVIDENCE_DIR/$category"
+    if [ ! -d "$cat_dir" ]; then
+        continue
     fi
 
-    # Write comma between JSON records
-    if [[ "$first_record" == false ]]; then
-        echo "," >> "$TMP_FILE"
-    fi
+    cat_files=0
+    cat_b_count=0
 
-    first_record=false
+    # Loop through files in the category directory safely
+    for filepath in "$cat_dir"/*; do
+        [ -f "$filepath" ] || continue
+        
+        rel_path="${filepath#$EVIDENCE_DIR/}"
+        
+        case "$rel_path" in
+            windows/*.json) source_type="windows_json" ;;
+            linux/*) source_type="linux_text" ;;
+            network/*.csv) source_type="network_csv" ;;
+            network/*.json) source_type="network_json" ;;
+            *) source_type="unknown" ;;
+        esac
 
-    cat >> "$TMP_FILE" <<EOF
-  {
-    "path": "$relative_path",
-    "source_type": "$source_type",
-    "size_bytes": $size_bytes,
-    "sha256": "$sha256",
-    "line_count": ${line_count:-null},
-    "record_count": ${record_count:-null},
-    "first_event_time": ${first_event_time:+\"$first_event_time\"},
-    "last_event_time": ${last_event_time:+\"$last_event_time\"}
-  }
-EOF
+        size_bytes=$(stat -c%s "$filepath")
+        sha256=$(sha256sum "$filepath" | awk '{print $1}')
+        line_count=$(wc -l < "$filepath")
 
-done < <(
-    find "$EVIDENCE_ROOT/windows" \
-         "$EVIDENCE_ROOT/linux" \
-         "$EVIDENCE_ROOT/network" \
-         -type f -print0 2>/dev/null
-)
+        timestamps=$(python3 -c '
+import sys, re, json
+path = sys.argv[1]
+stype = sys.argv[2]
+first_t = None
+last_t = None
+iso_regex = re.compile(r"\b\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?\b")
+try:
+    with open(path, "r", errors="ignore") as f:
+        for line in f:
+            match = iso_regex.search(line)
+            if match:
+                t_str = match.group(0).strip()
+                if not first_t:
+                    first_t = t_str
+                last_t = t_str
+            if stype in ["windows_json", "network_json"]:
+                try:
+                    data = json.loads(line)
+                    for k in ["timestamp", "@timestamp", "TimeCreated", "time", "datetime"]:
+                        if k in data and isinstance(data[k], str):
+                            if not first_t:
+                                first_t = data[k]
+                            last_t = data[k]
+                except:
+                    pass
+except Exception:
+    pass
+print(json.dumps({"first": first_t, "last": last_t}))
+' "$filepath" "$source_type")
 
-# Finish JSON
-echo "]" >> "$TMP_FILE"
+        first_event_time=$(echo "$timestamps" | jq -r '.first')
+        last_event_time=$(echo "$timestamps" | jq -r '.last')
+        
+        [ "$first_event_time" = "null" ] && first_event_time=""
+        [ "$last_event_time" = "null" ] && last_event_time=""
 
-# Validate and write final JSON
-if command -v jq >/dev/null 2>&1; then
-    jq '.' "$TMP_FILE" > "$OUTPUT_FILE"
-else
-    cp "$TMP_FILE" "$OUTPUT_FILE"
-fi
+        jq --arg path "$rel_path" \
+           --arg st "$source_type" \
+           --argjson size "$size_bytes" \
+           --arg sha "$sha256" \
+           --argjson lines "$line_count" \
+           --arg first "$first_event_time" \
+           --arg last "$last_event_time" \
+           '. += [{
+               "path": $path,
+               "source_type": $st,
+               "size_bytes": $size,
+               "sha256": $sha,
+               "line_count": $lines,
+               "first_event_time": $first,
+               "last_event_time": $last
+           }]' "$TEMP_JSON" > "${TEMP_JSON}.tmp" && mv "${TEMP_JSON}.tmp" "$TEMP_JSON"
 
-# Calculate human-readable summary
-windows_count=$(find "$EVIDENCE_ROOT/windows" -type f 2>/dev/null | wc -l | tr -d ' ')
-linux_count=$(find "$EVIDENCE_ROOT/linux" -type f 2>/dev/null | wc -l | tr -d ' ')
-network_count=$(find "$EVIDENCE_ROOT/network" -type f 2>/dev/null | wc -l | tr -d ' ')
+        cat_files=$((cat_files + 1))
+        cat_b_count=$((cat_b_count + size_bytes))
+        total_files=$((total_files + 1))
+        total_bytes=$((total_bytes + size_bytes))
+    done
 
-windows_bytes=$(find "$EVIDENCE_ROOT/windows" -type f -printf '%s\n' 2>/dev/null | awk '{sum += $1} END {print sum+0}')
-linux_bytes=$(find "$EVIDENCE_ROOT/linux" -type f -printf '%s\n' 2>/dev/null | awk '{sum += $1} END {print sum+0}')
-network_bytes=$(find "$EVIDENCE_ROOT/network" -type f -printf '%s\n' 2>/dev/null | awk '{sum += $1} END {print sum+0}')
+    category_counts[$category]=$cat_files
+    category_bytes[$category]=$cat_b_count
+done
 
-total_count=$((windows_count + linux_count + network_count))
-total_bytes=$((windows_bytes + linux_bytes + network_bytes))
+mv "$TEMP_JSON" "$MANIFEST_FILE"
 
-# Convert bytes to MB
-format_mb() {
-    awk -v bytes="$1" 'BEGIN { printf "%.1f MB", bytes / 1024 / 1024 }'
-}
+for cat in windows linux network; do
+    count=${category_counts[$cat]:-0}
+    bytes=${category_bytes[$cat]:-0}
+    mb=$(awk "BEGIN {printf \"%.1f\", $bytes / 1024 / 1024}")
+    printf "%-8s : %d files  |  %4.1f MB\n" "$cat" "$count" "$mb"
+done
 
-echo "windows : $windows_count files  |  $(format_mb "$windows_bytes")"
-echo "linux   : $linux_count files  |  $(format_mb "$linux_bytes")"
-echo "network : $network_count files  |  $(format_mb "$network_bytes")"
-echo "total   : $total_count files  |  $(format_mb "$total_bytes")"
-echo "manifest written to $OUTPUT_FILE"
+total_mb=$(awk "BEGIN {printf \"%.1f\", $total_bytes / 1024 / 1024}")
+printf "total    : %d files  |  %4.1f MB\n" "$total_files" "$total_mb"
+echo "manifest written to $MANIFEST_FILE"
