@@ -1,0 +1,110 @@
+[
+  {
+    "source_type": "auth",
+    "match": {
+      "action": "login",
+      "status": "success"
+    },
+    "label": "login_success"
+  },
+  {
+    "source_type": "auth",
+    "match": {
+      "action": "login",
+      "status": "failure"
+    },
+    "label": "login_failure"
+  },
+  {
+    "source_type": "auth",
+    "match": {
+      "action": "logout"
+    },
+    "label": "logout"
+  },
+  {
+    "source_type": "auth",
+    "match": {
+      "action": "lockout"
+    },
+    "label": "account_lockout"
+  },
+  {
+    "source_type": "auth",
+    "match": {
+      "action": "privilege_escalation"
+    },
+    "label": "privilege_escalation"
+  },
+  {
+    "source_type": "process",
+    "match": {
+      "action": "start"
+    },
+    "label": "process_start"
+  },
+  {
+    "source_type": "process",
+    "match": {
+      "action": "stop"
+    },
+    "label": "process_stop"
+  },
+  {
+    "source_type": "process",
+    "match": {
+      "action": "spawn"
+    },
+    "label": "child_process_spawn"
+  },
+  {
+    "source_type": "file",
+    "match": {
+      "action": "read",
+      "sensitivity": "high"
+    },
+    "label": "file_read_sensitive"
+  },
+  {
+    "source_type": "file",
+    "match": {
+      "action": "write",
+      "sensitivity": "high"
+    },
+    "label": "file_write_sensitive"
+  },
+  {
+    "source_type": "file",
+    "match": {
+      "action": "chmod"
+    },
+    "label": "file_permission_change"
+  },
+  {
+    "source_type": "network",
+    "match": {
+      "direction": "outbound"
+    },
+    "label": "network_connection_outbound"
+  },
+  {
+    "source_type": "network",
+    "match": {
+      "direction": "inbound"
+    },
+    "label": "network_connection_inbound"
+  },
+  {
+    "source_type": "network",
+    "match": {
+      "status": "alert"
+    },
+    "label": "network_alert"
+  },
+  {
+    "source_type": "network",
+    "match": {
+      "status": "blocked"
+    },
+    "label": "network_blocked"
+  }
