@@ -1,152 +1,187 @@
 #!/bin/bash
+set -euo pipefail
 
+# Resolve HANDOFF_DIR with default
 HANDOFF_DIR="${HANDOFF_DIR:-$HOME/3x00_handoff/evidence_handoff}"
-DATA_FILE="$HANDOFF_DIR/data/enriched_events.json"
 
-if [[ ! -f "$DATA_FILE" ]]; then
-    echo "Error: Data file not found at $DATA_FILE" >&2
+ENRICHED_EVENTS="${HANDOFF_DIR}/data/enriched_events.json"
+
+if [[ ! -f "${ENRICHED_EVENTS}" ]]; then
+    echo "ERROR: Enriched events file not found at ${ENRICHED_EVENTS}" >&2
     exit 1
 fi
 
-usage() {
-    cat <<EOF
-query_toolkit.sh <verb> [options]
+export ENRICHED_EVENTS
+
+python3 -W error - "$@" << 'PYEOF'
+import json
+import os
+import sys
+import argparse
+from collections import Counter
+
+USAGE = """query_toolkit.sh <verb> [options]
   filter   emit matching records as ndjson
   top      top N values of a field
   distinct distinct values of a field
   count    number of matching records
   window   bucketed counts by time window
-  help     this message
-EOF
-}
+  help     this message"""
 
-verb="${1:-help}"
-shift || true
+def matches_filters(event, args):
+    """Check if an event matches all provided filter arguments."""
+    if hasattr(args, "source") and args.source is not None:
+        if event.get("source_type") != args.source:
+            return False
+    if hasattr(args, "host") and args.host is not None:
+        if event.get("hostname") != args.host:
+            return False
+    if hasattr(args, "category") and args.category is not None:
+        if event.get("event_category") != args.category:
+            return False
+    ts = event.get("timestamp")
+    if hasattr(args, "from_ts") and args.from_ts is not None:
+        if ts is None or ts < args.from_ts:
+            return False
+    if hasattr(args, "to_ts") and args.to_ts is not None:
+        if ts is None or ts >= args.to_ts:
+            return False
+    return True
 
-source_val=""
-host_val=""
-from_val=""
-to_val=""
-category_val=""
-field_val=""
-limit_val="10"
-bucket_val="day"
+def iter_events(path):
+    """Stream NDJSON one line at a time, yielding parsed dicts."""
+    with open(path, "r") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                yield json.loads(line)
+            except json.JSONDecodeError:
+                continue
 
-while [[ "$#" -gt 0 ]]; do
-    case "$1" in
-        --source)
-            source_val="$2"
-            shift 2
-            ;;
-        --host)
-            host_val="$2"
-            shift 2
-            ;;
-        --from)
-            from_val="$2"
-            shift 2
-            ;;
-        --to)
-            to_val="$2"
-            shift 2
-            ;;
-        --category)
-            category_val="$2"
-            shift 2
-            ;;
-        --field)
-            field_val="$2"
-            shift 2
-            ;;
-        --limit)
-            limit_val="$2"
-            shift 2
-            ;;
-        --bucket)
-            bucket_val="$2"
-            shift 2
-            ;;
-        *)
-            echo "Unknown option: $1" >&2
-            exit 1
-            ;;
-    esac
-done
+def safe_write(s):
+    """Write to stdout, suppressing BrokenPipeError gracefully."""
+    try:
+        sys.stdout.write(s)
+    except BrokenPipeError:
+        sys.stdout = None
+        sys.exit(0)
 
-jq_cond="true"
+def add_filter_args(subparser):
+    """Add shared filter arguments to a subparser."""
+    subparser.add_argument("--source", default=None, help="Filter by source_type")
+    subparser.add_argument("--host", default=None, help="Filter by hostname")
+    subparser.add_argument("--from", dest="from_ts", default=None,
+                           help="ISO timestamp lower bound (inclusive)")
+    subparser.add_argument("--to", dest="to_ts", default=None,
+                           help="ISO timestamp upper bound (exclusive)")
+    subparser.add_argument("--category", default=None, help="Filter by event_category")
 
-if [[ -n "$source_val" ]]; then
-    jq_cond="$jq_cond and (.source == \$src or .source_type == \$src)"
-fi
-if [[ -n "$host_val" ]]; then
-    jq_cond="$jq_cond and (.host == \$h or .hostname == \$h or .source_host == \$h)"
-fi
-if [[ -n "$category_val" ]]; then
-    jq_cond="$jq_cond and (.category == \$cat or .event_category == \$cat)"
-fi
-if [[ -n "$from_val" ]]; then
-    jq_cond="$jq_cond and (.timestamp >= \$from or .time >= \$from)"
-fi
-if [[ -n "$to_val" ]]; then
-    jq_cond="$jq_cond and (.timestamp <= \$to or .time <= \$to)"
-fi
+def cmd_filter(args):
+    enriched = os.environ["ENRICHED_EVENTS"]
+    for event in iter_events(enriched):
+        if matches_filters(event, args):
+            safe_write(json.dumps(event, separators=(",", ":")) + "\n")
 
-jq_args=()
-if [[ -n "$source_val" ]]; then
-    jq_args+=(--arg src "$source_val")
-fi
-if [[ -n "$host_val" ]]; then
-    jq_args+=(--arg h "$host_val")
-fi
-if [[ -n "$category_val" ]]; then
-    jq_args+=(--arg cat "$category_val")
-fi
-if [[ -n "$from_val" ]]; then
-    jq_args+=(--arg from "$from_val")
-fi
-if [[ -n "$to_val" ]]; then
-    jq_args+=(--arg to "$to_val")
-fi
+def cmd_top(args):
+    enriched = os.environ["ENRICHED_EVENTS"]
+    counter = Counter()
+    for event in iter_events(enriched):
+        if matches_filters(event, args):
+            val = event.get(args.field)
+            if val is not None:
+                counter[str(val)] += 1
+    for value, count in counter.most_common(args.limit):
+        safe_write(f"{value}\t{count}\n")
 
-case "$verb" in
-    help)
-        usage
-        ;;
-    filter)
-        jq -c "${jq_args[@]}" 'if type=="array" then .[] else . end | select('"$jq_cond"')' "$DATA_FILE"
-        ;;
-    top)
-        if [[ -z "$field_val" ]]; then
-            echo "Error: --field is required for top command" >&2
-            exit 1
-        fi
-        jq -r "${jq_args[@]}" --arg field "$field_val" --argjson limit "$limit_val" \
-            '[if type=="array" then .[] else . end | select('"$jq_cond"') | .[$field] // "N/A" | tostring] | group_by(.) | map({value:.[0], count: length}) | sort_by(.count) | reverse | .[0:$limit] | .[] | "\(.value)\t\(.count)"' \
-            "$DATA_FILE"
-        ;;
-    distinct)
-        if [[ -z "$field_val" ]]; then
-            echo "Error: --field is required for distinct command" >&2
-            exit 1
-        fi
-        jq -r "${jq_args[@]}" --arg field "$field_val" \
-            'if type=="array" then .[] else . end | select('"$jq_cond"') | .[$field] // empty' \
-            "$DATA_FILE" | sort -u
-        ;;
-    count)
-        jq "${jq_args[@]}" \
-            '[if type=="array" then .[] else . end | select('"$jq_cond"')] | length' \
-            "$DATA_FILE"
-        ;;
-    window)
-        time_field="${field_val:-timestamp}"
-        jq -r "${jq_args[@]}" --arg field "$time_field" --arg bucket "$bucket_val" \
-            '[if type=="array" then .[] else . end | select('"$jq_cond"') | .[$field] // empty | tostring | if $bucket == "day" then .[0:10] else .[0:13] end] | group_by(.) | map({bucket:.[0], count: length}) | sort_by(.bucket) | .[] | "\(.bucket)\t\(.count)"' \
-            "$DATA_FILE"
-        ;;
-    *)
-        echo "Unknown verb: $verb" >&2
-        usage
-        exit 1
-        ;;
-esac
+def cmd_distinct(args):
+    enriched = os.environ["ENRICHED_EVENTS"]
+    seen = set()
+    for event in iter_events(enriched):
+        if matches_filters(event, args):
+            val = event.get(args.field)
+            if val is not None:
+                val_str = str(val)
+                if val_str not in seen:
+                    seen.add(val_str)
+                    safe_write(val_str + "\n")
+
+def cmd_count(args):
+    enriched = os.environ["ENRICHED_EVENTS"]
+    count = 0
+    for event in iter_events(enriched):
+        if matches_filters(event, args):
+            count += 1
+    safe_write(str(count) + "\n")
+
+def cmd_window(args):
+    enriched = os.environ["ENRICHED_EVENTS"]
+    counter = Counter()
+    field = args.field
+    for event in iter_events(enriched):
+        if matches_filters(event, args):
+            ts = event.get(field)
+            if not ts:
+                continue
+            if args.bucket == "hour":
+                bucket = ts[:13]
+            elif args.bucket == "day":
+                bucket = ts[:10]
+            else:
+                continue
+            counter[bucket] += 1
+    for bucket, count in sorted(counter.items()):
+        safe_write(f"{bucket}\t{count}\n")
+
+def main():
+    parser = argparse.ArgumentParser(prog="2-query_toolkit.sh", add_help=False)
+    subparsers = parser.add_subparsers(dest="verb")
+
+    # filter
+    sp = subparsers.add_parser("filter", add_help=False)
+    add_filter_args(sp)
+    sp.set_defaults(func=cmd_filter)
+
+    # top
+    sp = subparsers.add_parser("top", add_help=False)
+    add_filter_args(sp)
+    sp.add_argument("--field", required=True, help="Field to rank by occurrence")
+    sp.add_argument("--limit", type=int, default=10, help="Max results (default 10)")
+    sp.set_defaults(func=cmd_top)
+
+    # distinct
+    sp = subparsers.add_parser("distinct", add_help=False)
+    add_filter_args(sp)
+    sp.add_argument("--field", required=True, help="Field to list distinct values for")
+    sp.set_defaults(func=cmd_distinct)
+
+    # count
+    sp = subparsers.add_parser("count", add_help=False)
+    add_filter_args(sp)
+    sp.set_defaults(func=cmd_count)
+
+    # window
+    sp = subparsers.add_parser("window", add_help=False)
+    add_filter_args(sp)
+    sp.add_argument("--field", required=True, help="Timestamp field to bucket on")
+    sp.add_argument("--bucket", choices=["hour", "day"], required=True,
+                    help="Bucket granularity")
+    sp.set_defaults(func=cmd_window)
+
+    # help
+    sp = subparsers.add_parser("help", add_help=False)
+    sp.set_defaults(func=None)
+
+    args = parser.parse_args(sys.argv[1:])
+
+    if args.verb is None or args.verb == "help":
+        sys.stdout.write(USAGE + "\n")
+        sys.exit(0)
+
+    args.func(args)
+
+if __name__ == "__main__":
+    main()
+PYEOF
+exit 0
