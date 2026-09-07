@@ -1,4 +1,4 @@
-cat << 'EOF' > 4-baseline_auth.sh
+
 #!/bin/bash
 # Task 4: Authentication Baseline
 set -euo pipefail
