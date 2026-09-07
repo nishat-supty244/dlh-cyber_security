@@ -1,4 +1,4 @@
-cat << 'EOF' > 5-baseline_process.sh
+
 #!/bin/bash
 # Task 5: Process Execution Baseline
 set -euo pipefail
