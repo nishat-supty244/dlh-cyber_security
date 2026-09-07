@@ -1,11 +1,4 @@
 #!/bin/bash
-#
-# Name: 2-query_toolkit.sh
-# Purpose: Reusable CLI query toolkit for filtering, projecting, and aggregating events
-# Author: Steve - Cybersecurity Engineer
-# Date: 31 August 2026
-#
-
 set -euo pipefail
 
 # Resolve HANDOFF_DIR with default
