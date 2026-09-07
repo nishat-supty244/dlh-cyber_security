@@ -1,0 +1,296 @@
+{
+  "pcap": "./mixed_traffic.pcap",
+  "started_at": "2026-08-29T06:51:19Z",
+  "finished_at": "2026-08-29T06:51:20Z",
+  "total_alerts": 0,
+  "unique_signatures": 0,
+  "severity_distribution": {},
+  "by_category": {},
+  "top_sources": [],
+  "top_destinations": [],
+  "alerts": []
+}
+{
+  "pcap": "./mixed_traffic.pcap",
+  "started_at": "2026-08-29T06:51:19Z",
+  "finished_at": "2026-08-29T06:51:20Z",
+  "total_alerts": 0,
+  "unique_signatures": 0,
+  "severity_distribution": {},
+  "by_category": {},
+  "top_sources": [],
+  "top_destinations": [],
+  "alerts": []
+}
+{
+  "pcap": "./mixed_traffic.pcap",
+  "started_at": "2026-08-29T06:51:19Z",
+  "finished_at": "2026-08-29T06:51:20Z",
+  "total_alerts": 1,
+  "unique_signatures": 1,
+  "severity_distribution": {
+    "2": 1
+  },
+  "by_category": {
+    "other": 1
+  },
+  "top_sources": [
+    {
+      "ip": "10.10.2.51",
+      "count": 1
+    }
+  ],
+  "top_destinations": [
+    {
+      "ip": null,
+      "count": 1
+    }
+  ],
+  "alerts": [
+    {
+      "timestamp": "2025-08-13T11:46:42.150000-0400",
+      "src_ip": "10.10.2.51",
+      "src_port": 51050,
+      "dst_ip": null,
+      "dst_port": null,
+      "proto": "TCP",
+      "signature": "Clinical Workstation Access to Unauthorized MySQL Database",
+      "signature_id": 9000005,
+      "category": "Attempted Information Leak",
+      "severity": 2,
+      "classification": "other"
+    }
+  ]
+}
+{
+  "pcap": "./mixed_traffic.pcap",
+  "started_at": "2026-08-29T06:51:19Z",
+  "finished_at": "2026-08-29T06:51:20Z",
+  "total_alerts": 1,
+  "unique_signatures": 1,
+  "severity_distribution": {
+    "2": 1
+  },
+  "by_category": {
+    "other": 1
+  },
+  "top_sources": [
+    {
+      "ip": "10.10.2.51",
+      "count": 1
+    }
+  ],
+  "top_destinations": [
+    {
+      "ip": null,
+      "count": 1
+    }
+  ],
+  "alerts": [
+    {
+      "timestamp": "2025-08-13T11:46:42.300000-0400",
+      "src_ip": "10.10.2.51",
+      "src_port": 51050,
+      "dst_ip": null,
+      "dst_port": null,
+      "proto": "TCP",
+      "signature": "Clinical Workstation Access to Unauthorized MySQL Database",
+      "signature_id": 9000005,
+      "category": "Attempted Information Leak",
+      "severity": 2,
+      "classification": "other"
+    }
+  ]
+}
+{
+  "pcap": "./mixed_traffic.pcap",
+  "started_at": "2026-08-29T06:51:19Z",
+  "finished_at": "2026-08-29T06:51:20Z",
+  "total_alerts": 1,
+  "unique_signatures": 1,
+  "severity_distribution": {
+    "2": 1
+  },
+  "by_category": {
+    "other": 1
+  },
+  "top_sources": [
+    {
+      "ip": "10.10.2.51",
+      "count": 1
+    }
+  ],
+  "top_destinations": [
+    {
+      "ip": null,
+      "count": 1
+    }
+  ],
+  "alerts": [
+    {
+      "timestamp": "2025-08-13T11:46:42.350000-0400",
+      "src_ip": "10.10.2.51",
+      "src_port": 51050,
+      "dst_ip": null,
+      "dst_port": null,
+      "proto": "TCP",
+      "signature": "Clinical Workstation Access to Unauthorized MySQL Database",
+      "signature_id": 9000005,
+      "category": "Attempted Information Leak",
+      "severity": 2,
+      "classification": "other"
+    }
+  ]
+}
+{
+  "pcap": "./mixed_traffic.pcap",
+  "started_at": "2026-08-29T06:51:19Z",
+  "finished_at": "2026-08-29T06:51:20Z",
+  "total_alerts": 1,
+  "unique_signatures": 1,
+  "severity_distribution": {
+    "2": 1
+  },
+  "by_category": {
+    "other": 1
+  },
+  "top_sources": [
+    {
+      "ip": "10.10.2.51",
+      "count": 1
+    }
+  ],
+  "top_destinations": [
+    {
+      "ip": null,
+      "count": 1
+    }
+  ],
+  "alerts": [
+    {
+      "timestamp": "2025-08-13T11:46:42.450000-0400",
+      "src_ip": "10.10.2.51",
+      "src_port": 51050,
+      "dst_ip": null,
+      "dst_port": null,
+      "proto": "TCP",
+      "signature": "Clinical Workstation Access to Unauthorized MySQL Database",
+      "signature_id": 9000005,
+      "category": "Attempted Information Leak",
+      "severity": 2,
+      "classification": "other"
+    }
+  ]
+}
+{
+  "pcap": "./mixed_traffic.pcap",
+  "started_at": "2026-08-29T06:51:19Z",
+  "finished_at": "2026-08-29T06:51:20Z",
+  "total_alerts": 0,
+  "unique_signatures": 0,
+  "severity_distribution": {},
+  "by_category": {},
+  "top_sources": [],
+  "top_destinations": [],
+  "alerts": []
+}
+{
+  "pcap": "./mixed_traffic.pcap",
+  "started_at": "2026-08-29T06:51:19Z",
+  "finished_at": "2026-08-29T06:51:20Z",
+  "total_alerts": 0,
+  "unique_signatures": 0,
+  "severity_distribution": {},
+  "by_category": {},
+  "top_sources": [],
+  "top_destinations": [],
+  "alerts": []
+}
+{
+  "pcap": "./mixed_traffic.pcap",
+  "started_at": "2026-08-29T06:51:19Z",
+  "finished_at": "2026-08-29T06:51:20Z",
+  "total_alerts": 0,
+  "unique_signatures": 0,
+  "severity_distribution": {},
+  "by_category": {},
+  "top_sources": [],
+  "top_destinations": [],
+  "alerts": []
+}
+{
+  "pcap": "./mixed_traffic.pcap",
+  "started_at": "2026-08-29T06:51:19Z",
+  "finished_at": "2026-08-29T06:51:20Z",
+  "total_alerts": 0,
+  "unique_signatures": 0,
+  "severity_distribution": {},
+  "by_category": {},
+  "top_sources": [],
+  "top_destinations": [],
+  "alerts": []
+}
+{
+  "pcap": "./mixed_traffic.pcap",
+  "started_at": "2026-08-29T06:51:19Z",
+  "finished_at": "2026-08-29T06:51:20Z",
+  "total_alerts": 1,
+  "unique_signatures": 1,
+  "severity_distribution": {
+    "1": 1
+  },
+  "by_category": {
+    "other": 1
+  },
+  "top_sources": [
+    {
+      "ip": "10.10.1.10",
+      "count": 1
+    }
+  ],
+  "top_destinations": [
+    {
+      "ip": null,
+      "count": 1
+    }
+  ],
+  "alerts": [
+    {
+      "timestamp": "2025-08-13T11:47:50.000000-0400",
+      "src_ip": "10.10.1.10",
+      "src_port": 57948,
+      "dst_ip": null,
+      "dst_port": null,
+      "proto": "UDP",
+      "signature": "DNS Tunneling Long Leftmost Label Detected",
+      "signature_id": 9000004,
+      "category": "A Network Trojan was detected",
+      "severity": 1,
+      "classification": "other"
+    }
+  ]
+}
+{
+  "pcap": "./mixed_traffic.pcap",
+  "started_at": "2026-08-29T06:51:19Z",
+  "finished_at": "2026-08-29T06:51:20Z",
+  "total_alerts": 0,
+  "unique_signatures": 0,
+  "severity_distribution": {},
+  "by_category": {},
+  "top_sources": [],
+  "top_destinations": [],
+  "alerts": []
+}
+{
+  "pcap": "./mixed_traffic.pcap",
+  "started_at": "2026-08-29T06:51:19Z",
+  "finished_at": "2026-08-29T06:51:20Z",
+  "total_alerts": 0,
+  "unique_signatures": 0,
+  "severity_distribution": {},
+  "by_category": {},
+  "top_sources": [],
+  "top_destinations": [],
+  "alerts": []
+}

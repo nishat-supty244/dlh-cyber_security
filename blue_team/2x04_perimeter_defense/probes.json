@@ -1,0 +1,125 @@
+{
+  "schema_version": "meddefense-probes-v1",
+  "description": "Shipped test topology for T5 firewall validation. This is a single-host lab: the local host plays the INTERNAL/server_host role from segmentation_rules.json, so allow-flow targets resolve to loopback where the corresponding service is expected to be live, and deny-flow targets point at unreachable addresses in the zones that must never be reachable from here.",
+  "local_zone": "INTERNAL",
+  "local_role": "server_host",
+  "allow": [
+    {
+      "src_zone": "MGMT",
+      "dst_zone": "INTERNAL",
+      "proto": "tcp",
+      "dport": 22,
+      "target": "127.0.0.1",
+      "justification": "Administrative SSH access to internal hosts (sshd is live on this host)"
+    },
+    {
+      "src_zone": "INTERNAL",
+      "dst_zone": "INTERNAL",
+      "src_role": "clinical_workstation",
+      "dst_role": "server_host",
+      "proto": "tcp",
+      "dport": 443,
+      "target": "127.0.0.1",
+      "justification": "Clinical workstation access to application server over HTTPS"
+    },
+    {
+      "src_zone": "INTERNAL",
+      "dst_zone": "INTERNAL",
+      "src_role": "clinical_workstation",
+      "dst_role": "server_host",
+      "proto": "tcp",
+      "dport": 3306,
+      "target": "127.0.0.1",
+      "justification": "Clinical application database access (mysqld is live on this host)"
+    },
+    {
+      "src_zone": "DMZ",
+      "dst_zone": "INTERNAL",
+      "src_role": "named_dmz_application_host",
+      "dst_role": "database",
+      "proto": "tcp",
+      "dport": 3306,
+      "target": "127.0.0.1",
+      "justification": "DMZ application access to internal database"
+    },
+    {
+      "src_zone": "ALL",
+      "dst_zone": "MGMT",
+      "dst_role": "resolver",
+      "proto": "udp",
+      "dport": 53,
+      "target": "127.0.0.53",
+      "justification": "DNS resolution through the management resolver"
+    },
+    {
+      "src_zone": "ALL",
+      "dst_zone": "MGMT",
+      "dst_role": "resolver",
+      "proto": "tcp",
+      "dport": 53,
+      "target": "127.0.0.53",
+      "justification": "DNS resolution fallback through the management resolver"
+    }
+  ],
+  "denied": [
+    {
+      "name": "guest-to-billing-db",
+      "target": "172.16.10.50",
+      "proto": "tcp",
+      "dport": 3306,
+      "justification": "DMZ guest-facing host must never reach the billing database directly"
+    },
+    {
+      "name": "internal-to-meddev-admin",
+      "target": "172.16.40.15",
+      "proto": "tcp",
+      "dport": 22,
+      "justification": "Internal hosts cannot directly administer medical devices"
+    },
+    {
+      "name": "dmz-to-meddev",
+      "target": "172.16.40.20",
+      "proto": "tcp",
+      "dport": 4242,
+      "justification": "DMZ hosts must not initiate connections to medical devices"
+    },
+    {
+      "name": "internal-to-public-http",
+      "target": "203.0.113.10",
+      "proto": "tcp",
+      "dport": 80,
+      "justification": "No unrestricted internal outbound access to the public Internet"
+    },
+    {
+      "name": "meddev-to-public-dns",
+      "target": "203.0.113.53",
+      "proto": "udp",
+      "dport": 53,
+      "justification": "Medical devices must not reach public DNS directly, only the management resolver"
+    },
+    {
+      "name": "internal-to-radiology-telnet",
+      "target": "172.16.40.77",
+      "proto": "tcp",
+      "dport": 23,
+      "justification": "Legacy Telnet listener on the radiology lab PC must remain unreachable from other zones"
+    },
+    {
+      "name": "dmz-to-mgmt-ssh",
+      "target": "172.16.30.10",
+      "proto": "tcp",
+      "dport": 22,
+      "justification": "DMZ hosts must not access management systems"
+    },
+    {
+      "name": "internal-to-dmz-unlisted",
+      "target": "172.16.10.25",
+      "proto": "tcp",
+      "dport": 8080,
+      "justification": "Internal hosts require explicitly authorized flows to DMZ; this port is not authorized"
+    }
+  ],
+  "icmp_target": "127.0.0.1",
+  "loopback_target": "127.0.0.1"
+}
+

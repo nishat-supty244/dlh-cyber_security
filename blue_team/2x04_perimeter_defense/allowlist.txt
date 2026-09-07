@@ -1,0 +1,14 @@
+# MedDefense DNS allowlist
+# One domain per line. Used by 13-dns_filtering.sh to validate that
+# legitimate resolution still works after the blocklist is applied.
+# First entry must resolve via the live upstream forwarders.
+#
+ubuntu.com
+google.com
+cloudflare.com
+wikipedia.org
+github.com
+debian.org
+billing.meddefense.local
+ntp.meddefense.local
+clamav-db.meddefense.local

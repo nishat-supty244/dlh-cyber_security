@@ -1,0 +1,22 @@
+# 5-sshd_config (Hardened Version)
+
+# Protocol 2 is the only secure version; 1 is obsolete/vulnerable.
+Protocol 2
+
+# Never allow root to log in directly via SSH.
+PermitRootLogin no
+
+# Disable password auth to force the use of secure SSH keys.
+PasswordAuthentication no
+
+# Absolutely never allow accounts with empty passwords.
+PermitEmptyPasswords no
+
+# Keep PubkeyAuthentication enabled to allow SSH keys.
+PubkeyAuthentication yes
+
+# Disable graphical forwarding to minimize the attack surface.
+X11Forwarding no
+
+# Standard SSH port is 22, but you can change it to reduce bot scans.
+Port 22

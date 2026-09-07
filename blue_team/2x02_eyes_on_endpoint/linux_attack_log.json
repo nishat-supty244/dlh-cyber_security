@@ -1,0 +1,6 @@
+{
+  "simulation": "linux_attacker_sim",
+  "actions_executed": 6,
+  "status": "completed",
+  "cleanup": "success"
+}

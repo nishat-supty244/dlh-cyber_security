@@ -1,0 +1,74 @@
+{
+  "timestamp": "2026-08-27T20:10:59Z",
+  "hostname": "nishatsupty",
+  "interfaces": [
+    {
+      "name": "lo",
+      "mac": "00:00:00:00:00:00",
+      "state": "UNKNOWN",
+      "addresses": [
+        "127.0.0.1",
+        "::1"
+      ]
+    },
+    {
+      "name": "eth0",
+      "mac": "08:00:27:aa:8b:e9",
+      "state": "UP",
+      "addresses": [
+        "10.0.2.15",
+        "fd17:625c:f037:2:9e7:bf08:b784:2c97",
+        "fd17:625c:f037:2:a00:27ff:feaa:8be9",
+        "fe80::a00:27ff:feaa:8be9"
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "destination": "default",
+      "gateway": "10.0.2.2",
+      "device": "eth0",
+      "protocol": "dhcp",
+      "scope": null,
+      "metric": 100
+    },
+    {
+      "destination": "10.0.2.0/24",
+      "gateway": null,
+      "device": "eth0",
+      "protocol": "kernel",
+      "scope": "link",
+      "metric": 100
+    }
+  ],
+  "neighbors": [
+    {
+      "ip": "10.0.2.2",
+      "mac": "52:54:00:12:35:00",
+      "state": "REACHABLE"
+    },
+    {
+      "ip": "fe80::2",
+      "mac": "52:54:00:12:35:00",
+      "state": "STALE"
+    },
+    {
+      "ip": "fd17:625c:f037:2::2",
+      "mac": "52:54:00:12:35:00",
+      "state": "STALE"
+    }
+  ],
+  "listening_sockets": [],
+  "established_connections": [],
+  "dns_resolvers": [
+    "192.168.178.1",
+    "fd17:625c:f037:2::3"
+  ],
+  "summary": {
+    "up_interfaces": [
+      "eth0"
+    ],
+    "listeners": 0,
+    "resolved_status": "inactive"
+  }
+}

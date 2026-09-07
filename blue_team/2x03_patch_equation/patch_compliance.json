@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-08-19T17:04:23+00:00",
+  "hostname": "nishatsupty",
+  "kernel": "7.0.12+kali-amd64",
+  "summary": {
+    "resolved": 0,
+    "open": 0,
+    "deferred_held": 0,
+    "deferred_window": 0,
+    "total": 0,
+    "score": 100.00,
+    "target_score": 95.00,
+    "overdue": 0
+  },
+  "cves": []
+}

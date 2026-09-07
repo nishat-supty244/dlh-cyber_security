@@ -1,0 +1,45 @@
+{
+  "summary": {
+    "total_events": 4544,
+    "quality_score": 55,
+    "assessment": "poor"
+  },
+  "event_distribution": {
+    "per_category": [
+      {
+        "category": "execve",
+        "count": 4249,
+        "percentage": 93
+      },
+      {
+        "category": "network",
+        "count": 295,
+        "percentage": 6
+      }
+    ],
+    "per_source": [
+      {
+        "source": "audit.log",
+        "count": 4544,
+        "percentage": 100
+      }
+    ]
+  },
+  "time_coverage": {
+    "events_per_hour": 4544,
+    "hours_with_events": 1,
+    "hours_without_events": 0,
+    "max_gap_minutes": 0,
+    "gaps_detected": false
+  },
+  "field_completeness": {
+    "timestamp": 100,
+    "hostname": 100,
+    "source_type": 100,
+    "event_category": 100,
+    "execve_command_line": 100,
+    "ssh_source_ip": 0,
+    "ssh_user": 0,
+    "auditd_file_path": 0
+  }
+}
