@@ -1,0 +1,9 @@
+{
+  "self_check_total": 0,
+  "live_check_total": 5,
+  "signal_to_noise_ratio": 5.0,
+  "self_check_breakdown": {},
+  "live_check_breakdown": {
+    "unknown_process_for_host": 5
+  },
+  "verdict": "pass"
