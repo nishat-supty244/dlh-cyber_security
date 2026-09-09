@@ -1,0 +1,152 @@
+[
+  {
+    "source_type": "windows_json",
+    "record_count": 1000,
+    "stable_fields": [
+      "host",
+      "source_type",
+      "timestamp"
+    ],
+    "high_cardinality_fields": [
+      "dest_ip",
+      "src_ip",
+      "user"
+    ],
+    "supported_detection_types": [
+      "signature",                                                                                                                                                     
+      "anomaly",                                                                                                                                                       
+      "behavioral",                                                                                                                                                    
+      "correlation"                                                                                                                                                    
+    ],                                                                                                                                                                 
+    "rationale": {                                                                                                                                                     
+      "signature": "High field stability and rich event context enable reliable IOC matching.",
+      "anomaly": "Sufficient baseline volume allows statistical deviation detection.",
+      "behavioral": "Process execution chains support sequence analysis.",
+      "correlation": "Host and user identifiers enable cross-source joining."
+    },
+    "recommended_attack_tactics": [
+      "TA0002",
+      "TA0003",
+      "TA0004",
+      "TA0005",
+      "TA0006",
+      "TA0007",
+      "TA0008"
+    ]
+  },
+  {
+    "source_type": "linux_text",
+    "record_count": 1000,
+    "stable_fields": [
+      "host",
+      "source_type",
+      "timestamp"
+    ],
+    "high_cardinality_fields": [
+      "dest_ip",
+      "src_ip",
+      "user"
+    ],
+    "supported_detection_types": [
+      "signature",
+      "anomaly",
+      "behavioral",
+      "correlation"
+    ],
+    "rationale": {
+      "signature": "Standardized log format supports pattern matching.",
+      "anomaly": "Baseline volume enables frequency outlier detection.",
+      "behavioral": "Command execution history supports behavioral profiling.",
+      "correlation": "System identifiers allow correlation with network and auth logs."
+    },
+    "recommended_attack_tactics": [
+      "TA0002",
+      "TA0003",
+      "TA0004",
+      "TA0005",
+      "TA0006",
+      "TA0007",
+      "TA0008"
+    ]
+  },
+  {
+    "source_type": "suricata_alert",
+    "record_count": 1000,
+    "stable_fields": [
+      "host",
+      "source_type",
+      "timestamp"
+    ],
+    "high_cardinality_fields": [
+      "dest_ip",
+      "src_ip",
+      "user"
+    ],
+    "supported_detection_types": [
+      "signature",
+      "correlation"
+    ],
+    "rationale": {
+      "signature": "Rule-based engine natively generates signature alerts.",
+      "correlation": "IP and port timestamps allow joining with host traffic."
+    },
+    "recommended_attack_tactics": [
+      "TA0001",
+      "TA0011",
+      "TA0010"
+    ]
+  },
+  {
+    "source_type": "firewall",
+    "record_count": 1000,
+    "stable_fields": [
+      "host",
+      "source_type",
+      "timestamp"
+    ],
+    "high_cardinality_fields": [
+      "dest_ip",
+      "src_ip",
+      "user"
+    ],
+    "supported_detection_types": [
+      "anomaly",
+      "correlation"
+    ],
+    "rationale": {
+      "anomaly": "Traffic volume and connection frequency baselines support anomaly detection.",
+      "correlation": "Source/destination IPs enable correlation with endpoint logs."
+    },
+    "recommended_attack_tactics": [
+      "TA0001",
+      "TA0011",
+      "TA0008"
+    ]
+  },
+  {
+    "source_type": "pcap_flow",
+    "record_count": 1000,
+    "stable_fields": [
+      "host",
+      "source_type",
+      "timestamp"
+    ],
+    "high_cardinality_fields": [
+      "dest_ip",
+      "src_ip",
+      "user"
+    ],
+    "supported_detection_types": [
+      "anomaly",
+      "behavioral"
+    ],
+    "rationale": {
+      "anomaly": "Flow duration and byte counts support statistical anomaly detection.",
+      "behavioral": "Connection patterns reveal protocol behavioral profiles."
+    },
+    "recommended_attack_tactics": [
+      "TA0011",
+      "TA0010"
+    ]
+  }
+]
