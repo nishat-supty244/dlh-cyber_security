@@ -1,0 +1,42 @@
+{
+  "queue_size": 9,
+  "validation_errors": [],
+  "by_priority_band": {
+    "critical": 0,
+    "high": 3,
+    "medium": 2,
+    "low": 4
+  },
+  "by_rule": {
+    "d76b5c32-11a2-4e59-8f3e-9182746f5c10": 3,
+    "b41a9c33-88f1-4b12-9c42-7718253f1a11": 2,
+    "c92b8d44-99a2-4c23-8d53-8829364f2b22": 2,
+    "f83a4b21-99c2-4a1e-8e41-1182746f5c22": 2
+  },
+  "by_hostname": {
+    "db-patient-01": 3,
+    "clin-ws-03": 2,
+    "meddb-01": 2,
+    "auth-srv-02": 1,
+    "med-img-02": 1
+  },
+  "by_attack_tactic": {},
+  "time_span": {
+    "start": "2026-03-18T08:15:00Z",
+    "end": "2026-03-18T10:15:00Z"
+  },
+  "top_targets": [
+    {
+      "hostname": "db-patient-01",
+      "cumulative_score": 32.1
+    },
+    {
+      "hostname": "clin-ws-03",
+      "cumulative_score": 27.8
+    },
+    {
+      "hostname": "auth-srv-02",
+      "cumulative_score": 18.0
+    }
+  ]
+}
