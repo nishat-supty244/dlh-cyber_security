@@ -1,0 +1,312 @@
+[
+  {
+    "alert_id": "390fe050-e483-58b8-87d8-2ab1c59be74b",
+    "generated_at": "2026-09-09T20:44:23.188283+00:00",
+    "rule_id": "d76b5c32-11a2-4e59-8f3e-9182746f5c10",
+    "rule_title": "SSH Repeated Authentication Failures from Single Source",
+    "rule_level": "high",
+    "priority_score": 18.0,
+    "event_ref": "evt-001_ssh_brute_force-0",
+    "event_summary": {
+      "timestamp": "2026-03-18T08:15:00Z",
+      "hostname": "auth-srv-02",
+      "user": "dadmin",
+      "src_ip": "10.100.4.10",
+      "dst_ip": "10.200.10.1",
+      "process_name": "svchost.exe",
+      "canonical_label": "suspicious_activity",
+      "event_category": "process_execution"
+    },
+    "asset_context": {
+      "hostname": "auth-srv-02",
+      "criticality": "high",
+      "segment": "clinical"
+    },
+    "attack_techniques": [
+      "attack.t1110.001"
+    ],
+    "status": "new",
+    "evidence_hash": "186a2e150ade81658466d8d60be1ce6f2d2067a6268685c4ae7eb24079853acf",
+    "priority_band": "high",
+    "asset": {},
+    "baseline_host_profile": {},
+    "event_record": {},
+    "ioc_hits": []
+  },
+  {
+    "alert_id": "a049183d-9e3c-5965-ac3e-6d6cbfa49a42",
+    "generated_at": "2026-09-09T20:44:23.188283+00:00",
+    "rule_id": "d76b5c32-11a2-4e59-8f3e-9182746f5c10",
+    "rule_title": "SSH Repeated Authentication Failures from Single Source",
+    "rule_level": "high",
+    "priority_score": 18.0,
+    "event_ref": "evt-001_ssh_brute_force-1",
+    "event_summary": {
+      "timestamp": "2026-03-18T09:15:00Z",
+      "hostname": "clin-ws-03",
+      "user": "user_9",
+      "src_ip": "10.100.8.11",
+      "dst_ip": "10.200.10.2",
+      "process_name": "powershell.exe",
+      "canonical_label": "suspicious_activity",
+      "event_category": "process_execution"
+    },
+    "asset_context": {
+      "hostname": "clin-ws-03",
+      "criticality": "high",
+      "segment": "clinical"
+    },
+    "attack_techniques": [
+      "attack.t1110.001"
+    ],
+    "status": "new",
+    "evidence_hash": "0e29bd9885a995dd08b26327a0ec201860c51e6b64da1e8d9c7af44471076231",
+    "priority_band": "high",
+    "asset": {},
+    "baseline_host_profile": {},
+    "event_record": {},
+    "ioc_hits": []
+  },
+  {
+    "alert_id": "00ad3597-8c8b-5229-99f7-a66d15c6b38a",
+    "generated_at": "2026-09-09T20:44:23.188283+00:00",
+    "rule_id": "d76b5c32-11a2-4e59-8f3e-9182746f5c10",
+    "rule_title": "SSH Repeated Authentication Failures from Single Source",
+    "rule_level": "high",
+    "priority_score": 18.0,
+    "event_ref": "evt-001_ssh_brute_force-2",
+    "event_summary": {
+      "timestamp": "2026-03-18T10:15:00Z",
+      "hostname": "db-patient-01",
+      "user": "admin",
+      "src_ip": "10.100.12.12",
+      "dst_ip": "10.200.10.3",
+      "process_name": "svchost.exe",
+      "canonical_label": "suspicious_activity",
+      "event_category": "process_execution"
+    },
+    "asset_context": {
+      "hostname": "db-patient-01",
+      "criticality": "high",
+      "segment": "clinical"
+    },
+    "attack_techniques": [
+      "attack.t1110.001"
+    ],
+    "status": "new",
+    "evidence_hash": "d5fa9fa68899981301cd73b110a08858494934a9b8546b381c7c95369b6dc647",
+    "priority_band": "high",
+    "asset": {},
+    "baseline_host_profile": {},
+    "event_record": {},
+    "ioc_hits": []
+  },
+  {
+    "alert_id": "7b92d0c7-1c48-5941-a022-9287b9e606b5",
+    "generated_at": "2026-09-09T20:44:23.188283+00:00",
+    "rule_id": "b41a9c33-88f1-4b12-9c42-7718253f1a11",
+    "rule_title": "Suspicious Script Interpreter Execution from Non-Standard Parent",
+    "rule_level": "high",
+    "priority_score": 9.8,
+    "event_ref": "evt-003_interpreter_abuse-0",
+    "event_summary": {
+      "timestamp": "2026-03-18T08:15:00Z",
+      "hostname": "clin-ws-03",
+      "user": "user_9",
+      "src_ip": "10.100.4.10",
+      "dst_ip": "10.200.10.1",
+      "process_name": "svchost.exe",
+      "canonical_label": "suspicious_activity",
+      "event_category": "process_execution"
+    },
+    "asset_context": {
+      "hostname": "clin-ws-03",
+      "criticality": "high",
+      "segment": "clinical"
+    },
+    "attack_techniques": [
+      "attack.t1059.001",
+      "attack.t1059.003"
+    ],
+    "status": "new",
+    "evidence_hash": "36f00426c83e6d54b30cfb735a6e69609480c94a16cdef6d30ff06329950439e",
+    "priority_band": "medium",
+    "asset": {},
+    "baseline_host_profile": {},
+    "event_record": {},
+    "ioc_hits": []
+  },
+  {
+    "alert_id": "cc130f24-2197-5232-a45c-6f7a5aa03ba5",
+    "generated_at": "2026-09-09T20:44:23.188283+00:00",
+    "rule_id": "b41a9c33-88f1-4b12-9c42-7718253f1a11",
+    "rule_title": "Suspicious Script Interpreter Execution from Non-Standard Parent",
+    "rule_level": "high",
+    "priority_score": 9.8,
+    "event_ref": "evt-003_interpreter_abuse-1",
+    "event_summary": {
+      "timestamp": "2026-03-18T09:15:00Z",
+      "hostname": "db-patient-01",
+      "user": "admin",
+      "src_ip": "10.100.8.11",
+      "dst_ip": "10.200.10.2",
+      "process_name": "powershell.exe",
+      "canonical_label": "suspicious_activity",
+      "event_category": "process_execution"
+    },
+    "asset_context": {
+      "hostname": "db-patient-01",
+      "criticality": "high",
+      "segment": "clinical"
+    },
+    "attack_techniques": [
+      "attack.t1059.001",
+      "attack.t1059.003"
+    ],
+    "status": "new",
+    "evidence_hash": "08d10d0928d4b19622660bbc586559cb21f3d9ca4ec3f9e06816f73e8a3ce4e9",
+    "priority_band": "medium",
+    "asset": {},
+    "baseline_host_profile": {},
+    "event_record": {},
+    "ioc_hits": []
+  },
+  {
+    "alert_id": "ffe71096-10cd-5935-baa3-d438027161ed",
+    "generated_at": "2026-09-09T20:44:23.188283+00:00",
+    "rule_id": "c92b8d44-99a2-4c23-8d53-8829364f2b22",
+    "rule_title": "Unseen Reconnaissance Tool Execution on Endpoints",
+    "rule_level": "medium",
+    "priority_score": 4.3,
+    "event_ref": "evt-004_recon_tool_execution-0",
+    "event_summary": {
+      "timestamp": "2026-03-18T08:15:00Z",
+      "hostname": "db-patient-01",
+      "user": "admin",
+      "src_ip": "10.100.4.10",
+      "dst_ip": "10.200.10.1",
+      "process_name": "svchost.exe",
+      "canonical_label": "suspicious_activity",
+      "event_category": "process_execution"
+    },
+    "asset_context": {
+      "hostname": "db-patient-01",
+      "criticality": "high",
+      "segment": "clinical"
+    },
+    "attack_techniques": [
+      "attack.t1087",
+      "attack.t1082"
+    ],
+    "status": "new",
+    "evidence_hash": "f26be4d223de7380f2db7bae483ad1ace2c4f68fad302a5abc6bbf2e24e23c80",
+    "priority_band": "low",
+    "asset": {},
+    "baseline_host_profile": {},
+    "event_record": {},
+    "ioc_hits": []
+  },
+  {
+    "alert_id": "2a7c2d3b-70ae-5dc1-b403-ada4b4bd1c26",
+    "generated_at": "2026-09-09T20:44:23.188283+00:00",
+    "rule_id": "c92b8d44-99a2-4c23-8d53-8829364f2b22",
+    "rule_title": "Unseen Reconnaissance Tool Execution on Endpoints",
+    "rule_level": "medium",
+    "priority_score": 4.3,
+    "event_ref": "evt-004_recon_tool_execution-1",
+    "event_summary": {
+      "timestamp": "2026-03-18T09:15:00Z",
+      "hostname": "meddb-01",
+      "user": "clinician_k",
+      "src_ip": "10.100.8.11",
+      "dst_ip": "10.200.10.2",
+      "process_name": "powershell.exe",
+      "canonical_label": "suspicious_activity",
+      "event_category": "process_execution"
+    },
+    "asset_context": {
+      "hostname": "meddb-01",
+      "criticality": "high",
+      "segment": "clinical"
+    },
+    "attack_techniques": [
+      "attack.t1087",
+      "attack.t1082"
+    ],
+    "status": "new",
+    "evidence_hash": "7502ed93f97ba5aafd86f6bb913a9b03389dcc23fb875f4d4d21b7659a513088",
+    "priority_band": "low",
+    "asset": {},
+    "baseline_host_profile": {},
+    "event_record": {},
+    "ioc_hits": []
+  },
+  {
+    "alert_id": "7bfb05ad-dc17-5b1e-b5b6-5501b6a09305",
+    "generated_at": "2026-09-09T20:44:23.188283+00:00",
+    "rule_id": "f83a4b21-99c2-4a1e-8e41-1182746f5c22",
+    "rule_title": "Windows Off-Hours Privileged Logon",
+    "rule_level": "medium",
+    "priority_score": 3.75,
+    "event_ref": "evt-002_windows_offhours_privileged_logon-0",
+    "event_summary": {
+      "timestamp": "2026-03-18T08:15:00Z",
+      "hostname": "meddb-01",
+      "user": "clinician_k",
+      "src_ip": "10.100.4.10",
+      "dst_ip": "10.200.10.1",
+      "process_name": "svchost.exe",
+      "canonical_label": "suspicious_activity",
+      "event_category": "process_execution"
+    },
+    "asset_context": {
+      "hostname": "meddb-01",
+      "criticality": "high",
+      "segment": "clinical"
+    },
+    "attack_techniques": [
+      "attack.t1078"
+    ],
+    "status": "new",
+    "evidence_hash": "22c1f3b8e80c9f85dad61cba29b8115efc5d7b5bff63adc17b832c6e2127e79a",
+    "priority_band": "low",
+    "asset": {},
+    "baseline_host_profile": {},
+    "event_record": {},
+    "ioc_hits": []
+  },
+  {
+    "alert_id": "c95dc23d-763f-5e90-9897-a54690fb007c",
+    "generated_at": "2026-09-09T20:44:23.188283+00:00",
+    "rule_id": "f83a4b21-99c2-4a1e-8e41-1182746f5c22",
+    "rule_title": "Windows Off-Hours Privileged Logon",
+    "rule_level": "medium",
+    "priority_score": 3.75,
+    "event_ref": "evt-002_windows_offhours_privileged_logon-1",
+    "event_summary": {
+      "timestamp": "2026-03-18T09:15:00Z",
+      "hostname": "med-img-02",
+      "user": "SYSTEM",
+      "src_ip": "10.100.8.11",
+      "dst_ip": "10.200.10.2",
+      "process_name": "powershell.exe",
+      "canonical_label": "suspicious_activity",
+      "event_category": "process_execution"
+    },
+    "asset_context": {
+      "hostname": "med-img-02",
+      "criticality": "high",
+      "segment": "clinical"
+    },
+    "attack_techniques": [
+      "attack.t1078"
+    ],
+    "status": "new",
+    "evidence_hash": "d737d05734721e5ebc86897d059edc20e99ee91560c9427360a991c1554c834b",
+    "priority_band": "low",
+    "asset": {},
+    "baseline_host_profile": {},
+    "event_record": {},
+    "ioc_hits": []
+  }
+]
