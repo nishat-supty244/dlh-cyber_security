@@ -1,0 +1,45 @@
+{
+  "baseline_window_start": "2026-03-18",
+  "baseline_window_end": "2026-03-24",
+  "evaluations": [
+    {
+      "rule_id": "d76b5c32-11a2-4e59-8f3e-9182746f5c10",
+      "rule_title": "SSH Repeated Authentication Failures from Single Source",
+      "short_name": "001_ssh_brute_force",
+      "level": "high",
+      "fp_count": 0,
+      "baseline_window_start": "2026-03-18",
+      "baseline_window_end": "2026-03-24",
+      "fp_rate_per_day": 0.0
+    },
+    {
+      "rule_id": "f83a4b21-99c2-4a1e-8e41-1182746f5c22",
+      "rule_title": "Windows Off-Hours Privileged Logon",
+      "short_name": "002_windows_offhours_privileged_logon",
+      "level": "medium",
+      "fp_count": 0,
+      "baseline_window_start": "2026-03-18",
+      "baseline_window_end": "2026-03-24",
+      "fp_rate_per_day": 0.0
+    },
+    {
+      "rule_id": "b41a9c33-88f1-4b12-9c42-7718253f1a11",
+      "rule_title": "Suspicious Script Interpreter Execution from Non-Standard Parent",
+      "short_name": "003_interpreter_abuse",
+      "level": "high",
+      "fp_count": 0,
+      "baseline_window_start": "2026-03-18",
+      "baseline_window_end": "2026-03-24",
+      "fp_rate_per_day": 0.0
+    },
+    {
+      "rule_id": "c92b8d44-99a2-4c23-8d53-8829364f2b22",
+      "rule_title": "Unseen Reconnaissance Tool Execution on Endpoints",
+      "short_name": "004_recon_tool_execution",
+      "level": "medium",
+      "fp_count": 0,
+      "baseline_window_start": "2026-03-18",
+      "baseline_window_end": "2026-03-24",
+      "fp_rate_per_day": 0.0
+    }
+  ]
