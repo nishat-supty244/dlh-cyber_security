@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # shellcheck shell=bash
 set -euo pipefail
@@ -12,7 +11,6 @@ DRY_RUN=false
 COUNT_ONLY=false
 WINDOW=""
 
-# Parse arguments
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --dry-run)
@@ -49,10 +47,13 @@ fi
 
 python3 - << 'PY_EOF' "$RULE_FILE" "$EVIDENCE_FILE" "$DRY_RUN" "$COUNT_ONLY" "$WINDOW"
 import sys
+import os
 import json
 import time
+import re
 import yaml
 from datetime import datetime
+from collections import defaultdict
 
 rule_file = sys.argv[1]
 evidence_file = sys.argv[2]
@@ -81,8 +82,8 @@ if dry_run:
 start_time = time.time()
 
 events = []
-try:
-    if os_path_exists := evidence_file:
+if os.path.exists(evidence_file):
+    try:
         with open(evidence_file, 'r') as f:
             content = f.read().strip()
             if content.startswith('['):
@@ -94,8 +95,8 @@ try:
                             events.append(json.loads(line))
                         except Exception:
                             pass
-except Exception:
-    pass
+    except Exception:
+        pass
 
 # Parse window if provided
 window_start = None
@@ -151,19 +152,22 @@ for idx, ev in enumerate(events):
             "event_ref": idx
         })
 
+# Dynamic handling of count() conditions with extracted threshold
 if 'count(' in condition and matched_events:
-    from collections import defaultdict
     try:
         field_to_count = condition.split('count(')[1].split(')')[0].strip()
+        match_thresh = re.search(r'>\s*(\d+)', condition)
+        threshold = int(match_thresh.group(1)) if match_thresh else 5
+        
         counts = defaultdict(list)
         for ev_ref in matched_events:
             ev = events[ev_ref['event_ref']]
             val = ev.get(field_to_count, 'unknown')
             counts[val].append(ev_ref)
-
+        
         filtered_matches = []
         for val, ev_list in counts.items():
-            if len(ev_list) > 5:
+            if len(ev_list) > threshold:
                 filtered_matches.extend(ev_list)
         matched_events = filtered_matches
     except Exception:
