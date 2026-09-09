@@ -141,4 +141,4 @@ with open("rule_quality.json", "w") as f:
 PY_EOF
 
 echo "rule_quality.json written"
-EOF
+
