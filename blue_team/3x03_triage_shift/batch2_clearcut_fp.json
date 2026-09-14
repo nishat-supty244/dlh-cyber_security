@@ -1,0 +1,41 @@
+[
+  {
+    "alert_id": "ffe71096-10cd-5935-baa3-d438027161ed",
+    "classification": "false_positive",
+    "recommended_action": "tune_rule",
+    "justification": "Matched service account prefix in asset owner metadata for authentication/process rule.",
+    "fp_reason": "service_account_activity",
+    "evidence_refs": [
+      "ffe71096-10cd-5935-baa3-d438027161ed"
+    ]
+  },
+  {
+    "alert_id": "2a7c2d3b-70ae-5dc1-b403-ada4b4bd1c26",
+    "classification": "false_positive",
+    "recommended_action": "tune_rule",
+    "justification": "Matched service account prefix in asset owner metadata for authentication/process rule.",
+    "fp_reason": "service_account_activity",
+    "evidence_refs": [
+      "2a7c2d3b-70ae-5dc1-b403-ada4b4bd1c26"
+    ]
+  },
+  {
+    "alert_id": "7bfb05ad-dc17-5b1e-b5b6-5501b6a09305",
+    "classification": "false_positive",
+    "recommended_action": "tune_rule",
+    "justification": "Matched service account prefix in asset owner metadata for authentication/process rule.",
+    "fp_reason": "service_account_activity",
+    "evidence_refs": [
+      "7bfb05ad-dc17-5b1e-b5b6-5501b6a09305"
+    ]
+  },
+  {
+    "alert_id": "c95dc23d-763f-5e90-9897-a54690fb007c",
+    "classification": "false_positive",
+    "recommended_action": "tune_rule",
+    "justification": "Matched service account prefix in asset owner metadata for authentication/process rule.",
+    "fp_reason": "service_account_activity",
+    "evidence_refs": [
+      "c95dc23d-763f-5e90-9897-a54690fb007c"
+    ]
+  }
