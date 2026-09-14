@@ -1,0 +1,59 @@
+[
+  {
+    "ticket_id": "incident_db-patient-01_2026-03-25T02:14:08Z",
+    "classification": "true_positive",
+    "confidence": "high_confidence",
+    "contributing_alerts": [
+      "alert_00042",
+      "alert_00043",
+      "alert_00044",
+      "alert_00045"
+    ],
+    "incident_window": {
+      "start": "2026-03-25T02:14:08Z",
+      "end": "2026-03-25T02:20:00Z"
+    },
+    "attack_techniques": [
+      "credential_access",
+      "lateral_movement",
+      "collection"
+    ],
+    "recommended_action": "escalate_tier2"
+  },
+  {
+    "ticket_id": "incident_clin-ws-07_2026-03-25T09:41:22Z",
+    "classification": "true_positive",
+    "confidence": "high_confidence",
+    "contributing_alerts": [
+      "alert_00035",
+      "alert_00036",
+      "alert_00037"
+    ],
+    "incident_window": {
+      "start": "2026-03-25T09:41:22Z",
+      "end": "2026-03-25T09:48:10Z"
+    },
+    "attack_techniques": [
+      "execution",
+      "persistence"
+    ],
+    "recommended_action": "escalate_tier2"
+  },
+  {
+    "ticket_id": "incident_med-img-02_2026-03-25T17:08:39Z",
+    "classification": "true_positive",
+    "confidence": "medium_confidence",
+    "contributing_alerts": [
+      "alert_00017",
+      "alert_00019"
+    ],
+    "incident_window": {
+      "start": "2026-03-25T17:08:39Z",
+      "end": "2026-03-25T17:12:00Z"
+    },
+    "attack_techniques": [
+      "exfiltration"
+    ],
+    "recommended_action": "monitor"
+  }
+]
