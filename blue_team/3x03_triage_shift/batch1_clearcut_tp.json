@@ -1,0 +1,30 @@
+[
+  {
+    "alert_id": "alert_00042",
+    "classification": "true_positive",
+    "recommended_action": "escalate_tier2",
+    "justification": "Matched malicious IOC category 'credential_theft' and violated baseline profile.",
+    "evidence_refs": ["alert_00042"]
+  },
+  {
+    "alert_id": "alert_00031",
+    "classification": "true_positive",
+    "recommended_action": "escalate_tier2",
+    "justification": "Matched malicious IOC category 'credential_theft' and violated baseline profile.",
+    "evidence_refs": ["alert_00031"]
+  },
+  {
+    "alert_id": "alert_00017",
+    "classification": "true_positive",
+    "recommended_action": "escalate_tier2",
+    "justification": "Matched malicious IOC category 'credential_theft' and violated baseline profile.",
+    "evidence_refs": ["alert_00017"]
+  },
+  {
+    "alert_id": "alert_00019",
+    "classification": "true_positive",
+    "recommended_action": "escalate_tier2",
+    "justification": "Matched malicious IOC category 'credential_theft' and violated baseline profile.",
+    "evidence_refs": ["alert_00019"]
+  }
+]
