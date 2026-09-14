@@ -1,0 +1,39 @@
+[
+  {
+    "alert_id": "alert_00006",
+    "classification": "true_positive",
+    "recommended_action": "escalate_tier2",
+    "justification": "Unknown source IP on critical/high asset and never logged in.",
+    "evidence_refs": [
+      "alert_00006"
+    ]
+  },
+  {
+    "alert_id": "alert_00012",
+    "classification": "false_positive",
+    "recommended_action": "tune_rule",
+    "justification": "Known source IP and failure burst within baseline limits.",
+    "evidence_refs": [
+      "alert_00012"
+    ],
+    "fp_reason": "baseline_edge_burst"
+  },
+  {
+    "alert_id": "alert_00020",
+    "classification": "true_positive",
+    "recommended_action": "monitor",
+    "justification": "Ambiguous state with uncertainty; monitoring required.",
+    "evidence_refs": [
+      "alert_00020"
+    ]
+  },
+  {
+    "alert_id": "alert_00028",
+    "classification": "true_positive",
+    "recommended_action": "escalate_tier2",
+    "justification": "Privileged shift violation on critical asset.",
+    "evidence_refs": [
+      "alert_00028"
+    ]
+  }
+]
