@@ -1,0 +1,48 @@
+[
+  {
+    "alert_id": "alert_00014",
+    "classification": "true_positive",
+    "recommended_action": "escalate_tier2",
+    "justification": "Interpreter abuse with malicious indicators.",
+    "evidence_refs": [
+      "alert_00014"
+    ]
+  },
+  {
+    "alert_id": "alert_00018",
+    "classification": "true_positive",
+    "recommended_action": "monitor",
+    "justification": "Suspicious IOC hit on critical asset.",
+    "evidence_refs": [
+      "alert_00018"
+    ]
+  },
+  {
+    "alert_id": "alert_00023",
+    "classification": "false_positive",
+    "recommended_action": "tune_rule",
+    "justification": "Suspicious but baseline known elsewhere.",
+    "evidence_refs": [
+      "alert_00023"
+    ],
+    "fp_reason": "suspicious_but_baseline_known_elsewhere"
+  },
+  {
+    "alert_id": "alert_00026",
+    "classification": "true_positive",
+    "recommended_action": "monitor",
+    "justification": "Ambiguous process execution requiring monitoring.",
+    "evidence_refs": [
+      "alert_00026"
+    ]
+  },
+  {
+    "alert_id": "alert_00030",
+    "classification": "true_positive",
+    "recommended_action": "escalate_tier2",
+    "justification": "Interpreter abuse with malicious indicators.",
+    "evidence_refs": [
+      "alert_00030"
+    ]
+  }
+]
