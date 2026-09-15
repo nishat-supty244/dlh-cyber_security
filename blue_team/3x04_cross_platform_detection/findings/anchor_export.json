@@ -1,0 +1,15 @@
+{
+  "finding_id": "anchor_export",
+  "scenario_id": "anchor",
+  "interface": "wazuh_export",
+  "investigation_start": "2026-09-15T20:07:42Z",
+  "investigation_end": "2026-09-15T20:07:43Z",
+  "time_to_first_answer_seconds": 1,
+  "actions": ["Navigate to Discover → index meddefense-evidence-2026-03","Set time range: 2026-03-25T01:00:00Z to 2026-03-25T02:00:00Z","Type KQL: source.ip:(\"203.0.113.41\" OR \"203.0.113.42\" OR \"203.0.113.43\" OR \"203.0.113.44\") AND destination.ip:\"10.1.2.10\"","Sort by @timestamp ascending","Expand first matching row → inspect source.ip, destination.ip, full_log","Note 48 matching events — consistent SSH brute force pattern","Final event at 01:47 shows successful auth for user root"],
+  "fields_touched": ["agent.name", "@timestamp", "source.ip", "destination.ip", "user.name"],
+  "event_refs": ["ev-anchor-01", "ev-anchor-02"],
+  "attack_techniques": ["T1110.003"],
+  "hypothesis": "External actors performed a distributed SSH brute force attack identified via Wazuh dashboard exports against target asset agent.name.",
+  "confidence": "high",
+  "created_at": "2026-09-15T20:07:43Z"
+}
