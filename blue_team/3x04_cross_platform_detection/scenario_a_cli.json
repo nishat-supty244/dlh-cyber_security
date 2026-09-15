@@ -1,0 +1,22 @@
+{
+  "finding_id": "scenario_a_cli",
+  "scenario_id": "scenario_a",
+  "interface": "cli",
+  "investigation_start": "2026-09-15T20:28:51Z",
+  "investigation_end": "2026-09-15T20:28:52Z",
+  "time_to_first_answer_seconds": 1,
+  "actions": [
+    "Read scenario_a_credential_theft manifest",
+    "Filter enriched events by host clin-ws-12 and time bounds",
+    "Identify Sysmon EID 10 (LSASS access via rundll32)",
+    "Identify Sysmon EID 11 (Dump file creation)",
+    "Identify Sysmon EID 3 (Lateral movement SMB connection)",
+    "Synthesize credential theft attack chain hypothesis"
+  ],
+  "fields_touched": ["host", "timestamp", "event_id", "source_image", "target_image", "destination_ip"],
+  "event_refs": ["ev-scen-a-01", "ev-scen-a-02", "ev-scen-a-03"],
+  "attack_techniques": ["T1003.001", "T1550.002", "T1021.002"],
+  "hypothesis": "LSASS dump via rundll32, lateral move to DC via SMB on clin-ws-12.",
+  "confidence": "high",
+  "created_at": "2026-09-15T20:28:52Z"
+}
