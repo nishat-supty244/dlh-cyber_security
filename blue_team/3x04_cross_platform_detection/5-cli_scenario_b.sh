@@ -83,4 +83,3 @@ cat <<EOF > "$FINDINGS_DIR/scenario_b_cli.json"
 EOF
 
 echo "finding     : findings/scenario_b_cli.json written"
-EOF
