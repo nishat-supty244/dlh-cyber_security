@@ -1,0 +1,15 @@
+{
+  "finding_id": "scenario_a_export",
+  "scenario_id": "scenario_a",
+  "interface": "wazuh_export",
+  "investigation_start": "2026-09-16T09:27:19Z",
+  "investigation_end": "2026-09-16T09:27:20Z",
+  "time_to_first_answer_seconds": 1,
+  "actions": ["Navigate to Discover → index meddefense-evidence-2026-03","Set time range: 2026-03-25T14:20:00Z to 2026-03-25T14:30:00Z","Type KQL: agent.name:\"clin-ws-12\" AND winlog.event_id:(10 OR 1 OR 11 OR 3)","Sort by @timestamp ascending","Expand EID 10 event — note process.name and parent lsass.exe","Pivot to EID 11 event — note file path C:\\Temp\\debug.dmp","Pivot to EID 3 event — note destination.ip 10.1.1.10 port 445 (SMB lateral move)"],
+  "fields_touched": ["agent.name", "winlog.event_id", "@timestamp", "process.name", "destination.ip"],
+  "event_refs": ["ev-scen-a-01", "ev-scen-a-02", "ev-scen-a-03"],
+  "attack_techniques": ["T1003.001", "T1550.002", "T1021.002"],
+  "hypothesis": "Credential theft chain on clin-ws-12 validated via Wazuh export interface matching EID 10, 11, and 3 event sequences.",
+  "confidence": "high",
+  "created_at": "2026-09-16T09:27:20Z"
+}
