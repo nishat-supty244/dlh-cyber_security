@@ -1,0 +1,21 @@
+{
+  "finding_id": "scenario_c_cli",
+  "scenario_id": "scenario_c",
+  "interface": "cli",
+  "investigation_start": "2026-09-16T08:44:57Z",
+  "investigation_end": "2026-09-16T08:44:57Z",
+  "time_to_first_answer_seconds": 45,
+  "actions": [
+    "Read scenario_c_medical_egress manifest",
+    "Query enriched events for source IP 10.2.3.2 and destination IP 198.51.100.73",
+    "Verify network zone context against network_zones.json (MEDICAL_IOT segment)",
+    "Analyze beacon intervals and incremental byte size trends",
+    "Synthesize structured finding object with MITRE techniques T1071.001 and T1041"
+  ],
+  "fields_touched": ["source.ip", "destination.ip", "destination.port", "bytes_out", "timestamp"],
+  "event_refs": ["ev-scen-c-01", "ev-scen-c-02", "ev-scen-c-03", "ev-scen-c-04", "ev-scen-c-05", "ev-scen-c-06"],
+  "attack_techniques": ["T1071.001", "T1041"],
+  "hypothesis": "Medical IoT device med-mri-02 in isolated MEDICAL_IOT zone establishing periodic outbound C2 beaconing and exfiltration via HTTPS (198.51.100.73:443).",
+  "confidence": "high",
+  "created_at": "2026-09-16T08:44:57Z"
+}
