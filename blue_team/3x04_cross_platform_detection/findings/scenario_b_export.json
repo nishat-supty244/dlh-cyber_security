@@ -1,0 +1,21 @@
+{
+  "finding_id": "scenario_b_export",
+  "scenario_id": "scenario_b",
+  "interface": "wazuh_export",
+  "investigation_start": "2026-09-16T12:07:18Z",
+  "investigation_end": "2026-09-16T12:07:18Z",
+  "time_to_first_answer_seconds": 25,
+  "actions": [
+    "Read scenario_b_search_results.json",
+    "Extract agent.name, user.name, and winlog.event_id fields",
+    "Verify agent.labels data classification availability",
+    "Fallback lookup to asset_inventory.json performed for data classification",
+    "Analyze off-hours login anomaly against business hours window (06:00-18:00)"
+  ],
+  "fields_touched": ["agent.name", "user.name", "winlog.event_id", "agent.labels", "@timestamp"],
+  "event_refs": ["ev-scen-b-01", "ev-scen-b-02", "ev-scen-b-03"],
+  "attack_techniques": ["T1078.002", "T1059.001"],
+  "hypothesis": "Off-hours privileged logon on PHI workstation clin-ws-07 evaluated via Wazuh export interface with inventory fallback handling.",
+  "confidence": "medium",
+  "created_at": "2026-09-16T12:07:18Z"
+}
