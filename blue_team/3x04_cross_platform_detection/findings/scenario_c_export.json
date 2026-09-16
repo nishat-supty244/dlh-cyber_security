@@ -1,0 +1,20 @@
+{
+  "finding_id": "scenario_c_export",
+  "scenario_id": "scenario_c",
+  "interface": "wazuh_export",
+  "investigation_start": "2026-09-16T12:28:58Z",
+  "investigation_end": "2026-09-16T12:28:59Z",
+  "time_to_first_answer_seconds": 1,
+  "actions": [
+    "Read scenario_c_search_results.json",
+    "Extract source.ip, destination.ip, and timestamp records",
+    "Evaluate source.zone availability (Secondary lookup to network_zones.json required for zone context)",
+    "Compute chronological beacon intervals for exfiltration pattern"
+  ],
+  "fields_touched": ["source.ip", "destination.ip", "source.zone", "@timestamp", "message"],
+  "event_refs": ["ev-scen-c-01", "ev-scen-c-02", "ev-scen-c-03", "ev-scen-c-04", "ev-scen-c-05", "ev-scen-c-06"],
+  "attack_techniques": ["T1071.001", "T1041"],
+  "hypothesis": "Medical IoT segment egress to external C2 channel validated via Wazuh export interface with direct zone property checks.",
+  "confidence": "high",
+  "created_at": "2026-09-16T12:28:59Z"
+}
