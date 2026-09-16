@@ -3,35 +3,57 @@
   "comparisons": [
     {
       "scenario_id": "anchor",
-      "cli_time": 1,
-      "export_time": 1,
-      "advantage": "export",
-      "operational_cause": "filter_bar_efficiency"
-    },
-    {
-      "scenario_id": "scenario_a",
-      "cli_time": 1,
-      "export_time": 1,
-      "advantage": "export",
-      "operational_cause": "native_field_surface"
-    },
-    {
-      "scenario_id": "scenario_b",
-      "cli_time": 48,
-      "export_time": 25,
-      "advantage": "export",
+      "cli_time": 1.0,
+      "export_time": 1.0,
+      "time_delta_cli_minus_export": 0.0,
+      "cli_action_count": 5,
+      "export_action_count": 7,
+      "action_delta_cli_minus_export": -2,
+      "faster_interface": "tie",
+      "action_efficiency_advantage": "cli",
       "operational_cause": "timeline_visualization"
     },
     {
+      "scenario_id": "scenario_a",
+      "cli_time": 1.0,
+      "export_time": 1.0,
+      "time_delta_cli_minus_export": 0.0,
+      "cli_action_count": 6,
+      "export_action_count": 7,
+      "action_delta_cli_minus_export": -1,
+      "faster_interface": "tie",
+      "action_efficiency_advantage": "cli",
+      "operational_cause": "timeline_visualization"
+    },
+    {
+      "scenario_id": "scenario_b",
+      "cli_time": 48.0,
+      "export_time": 25.0,
+      "time_delta_cli_minus_export": 23.0,
+      "cli_action_count": 5,
+      "export_action_count": 5,
+      "action_delta_cli_minus_export": 0,
+      "faster_interface": "export",
+      "action_efficiency_advantage": "tie",
+      "operational_cause": "native_field_surface"
+    },
+    {
       "scenario_id": "scenario_c",
-      "cli_time": 45,
-      "export_time": 1,
-      "advantage": "export",
-      "operational_cause": "pipeline_expressiveness"
+      "cli_time": 45.0,
+      "export_time": 1.0,
+      "time_delta_cli_minus_export": 44.0,
+      "cli_action_count": 5,
+      "export_action_count": 4,
+      "action_delta_cli_minus_export": 1,
+      "faster_interface": "export",
+      "action_efficiency_advantage": "export",
+      "operational_cause": "native_field_surface"
     }
   ],
   "summary": {
-    "export_advantages": 4,
-    "cli_advantages": 0
+    "scenarios_analyzed": 4,
+    "export_advantages": 2,
+    "cli_advantages": 0,
+    "ties": 2
   }
 }
