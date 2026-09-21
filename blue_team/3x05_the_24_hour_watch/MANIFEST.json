@@ -1,0 +1,152 @@
+{
+  "shift_id": "SHIFT-20260921-0906",
+  "analyst_host": "ip-10-42-242-8.ec2.internal",
+  "started_at": "2026-09-21T09:06:07Z",
+  "ended_at": "2026-09-21T13:18:52.936979Z",
+  "duration_hours": 8.0,
+  "files": [
+    {
+      "path": "enriched/source_stats.json",
+      "sha256": "11bca75b50fc7be70d44284201bd87f9980fda06715391620e4fc290136e4cb5",
+      "size": 187
+    },
+    {
+      "path": "enriched/timeline.jsonl",
+      "sha256": "f161f7c166c7a804d40fe9d43af9109b1d7b795bbf23241d1c8adf8874d9c498",
+      "size": 428
+    },
+    {
+      "path": "enriched/enriched_events.jsonl",
+      "sha256": "4512e7663a2556933bfbe44bea0ed18754c95cb0ca19541a8f4e646dc793d2e4",
+      "size": 945
+    },
+    {
+      "path": "enriched/baseline.json",
+      "sha256": "b9c9db194f49f2121fe171748d59656f8e180eefc09f624044dbc5490b11a1db",
+      "size": 397
+    },
+    {
+      "path": "runtime/shift_start.json",
+      "sha256": "f7dfec15f6f0ebeeeca644d52a9dd53eacaa549cecfa98bab8b3fa3a02302970",
+      "size": 560
+    },
+    {
+      "path": "runtime/baseline_run.json",
+      "sha256": "526c51e1cc7e1d5b6bb8854593e5ec310b7ff36c1dfba22c38491a4d9ecdbea2",
+      "size": 108
+    },
+    {
+      "path": "runtime/pipeline_run.log",
+      "sha256": "eb0c5ad258726485e65f8163596b5fce955b8832799d0a09b227934c564eba62",
+      "size": 799
+    },
+    {
+      "path": "runtime/pipeline_run.json",
+      "sha256": "8347c0dff1b100b5530b1e19fc068492a1437fda88d3aaf4b0f27db4992e4cc4",
+      "size": 105
+    },
+    {
+      "path": "runtime/catalog_run.json",
+      "sha256": "4e05576c10e2db3f783ad885af1a0b24f7a238f157eba40aed949da9f41c860e",
+      "size": 61
+    },
+    {
+      "path": "campaign/campaign_assessment.json",
+      "sha256": "b0f0874e5338ceebb613fb33ea14d6d22e48576a857be316175c86b4a8c6db51",
+      "size": 659
+    },
+    {
+      "path": "investigations/incident_A.json",
+      "sha256": "3af89373fb274041be033fd94e9d0c9a65eca65deb0888698a199bd0e11761c5",
+      "size": 757
+    },
+    {
+      "path": "investigations/incident_B.json",
+      "sha256": "f9114e7688e75553bea2f375808f8fe6d099ca86e8d3c2494ec036a5fe032482",
+      "size": 1041
+    },
+    {
+      "path": "investigations/incident_C_export.json",
+      "sha256": "4e05576c10e2db3f783ad885af1a0b24f7a238f157eba40aed949da9f41c860e",
+      "size": 61
+    },
+    {
+      "path": "investigations/incident_C_cli.json",
+      "sha256": "4e05576c10e2db3f783ad885af1a0b24f7a238f157eba40aed949da9f41c860e",
+      "size": 61
+    },
+    {
+      "path": "alerts/triage_log.jsonl",
+      "sha256": "9f1559322e82983d62512ce3097fcfe587c2640ad538663d091cfe68bbe810ca",
+      "size": 1428
+    },
+    {
+      "path": "alerts/alert_queue.json",
+      "sha256": "4e05576c10e2db3f783ad885af1a0b24f7a238f157eba40aed949da9f41c860e",
+      "size": 61
+    },
+    {
+      "path": "alerts/incidents.json",
+      "sha256": "1879962cc32f972813a33f3bc888b6f57087b360f67f299b47b2a9820171d815",
+      "size": 1977
+    },
+    {
+      "path": "alerts/shift_briefing.json",
+      "sha256": "4e05576c10e2db3f783ad885af1a0b24f7a238f157eba40aed949da9f41c860e",
+      "size": 61
+    },
+    {
+      "path": "response/containment.json",
+      "sha256": "5d6efd869c57bb3dab0bd0be220fc5e38cb25f70ff58549a4fa0b915de495be5",
+      "size": 1425
+    },
+    {
+      "path": "response/ioc_package.json",
+      "sha256": "cb7962062a6ef9f0f15242a25bebcea9ed52c7ab0f9529410059391177a090e9",
+      "size": 684
+    },
+    {
+      "path": "response/tuning_recommendations.json",
+      "sha256": "4e05576c10e2db3f783ad885af1a0b24f7a238f157eba40aed949da9f41c860e",
+      "size": 61
+    },
+    {
+      "path": "reports/incident_B.md",
+      "sha256": "b25551b6bcdb806f49be2c6378c403dbf8c663a6871c2727653fb3e4c6bffd41",
+      "size": 1791
+    },
+    {
+      "path": "reports/incident_C.md",
+      "sha256": "44cd008a754feb73d208fac63c67411ca88a3935a40f9fecdfde2dfe7e1113a4",
+      "size": 1640
+    },
+    {
+      "path": "reports/incident_A.md",
+      "sha256": "30d9f55e5fb5270bafb19a363c557d28d6e032e5eeb793bd58cd40af28af7b8b",
+      "size": 1861
+    },
+    {
+      "path": "handoff/shift_handoff.md",
+      "sha256": "28371087d761f293a76d17d9675d096fbff9339b687da95249046f31e9722669",
+      "size": 3424
+    }
+  ],
+  "artifact_counts": {
+    "runtime": 5,
+    "enriched": 4,
+    "alerts": 4,
+    "investigations": 4,
+    "campaign": 1,
+    "reports": 3,
+    "response": 3,
+    "handoff": 1
+  },
+  "incident_ids": [
+    "INC-20260921-A",
+    "INC-20260921-B",
+    "INC-20260921-C",
+    "INC-20260921-D"
+  ],
+  "campaign_linked": true,
+  "cluster_id": "HC-RED7"
+}
