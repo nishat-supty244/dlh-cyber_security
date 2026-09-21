@@ -1,0 +1,86 @@
+{
+  "shift_id": "SH-2026-03",
+  "generated_at": "2026-09-21T12:47:12.466515Z",
+  "incidents": [
+    {
+      "incident_id": "INC-20260921-A",
+      "host_list": [
+        "hostname-1"
+      ],
+      "user_list": [
+        "admin"
+      ],
+      "ioc_list": [
+        "198.51.100.73"
+      ],
+      "alert_ids": [
+        "ALT-0001"
+      ],
+      "first_seen": "2026-09-21T12:47:12.466432Z",
+      "last_seen": "2026-09-21T12:47:12.466435Z",
+      "grouping_rule": "residual",
+      "tentative_category": "credential_abuse",
+      "confidence": "high"
+    },
+    {
+      "incident_id": "INC-20260921-B",
+      "host_list": [
+        "hostname-1"
+      ],
+      "user_list": [
+        "system"
+      ],
+      "ioc_list": [
+        "MedSyncHelper"
+      ],
+      "alert_ids": [
+        "ALT-0002"
+      ],
+      "first_seen": "2026-09-21T12:47:12.466460Z",
+      "last_seen": "2026-09-21T12:47:12.466462Z",
+      "grouping_rule": "residual",
+      "tentative_category": "credential_abuse",
+      "confidence": "high"
+    },
+    {
+      "incident_id": "INC-20260921-C",
+      "host_list": [
+        "hostname-2"
+      ],
+      "user_list": [
+        "service_acct"
+      ],
+      "ioc_list": [
+        "198.51.100.73"
+      ],
+      "alert_ids": [
+        "ALT-0003"
+      ],
+      "first_seen": "2026-09-21T12:47:12.466480Z",
+      "last_seen": "2026-09-21T12:47:12.466482Z",
+      "grouping_rule": "residual",
+      "tentative_category": "credential_abuse",
+      "confidence": "high"
+    },
+    {
+      "incident_id": "INC-20260921-D",
+      "host_list": [
+        "hostname-3"
+      ],
+      "user_list": [
+        "admin"
+      ],
+      "ioc_list": [],
+      "alert_ids": [
+        "ALT-0004"
+      ],
+      "first_seen": "2026-09-21T12:47:12.466504Z",
+      "last_seen": "2026-09-21T12:47:12.466506Z",
+      "grouping_rule": "residual",
+      "tentative_category": "credential_abuse",
+      "confidence": "medium"
+    }
+  ],
+  "incident_count": 4,
+  "unmatched_tp_count": 0
+}
