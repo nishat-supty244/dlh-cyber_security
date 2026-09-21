@@ -1,0 +1,36 @@
+{
+  "shift_id": "SH-2026-03",
+  "generated_at": "2026-09-21T13:10:23.212043Z",
+  "actions": [
+    {
+      "action_id": "ACT-001",
+      "priority": "immediate",
+      "action": "Block confirmed IOC IP at perimeter firewall and isolate host from network for incident INC-20260921-A",
+      "target_type": "ip",
+      "target_value": "198.51.100.73",
+      "incident_id": "INC-20260921-A",
+      "operational_impact": "None (Network Isolation)",
+      "requires_approval_from": "Incident Commander / Security On-Call"
+    },
+    {
+      "action_id": "ACT-002",
+      "priority": "short_term",
+      "action": "Reset compromised administrative user credentials and active Kerberos tickets for incident INC-20260921-B",
+      "target_type": "user",
+      "target_value": "rad_admin_miller",
+      "incident_id": "INC-20260921-B",
+      "operational_impact": "Temporary admin disruption during password change",
+      "requires_approval_from": "IT Systems Administration"
+    },
+    {
+      "action_id": "ACT-003",
+      "priority": "medium_term",
+      "action": "Review and tighten network firewall zoning for clinical radiological systems for incident INC-20260921-C",
+      "target_type": "rule",
+      "target_value": "FW-ZONE-RAD",
+      "incident_id": "INC-20260921-C",
+      "operational_impact": "Potential latency during rule compilation",
+      "requires_approval_from": "Security Architecture Review Board"
+    }
+  ]
+}
