@@ -1,0 +1,30 @@
+{
+  "incident_id": "INC-20260921-A",
+  "interface": "cli",
+  "hypothesis": "Service-based persistence installed after credential brute force authentication activity.",
+  "attack_techniques": [
+    "T1110.003",
+    "T1543.003",
+    "T1071.001"
+  ],
+  "confidence": "high",
+  "event_refs": [
+    "EVT-SYNTH-0001",
+    "EVT-SYNTH-0002",
+    "EVT-SYNTH-0003",
+    "EVT-SYNTH-0004",
+    "EVT-SYNTH-0005",
+    "EVT-SYNTH-0006"
+  ],
+  "ioc_matches": [
+    "198.51.100.73",
+    "MedSyncHelper"
+  ],
+  "baseline_deviations_count": 3,
+  "actions": [
+    "jq .incidents[0] $SHIFT_WORKSPACE/alerts/incidents.json",
+    "python3 -c parsing timestamp window and matching events",
+    "yq eval .rules $CATALOG_DIR"
+  ],
+  "investigated_at": "2026-09-21T12:49:05.618665Z"
+}
