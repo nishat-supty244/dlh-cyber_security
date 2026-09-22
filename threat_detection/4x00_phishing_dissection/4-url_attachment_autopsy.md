@@ -1,314 +1,244 @@
-**4\. URL and Attachment Autopsy**
+**Task 4 — URL and Attachment Autopsy**
+
+**Purpose**
+
+This task investigates suspicious URLs, IP addresses, and attachment indicators from the phishing emails.
+
+The investigation must be done **without clicking suspicious links or opening suspicious attachments**.
+
+The conclusions below are based on the email evidence provided in the lab. No live DNS, WHOIS, SIEM, Wazuh, or endpoint telemetry is required.
+
+**Safe Investigation Rules**
+
+- Do not click suspicious URLs.
+- Do not open suspicious attachments on a normal workstation.
+- Defang URLs before documenting them.
+- Use the email headers and body as the primary evidence.
+- Passive tools such as whois, dig, or nslookup may be used if the lab environment allows them.
+- Do not make a live HTTP request to a suspicious URL.
+- Do not depend on live lookup results to reach the conclusions in this task.
+- If an external analysis service is used, submit the indicator only according to the lab's approved procedure.
 
 **Indicator 1**
 
-- **Source email: E2**
-- **Original value: <https://meddefense-portal.com/verify/staff?id=dmarsh&token=a8f3e2d1>**
-- **Defanged value: hxxps://meddefense-portal\[.\]com/verify/staff?id=dmarsh&token=a8f3e2d1**
-- **Domain or IP: meddefense-portal.com**
-- **Indicator type: URL / domain**
-- **Evidence from email:**
-  - **The URL is presented as a MedDefense staff portal verification link.**
-  - **The email addresses Diane Marsh by name.**
-  - **It claims portal access will be suspended within 24 hours.**
-  - **The domain is meddefense-portal.com, rather than the organization's normal meddefense.com domain.**
-  - **E2 was clicked by Diane Marsh according to the evidence.**
-  - **The sending IP was 91.234.99.107.**
-  - **SPF failed, DKIM was absent and DMARC failed.**
-- **Safe investigation method:**
-  - **Extract and defang the URL without opening it.**
-  - **whois meddefense-portal.com**
-  - **dig meddefense-portal.com**
-  - **nslookup meddefense-portal.com**
-  - **Search the exact defanged URL in VirusTotal or urlscan.io.**
-  - **If HTTP headers must be examined, use an isolated analysis environment and a controlled request such as curl -I only when permitted by the lab.**
-- **Finding: The URL is a strong phishing indicator. It uses a look-alike domain, a personalized path containing dmarsh, and a tokenized verification URL. The email's authentication failures and 24-hour lockout threat further increase suspicion.**
-- **Risk rating: HIGH**
+- Source email: E2 — MedDefense IT Security
+- Original value: <https://meddefense-portal.com/verify/staff?id=dmarsh&token=a8f3e2d1>
+- Defanged value: hxxps://meddefense-portal\[.\]com/verify/staff?id=dmarsh&token=a8f3e2d1
+- Domain or IP: meddefense-portal.com
+- Indicator type: Phishing URL
+- Evidence from email:
+  - The email was sent to Diane Marsh.
+  - The sender claims to be MedDefense IT Security.
+  - The URL uses meddefense-portal.com instead of the normal meddefense.com domain.
+  - SPF failed.
+  - DKIM was not present.
+  - DMARC failed.
+  - The sending IP was 91.234.99.107.
+  - The email demanded verification within 24 hours.
+  - Diane Marsh reported that she clicked the email.
+- Safe investigation method:
+  - Examine the URL without opening it.
+  - Use passive WHOIS/DNS information if available.
+  - Search the exact defanged domain in an approved threat-intelligence service.
+- Finding:
+  - The URL is suspicious because it uses a lookalike MedDefense-related domain and is combined with failed email authentication and an urgent verification request.
+- Risk rating: HIGH
 
 **Indicator 2**
 
-- **Source email: E3**
-- **Original value: <https://outlook-protection.com/verify>**
-- **Defanged value: hxxps://outlook-protection\[.\]com/verify**
-- **Domain or IP: outlook-protection.com**
-- **Indicator type: URL / domain**
-- **Evidence from email:**
-  - **The email claims to be from "Microsoft Account Protection."**
-  - **The URL is hosted on outlook-protection.com.**
-  - **The message claims an unusual Microsoft account sign-in occurred.**
-  - **It gives a 48-hour deadline before account lockout.**
-  - **The email uses a Microsoft logo hosted from the same suspicious domain.**
-  - **The sender address is <security@outlook-protection.com>.**
-  - **The sending IP was 51.38.42.17.**
-  - **SPF, DKIM and DMARC all passed for outlook-protection.com, but this only authenticates that domain. It does not prove that the message came from Microsoft.**
-- **Safe investigation method:**
-  - **Defang and record the URL.**
-  - **whois outlook-protection.com**
-  - **dig outlook-protection.com**
-  - **nslookup outlook-protection.com**
-  - **Search the URL/domain in VirusTotal or urlscan.io.**
-  - **Compare the domain with legitimate Microsoft domains without visiting the suspicious URL.**
-- **Finding: The URL is suspicious because the message impersonates Microsoft while using outlook-protection.com. The authentication results are valid for that domain, not for Microsoft. This is an important example of why SPF/DKIM/DMARC passing does not automatically make an email legitimate.**
-- **Risk rating: HIGH**
+- Source email: E3 — Microsoft Account Protection
+- Original value: <https://outlook-protection.com/verify>
+- Defanged value: hxxps://outlook-protection\[.\]com/verify
+- Domain or IP: outlook-protection.com
+- Indicator type: Phishing URL / Microsoft impersonation
+- Evidence from email:
+  - The sender claims to be Microsoft Account Protection.
+  - The actual sender domain is outlook-protection.com.
+  - The email claims to concern a Microsoft 365 account.
+  - The email gives a 48-hour deadline.
+  - It threatens account lockout.
+  - The email contains an external IP address of 41.203.72.188 as part of the sign-in story.
+  - SPF, DKIM, and DMARC all passed, but they authenticate outlook-protection.com, not Microsoft.
+  - The sending IP was 51.38.42.17.
+- Safe investigation method:
+  - Inspect the domain name without visiting it.
+  - Compare the claimed organization with the authenticated domain.
+  - Use passive WHOIS/DNS or an approved URL-analysis service if available.
+- Finding:
+  - The authentication results do not prove that the email came from Microsoft. They only show that the sender was authenticated for outlook-protection.com.
+  - The domain is therefore suspicious in the context of the Microsoft impersonation.
+- Risk rating: HIGH
 
 **Indicator 3**
 
-- **Source email: E5**
-- **Original value: <https://medequip-supplies.net/invoices/pay?id=INV-2026-04891>**
-- **Defanged value: hxxps://medequip-supplies\[.\]net/invoices/pay?id=INV-2026-04891**
-- **Domain or IP: medequip-supplies.net**
-- **Indicator type: URL / domain**
-- **Evidence from email:**
-  - **The URL is presented as an invoice payment portal.**
-  - **The email requests payment of USD 24,716.38.**
-  - **The payment deadline is seven days.**
-  - **The message threatens suspension of future deliveries and a 2% late fee.**
-  - **The URL contains the invoice number INV-2026-04891.**
-  - **The sender is <invoices@medequip-supplies.net>.**
-  - **The sending IP was 185.176.43.22.**
-  - **SPF softfailed, DKIM was absent and DMARC failed.**
-  - **Angela Rivera reported that the invoice looked wrong.**
-- **Safe investigation method:**
-  - **Extract and defang the URL.**
-  - **whois medequip-supplies.net**
-  - **dig medequip-supplies.net**
-  - **nslookup medequip-supplies.net**
-  - **Search the domain and exact URL in VirusTotal or urlscan.io.**
-  - **Do not visit the payment page from the normal workstation.**
-- **Finding: The URL is suspicious because it requests payment through an external domain while the email has authentication failures. The large payment amount, deadline and late-fee threat create financial pressure.**
-- **Risk rating: HIGH**
+- Source email: E5 — MedEquip Supplies Billing
+- Original value: <https://medequip-supplies.net/invoices/pay?id=INV-2026-04891>
+- Defanged value: hxxps://medequip-supplies\[.\]net/invoices/pay?id=INV-2026-04891
+- Domain or IP: medequip-supplies.net
+- Indicator type: Payment URL
+- Evidence from email:
+  - The email is addressed to Angela Rivera in Accounts Payable.
+  - It requests payment of USD 24,716.38.
+  - The invoice number is INV-2026-04891.
+  - Payment is requested within 7 days.
+  - The email threatens a 2% late fee and suspension of future deliveries.
+  - SPF was softfail.
+  - DKIM was not present.
+  - DMARC failed.
+  - The sending IP was 185.176.43.22.
+  - Angela reported that the invoice looks wrong.
+- Safe investigation method:
+  - Do not open the payment URL.
+  - Record the URL from the raw email.
+  - Use passive domain information or an approved URL-analysis service if available.
+- Finding:
+  - The URL is suspicious because it is part of a payment request with failed authentication and a financial-pressure pretext.
+- Risk rating: HIGH
 
 **Indicator 4**
 
-- **Source email: E5**
-- **Original value: <https://medequip-supplies.net/portal/login>**
-- **Defanged value: hxxps://medequip-supplies\[.\]net/portal/login**
-- **Domain or IP: medequip-supplies.net**
-- **Indicator type: URL / credential-harvesting URL**
-- **Evidence from email:**
-  - **The email says recipients should log in if the attached invoice cannot be viewed.**
-  - **The URL points to a /portal/login path.**
-  - **The same suspicious domain is used for the payment URL.**
-  - **The email contains an invoice attachment named INV-2026-04891.pdf.**
-  - **The email requests payment of USD 24,716.38.**
-- **Safe investigation method:**
-  - **Defang the URL.**
-  - **whois medequip-supplies.net**
-  - **dig medequip-supplies.net**
-  - **nslookup medequip-supplies.net**
-  - **Search the domain/path in VirusTotal or urlscan.io.**
-  - **Do not submit credentials or interact with the login page.**
-- **Finding: The login URL provides an additional possible credential-harvesting path alongside the payment request.**
-- **Risk rating: HIGH**
+- Source email: E5 — MedEquip Supplies Billing
+- Original value: <https://medequip-supplies.net/portal/login>
+- Defanged value: hxxps://medequip-supplies\[.\]net/portal/login
+- Domain or IP: medequip-supplies.net
+- Indicator type: Credential/login URL
+- Evidence from email:
+  - The email says users can log in to retrieve the invoice.
+  - The login URL uses the same suspicious domain as the payment URL.
+  - SPF was softfail.
+  - DKIM was not present.
+  - DMARC failed.
+  - The email requests payment of USD 24,716.38.
+  - The recipient, Angela Rivera, reported that the invoice looks wrong.
+- Safe investigation method:
+  - Record and defang the URL.
+  - Do not visit the login page.
+  - Use passive domain or approved threat-intelligence analysis if available.
+- Finding:
+  - The login URL creates an additional credential-harvesting risk because it asks the recipient to log in through the same suspicious domain.
+- Risk rating: HIGH
 
 **Indicator 5**
 
-- **Source email: E5**
-- **Original value: INV-2026-04891.pdf**
-- **Defanged value: Not applicable**
-- **Domain or IP: Not applicable**
-- **Indicator type: Attachment**
-- **Evidence from email:**
-  - **Filename: INV-2026-04891.pdf**
-  - **MIME type: application/pdf**
-  - **Content type: PDF attachment**
-  - **The attachment is presented as an invoice for USD 24,716.38.**
-  - **The email also contains an external payment URL and a portal login URL.**
-  - **The raw email contains PDF metadata/base64 content.**
-  - **No validated SHA-256 file hash is available from the supplied evidence.**
-- **Safe investigation method:**
-  - **Do not open the PDF on the workstation.**
-  - **Extract only metadata from a controlled copy if the lab permits it.**
-  - **Calculate a SHA-256 hash without opening the document:  
-    sha256sum INV-2026-04891.pdf**
-  - **Submit the hash or file to an approved malware-analysis service such as VirusTotal or another sandbox, following lab rules.**
-  - **Inspect PDF metadata with a safe metadata tool such as:  
-    pdfinfo INV-2026-04891.pdf**
-- **Finding: The PDF is a suspicious attachment because it is part of a payment lure and is combined with suspicious payment and login URLs. The supplied email evidence does not prove that the PDF itself contains malware.**
-- **Risk rating: HIGH**
+- Source email: E5 — MedEquip Supplies Billing
+- Original value: INV-2026-04891.pdf
+- Defanged value: INV-2026-04891.pdf
+- Domain or IP: medequip-supplies.net
+- Indicator type: PDF attachment
+- Evidence from email:
+  - MIME type: application/pdf
+  - Filename: INV-2026-04891.pdf
+  - Invoice number: INV-2026-04891
+  - Amount: USD 24,716.38
+  - The PDF contains a link to the payment URL.
+  - The raw evidence contains PDF data and a truncated hash-like value, but it does not provide a complete validated SHA-256 hash.
+  - The email was authenticated with SPF softfail, no DKIM, and DMARC fail.
+- Safe investigation method:
+  - Do not open the PDF normally.
+  - If the actual attachment file is available in a controlled lab, calculate its hash with sha256sum.
+  - Use pdfinfo or another metadata-only tool in the controlled environment.
+  - Submit the file to an approved malware-analysis sandbox if permitted.
+- Finding:
+  - The attachment is suspicious because it is part of a large payment request and contains an external payment link.
+  - The evidence does not provide a complete validated file hash, so no complete SHA-256 IOC should be claimed from the email text alone.
+- Risk rating: HIGH
 
 **Indicator 6**
 
-- **Source email: E7**
-- **Original value: <https://meddefense-benefits.org/enroll>**
-- **Defanged value: hxxps://meddefense-benefits\[.\]org/enroll**
-- **Domain or IP: meddefense-benefits.org**
-- **Indicator type: URL / credential-harvesting URL**
-- **Evidence from email:**
-  - **The email claims to be from MedDefense HR Benefits.**
-  - **It tells Linda Patterson that benefits re-enrollment is incomplete.**
-  - **It says open enrollment closes at midnight the next day.**
-  - **It threatens loss of current coverage and default enrollment into a basic plan.**
-  - **The link uses meddefense-benefits.org, a look-alike domain.**
-  - **The sending IP was 164.90.218.73.**
-  - **SPF failed, DKIM was absent and DMARC failed.**
-- **Safe investigation method:**
-  - **Defang the URL.**
-  - **whois meddefense-benefits.org**
-  - **dig meddefense-benefits.org**
-  - **nslookup meddefense-benefits.org**
-  - **Search the URL/domain in VirusTotal or urlscan.io.**
-  - **Do not enter benefits or account information into the site.**
-- **Finding: The URL is suspicious because it impersonates the organization's HR benefits process and uses a look-alike domain with a direct enrollment path.**
-- **Risk rating: HIGH**
+- Source email: E7 — MedDefense HR Benefits
+- Original value: <https://meddefense-benefits.org/enroll>
+- Defanged value: hxxps://meddefense-benefits\[.\]org/enroll
+- Domain or IP: meddefense-benefits.org
+- Indicator type: Phishing / credential-harvesting URL
+- Evidence from email:
+  - The email was sent to Linda Patterson.
+  - The sender claims to be MedDefense HR Benefits.
+  - Linda reported that she never signed up for anything.
+  - The email says open enrollment closes at midnight on April 17, 2026.
+  - It threatens loss of current coverage and defaulting to a basic plan.
+  - SPF failed.
+  - DKIM was not present.
+  - DMARC failed.
+  - The sending IP was 164.90.218.73.
+- Safe investigation method:
+  - Do not open the enrollment URL.
+  - Defang and document the URL.
+  - Use passive domain information or an approved threat-intelligence service if available.
+- Finding:
+  - The URL is suspicious because it combines a lookalike benefits domain, failed authentication, and an urgent enrollment deadline.
+- Risk rating: HIGH
 
 **Indicator 7**
 
-- **Source email: E3**
-- **Original value: <https://outlook-protection.com/img/ms_logo.png>**
-- **Defanged value: hxxps://outlook-protection\[.\]com/img/ms_logo.png**
-- **Domain or IP: outlook-protection.com**
-- **Indicator type: External image / infrastructure indicator**
-- **Evidence from email:**
-  - **The image is presented as a Microsoft logo.**
-  - **The image is hosted on outlook-protection.com, the same domain used for the verification URL.**
-  - **This helps the email visually impersonate Microsoft.**
-- **Safe investigation method:**
-  - **Record the URL without loading it.**
-  - **whois outlook-protection.com**
-  - **dig outlook-protection.com**
-  - **Search the domain in VirusTotal or urlscan.io.**
-- **Finding: The image URL supports the impersonation theme. It is useful as an infrastructure indicator but should not be treated as malicious by itself.**
-- **Risk rating: MEDIUM**
+- Source email: E6 — Canadian Pharma Discounts
+- Original value: <http://203.0.113.228/shop?ref=pwhite>
+- Defanged value: hxxp://203\[.\]0\[.\]113\[.\]228/shop?ref=pwhite
+- Domain or IP: 203.0.113.228
+- Indicator type: IP-based URL
+- Evidence from email:
+  - The URL points directly to an IP address instead of a normal domain.
+  - The email advertises prescription drugs without a prescription.
+  - The email has an X-Spam-Score of 9.8.
+  - X-Spam-Status is Yes.
+  - SPF was softfail.
+  - DKIM was not present.
+  - DMARC failed with quarantine action.
+  - The sender used XPedia Bulk Mailer 4.2.
+- Safe investigation method:
+  - Do not visit the IP address.
+  - Record the IP from the raw email.
+  - If permitted, use passive IP reputation or WHOIS information.
+- Finding:
+  - The IP-based URL is an additional lab indicator associated with the spam email E6.
+  - The email evidence already provides strong spam indicators, so live access to the IP is not required.
+- Risk rating: MEDIUM
 
-**Indicator 8**
+**Required Lab Indicators**
 
-- **Source email: E3**
-- **Original value: 41.203.72.188**
-- **Defanged value: 41\[.\]203\[.\]72\[.\]188**
-- **Domain or IP: 41.203.72.188**
-- **Indicator type: IP address mentioned inside email content**
-- **Evidence from email:**
-  - **E3 claims that an unusual Microsoft account sign-in came from this IP.**
-  - **The email associates it with Lagos, Nigeria.**
-  - **This IP is part of the attacker's story inside the message.**
-  - **It is different from the actual sending IP 51.38.42.17.**
-- **Safe investigation method:**
-  - **Record the IP as a content indicator.**
-  - **whois 41.203.72.188**
-  - **dig -x 41.203.72.188**
-  - **Search the IP in VirusTotal or other approved threat-intelligence sources.**
-- **Finding: This IP should be treated as a contextual indicator, not automatically as attacker infrastructure. The email only claims that this was the source of the alleged sign-in.**
-- **Risk rating: LOW / CONTEXT ONLY**
+The required domains and IP address are covered above:
 
-**Indicator 9**
+| **Indicator**           | **Source** | **Type**                    |
+| ----------------------- | ---------- | --------------------------- |
+| meddefense-portal.com   | E2         | Phishing URL                |
+| outlook-protection.com  | E3         | Microsoft impersonation URL |
+| medequip-supplies.net   | E5         | Payment/login URLs          |
+| meddefense-benefits.org | E7         | Benefits phishing URL       |
+| 203.0.113.228           | E6         | IP-based spam URL           |
 
-- **Source email: E2**
-- **Original value: 91.234.99.107**
-- **Defanged value: 91\[.\]234\[.\]99\[.\]107**
-- **Domain or IP: 91.234.99.107**
-- **Indicator type: Sending IP**
-- **Evidence from email:**
-  - **E2 was received from this external IP.**
-  - **The IP was not authorized for meddefense-portal.com according to SPF.**
-  - **E2 also had no DKIM signature and failed DMARC.**
-- **Safe investigation method:**
-  - **whois 91.234.99.107**
-  - **dig -x 91.234.99.107**
-  - **Search the IP in VirusTotal or approved threat-intelligence services.**
-- **Finding: This is a strong infrastructure indicator associated with the suspicious E2 message.**
-- **Risk rating: HIGH**
+**Evidence-Based Summary**
 
-**Indicator 10**
+| **Email** | **Main Indicator**      | **Important Evidence**                                                                            | **Risk** |
+| --------- | ----------------------- | ------------------------------------------------------------------------------------------------- | -------- |
+| E2        | meddefense-portal.com   | SPF fail, DKIM none, DMARC fail, 24-hour deadline, Diane clicked                                  | HIGH     |
+| E3        | outlook-protection.com  | Microsoft impersonation, 48-hour deadline, authenticated domain does not prove Microsoft identity | HIGH     |
+| E5        | medequip-supplies.net   | \$24,716.38 payment request, SPF softfail, DKIM none, DMARC fail, suspicious PDF                  | HIGH     |
+| E7        | meddefense-benefits.org | SPF fail, DKIM none, DMARC fail, enrollment deadline, Linda never signed up                       | HIGH     |
+| E6        | 203.0.113.228           | Direct IP URL, spam score 9.8, SPF softfail, DKIM none, DMARC fail                                | MEDIUM   |
 
-- **Source email: E3**
-- **Original value: 51.38.42.17**
-- **Defanged value: 51\[.\]38\[.\]42\[.\]17**
-- **Domain or IP: 51.38.42.17**
-- **Indicator type: Sending IP**
-- **Evidence from email:**
-  - **E3 was received from this external IP.**
-  - **The IP was authorized for outlook-protection.com, explaining the SPF pass.**
-  - **The domain is nevertheless being used to impersonate Microsoft.**
-- **Safe investigation method:**
-  - **whois 51.38.42.17**
-  - **dig -x 51.38.42.17**
-  - **Search the IP in VirusTotal or approved threat-intelligence services.**
-- **Finding: The IP is useful for campaign investigation, but the evidence does not by itself prove that the IP is exclusively malicious.**
-- **Risk rating: MEDIUM**
+**Final Conclusion**
 
-**Indicator 11**
+The suspicious indicators can be investigated safely using the information already present in the raw email evidence.
 
-- **Source email: E5**
-- **Original value: 185.176.43.22**
-- **Defanged value: 185\[.\]176\[.\]43\[.\]22**
-- **Domain or IP: 185.176.43.22**
-- **Indicator type: Sending IP**
-- **Evidence from email:**
-  - **E5 was received from this external IP.**
-  - **SPF softfailed for medequip-supplies.net.**
-  - **DKIM was absent.**
-  - **DMARC failed.**
-  - **The email contains a suspicious invoice and payment/login URLs.**
-- **Safe investigation method:**
-  - **whois 185.176.43.22**
-  - **dig -x 185.176.43.22**
-  - **Search the IP in VirusTotal or approved threat-intelligence services.**
-- **Finding: The IP is a useful infrastructure indicator connected to the suspicious invoice lure.**
-- **Risk rating: HIGH**
+The investigation does **not** require:
 
-**Indicator 12**
+- Clicking the URLs
+- Opening the PDF
+- Visiting the suspicious IP
+- Live Wazuh telemetry
+- SIEM data
+- Sysmon data
+- Suricata data
+- Successful DNS or WHOIS lookups
 
-- **Source email: E7**
-- **Original value: 164.90.218.73**
-- **Defanged value: 164\[.\]90\[.\]218\[.\]73**
-- **Domain or IP: 164.90.218.73**
-- **Indicator type: Sending IP**
-- **Evidence from email:**
-  - **E7 was received from this external IP.**
-  - **SPF failed for meddefense-benefits.org.**
-  - **DKIM was absent.**
-  - **DMARC failed.**
-  - **The email uses a look-alike HR benefits domain and an urgent enrollment pretext.**
-- **Safe investigation method:**
-  - **whois 164.90.218.73**
-  - **dig -x 164.90.218.73**
-  - **Search the IP in VirusTotal or approved threat-intelligence services.**
-- **Finding: The IP is a strong infrastructure indicator associated with the suspicious benefits lure.**
-- **Risk rating: HIGH**
+The main evidence comes from:
 
-**Indicator 13**
+- Raw email URLs
+- Sender and recipient information
+- Received headers
+- Sending IP addresses
+- SPF/DKIM/DMARC results
+- Email content
+- Attachment metadata
+- The suspicious behavior described by the recipients
 
-- **Source email: E6 / HC3 context**
-- **Original value: 203.0.113.228**
-- **Defanged value: 203\[.\]0\[.\]113\[.\]228**
-- **Domain or IP: 203.0.113.228**
-- **Indicator type: IP address / URL infrastructure**
-- **Evidence from email:**
-  - **E6 contains the URL <http://203.0.113.228/shop?ref=pwhite>.**
-  - **The email is a bulk pharmaceutical spam message.**
-  - **It has a spam score of 9.8.**
-  - **The IP is therefore present as a suspicious URL indicator in the evidence.**
-- **Safe investigation method:**
-  - **whois 203.0.113.228**
-  - **dig -x 203.0.113.228**
-  - **Search the IP in VirusTotal or approved threat-intelligence sources.**
-  - **Do not browse directly to the URL from the workstation.**
-- **Finding: This is a suspicious IP-based URL found in the email evidence. It is not one of the E2/E3/E5/E7 phishing lures, so it should be kept separate from the main campaign indicators.**
-- **Risk rating: MEDIUM / CONTEXT**
-
-**Summary of Findings**
-
-| **Email** | **Main URL/domain**             | **Main purpose**                   | **Risk**             |
-| --------- | ------------------------------- | ---------------------------------- | -------------------- |
-| **E2**    | **meddefense-portal\[.\]com**   | **Account verification**           | **HIGH**             |
-| **E3**    | **outlook-protection\[.\]com**  | **Microsoft account verification** | **HIGH**             |
-| **E5**    | **medequip-supplies\[.\]net**   | **Payment and login**              | **HIGH**             |
-| **E5**    | **INV-2026-04891.pdf**          | **Invoice lure**                   | **HIGH**             |
-| **E7**    | **meddefense-benefits\[.\]org** | **Benefits enrollment**            | **HIGH**             |
-| **E6**    | **203\[.\]0\[.\]113\[.\]228**   | **Bulk-spam shopping URL**         | **MEDIUM / CONTEXT** |
-
-**Safe Investigation Principles**
-
-1. **Never click the suspicious URLs from the normal workstation.**
-2. **Defang URLs before placing them in reports or chat.**
-3. **Use whois, dig, nslookup and approved threat-intelligence platforms for passive investigation.**
-4. **Do not enter credentials into suspicious login or verification pages.**
-5. **Do not open suspicious attachments on the workstation.**
-6. **Extract attachment metadata and calculate hashes only from a controlled copy.**
-7. **Treat an IP mentioned inside an email as contextual until there is evidence connecting it to attacker infrastructure.**
-8. **Do not treat a tool such as PHPMailer as malicious by itself. It is an email-sending technology that can be used by both legitimate and malicious senders.**
-
-**Conclusion**
-
-**E2, E3, E5 and E7 contain suspicious URLs that support account verification, Microsoft impersonation, payment/login activity and benefits enrollment lures. E5 also contains a PDF invoice attachment that should be handled as potentially unsafe without opening it. The strongest evidence comes from the combination of look-alike domains, suspicious URLs, authentication failures in E2/E5/E7, and the social-engineering content of the messages. E3 is an important exception because its SPF, DKIM and DMARC checks pass for outlook-protection.com, but the domain itself is being used to impersonate Microsoft.**
+The strongest indicators are the lookalike domains, failed authentication results, urgent requests, payment/login actions, and the suspicious attachment in E5.
