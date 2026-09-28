@@ -1,0 +1,113 @@
+{
+  "name": "HEALTHBANE Campaign Mapping",
+  "version": "1.1",
+  "domain": "enterprise-attack",
+  "description": "Two-tier ATT&CK mapping for the HEALTHBANE campaign (Observed vs Inferred).",
+  "filters": {
+    "platforms": ["Windows"]
+  },
+  "setting": {
+    "showSubtechniques": true
+  },
+  "techniques": [
+    {
+      "techniqueID": "T1566.001",
+      "tactic": "initial-access",
+      "score": 50,
+      "color": "#ffc000",
+      "comment": "INFERRED: Delivery mechanism inferred for initial compromise of target infrastructure."
+    },
+    {
+      "techniqueID": "T1059.001",
+      "tactic": "execution",
+      "score": 100,
+      "color": "#ff0000",
+      "comment": "OBSERVED: PowerShell scripts executed to stage payloads and manage runtime."
+    },
+    {
+      "techniqueID": "T1059.003",
+      "tactic": "execution",
+      "score": 100,
+      "color": "#ff0000",
+      "comment": "OBSERVED: Native cmd.exe invocations utilized to chain utility commands."
+    },
+    {
+      "techniqueID": "T1204.002",
+      "tactic": "execution",
+      "score": 100,
+      "color": "#ff0000",
+      "comment": "OBSERVED: Initial execution requires user interaction with dropped attachments."
+    },
+    {
+      "techniqueID": "T1562.001",
+      "tactic": "defense-evasion",
+      "score": 100,
+      "color": "#ff0000",
+      "comment": "OBSERVED: Scripts attempt to terminate or disable endpoint security agents."
+    },
+    {
+      "techniqueID": "T1070.004",
+      "tactic": "defense-evasion",
+      "score": 100,
+      "color": "#ff0000",
+      "comment": "OBSERVED: Cleanup commands executed to wipe staging directories post-execution."
+    },
+    {
+      "techniqueID": "T1027",
+      "tactic": "defense-evasion",
+      "score": 50,
+      "color": "#ffc000",
+      "comment": "INFERRED: Code strings and script blocks heavily obfuscated to bypass static analysis."
+    },
+    {
+      "techniqueID": "T1082",
+      "tactic": "discovery",
+      "score": 50,
+      "color": "#ffc000",
+      "comment": "INFERRED: Commands executed to gather basic OS version and architecture details."
+    },
+    {
+      "techniqueID": "T1021.001",
+      "tactic": "lateral-movement",
+      "score": 50,
+      "color": "#ffc000",
+      "comment": "INFERRED: Anticipated lateral movement path using compromised administrative credentials."
+    },
+    {
+      "techniqueID": "T1114",
+      "tactic": "collection",
+      "score": 50,
+      "color": "#ffc000",
+      "comment": "INFERRED: Targeted interest in internal medical records and communications."
+    },
+    {
+      "techniqueID": "T1071.001",
+      "tactic": "command-and-control",
+      "score": 100,
+      "color": "#ff0000",
+      "comment": "OBSERVED: Beaconing and data exfiltration conducted over standard HTTPS."
+    },
+    {
+      "techniqueID": "T1041",
+      "tactic": "exfiltration",
+      "score": 100,
+      "color": "#ff0000",
+      "comment": "OBSERVED: Stolen archives transferred directly back to adversary infrastructure."
+    }
+  ],
+  "gradient": {
+    "colors": ["#ffc000", "#ff0000"],
+    "minValue": 50,
+    "maxValue": 100
+  },
+  "legendItems": [
+    {
+      "label": "INFERRED (Hunting Hypothesis)",
+      "color": "#ffc000"
+    },
+    {
+      "label": "OBSERVED (Confirmed Evidence)",
+      "color": "#ff0000"
+    }
+  ]
+}
