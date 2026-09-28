@@ -1,4 +1,4 @@
-**Threat Intelligence — Learning Objectives Q&A**
+**Threat Intelligence **
 
 **1\. Threat Intelligence Lifecycle**
 
