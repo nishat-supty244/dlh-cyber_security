@@ -1,5 +1,5 @@
-```markdown
-# 2-Source Assessment: Evaluating Cyber Threat Intelligence
+
+# Source Assessment: Evaluating Cyber Threat Intelligence
 
 ## 1. Methodology Overview
 
