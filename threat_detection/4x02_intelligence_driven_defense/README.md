@@ -1,4 +1,4 @@
-**Threat Intelligence **
+**Threat Intelligence**
 
 **1\. Threat Intelligence Lifecycle**
 
