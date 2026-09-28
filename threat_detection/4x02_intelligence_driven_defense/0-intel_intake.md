@@ -1,4 +1,4 @@
-**Task 0: Intelligence Intake Summary — HEALTHBANE Campaign**
+**Intelligence Intake Summary — HEALTHBANE Campaign**
 
 **1\. Individual Source Overview**
 
