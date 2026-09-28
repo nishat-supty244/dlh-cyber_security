@@ -1,4 +1,4 @@
-**6-Kill Chain Reconstruction: The HEALTHBANE Campaign**
+**Kill Chain Reconstruction: The HEALTHBANE Campaign**
 
 **1\. Campaign Timeline**
 
