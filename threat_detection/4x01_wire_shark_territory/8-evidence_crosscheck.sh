@@ -1,23 +1,6 @@
 #!/bin/bash
 # Name: 8-evidence_crosscheck.sh
 # ---------------------------------------------------------------------------
-# CLASSIFICATION RUBRIC
-#   CONFIRMED ........ the action itself is directly visible in packet
-#                      metadata (flows, ports, timing, query names)
-#   STRONG INFERENCE .. the session is packet-confirmed but the attributed
-#                      action (credential use, data meaning) requires
-#                      interpretation; contents encrypted or below
-#                      dissection depth
-#   UNCONFIRMED ...... no packet evidence exists; would need other sources
-#   NOT VISIBLE ...... categorically outside network telemetry
-#
-# DERIVATION RULES
-#   Phase table "PCAP Evidence?" column is computed from
-#   master_timeline evidence_class values in kill_chain_evidence.json.
-#   Visibility score = phases with >= 1 PACKET event / total phases (7).
-#   Analyst verdicts cite artifact facts (attck_mapping class strings)
-#   as their justification, never brief text alone.
-# ---------------------------------------------------------------------------
 
 set -euo pipefail
 
