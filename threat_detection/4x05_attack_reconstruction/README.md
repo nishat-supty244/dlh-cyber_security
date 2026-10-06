@@ -1,3 +1,9 @@
+**Objective**
+
+**To reconstruct a complete cyberattack by correlating evidence from email, network, endpoint, threat intelligence, and SIEM sources, building an accurate attack timeline, mapping attacker techniques to MITRE ATT&CK, assessing the impact, and producing an evidence-based investigation report.**
+
+**Learning Objectives of the project:**
+
 **1\. Cross-Evidence Correlation**
 
 **Q1. What is cross-evidence correlation?**  
