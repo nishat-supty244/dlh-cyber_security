@@ -1,0 +1,49 @@
+<!--
+Rule ID: 100101
+Name: LSASS Memory Access from Non-System Process
+ATT&CK: T1003.001
+Evidence: Task 6 - Credential Access Hunt
+-->
+
+<group name="healthbane,credential_access,lsass,">
+
+  <rule id="100101" level="13">
+    <if_group>sysmon_event10</if_group>
+
+    <field name="win.eventdata.targetImage">(?i)\\lsass\.exe$</field>
+
+    <description>
+      HEALTHBANE: Non-system process accessed LSASS.
+      Investigate for possible credential dumping.
+    </description>
+
+    <mitre>
+      <id>T1003.001</id>
+    </mitre>
+
+    <!--
+    Baseline logic:
+
+      Allow known Windows/system processes and approved
+      security software.
+
+      Examples:
+        svchost.exe
+        services.exe
+        wininit.exe
+        csrss.exe
+        lsass.exe
+        winlogon.exe
+        taskhostw.exe
+        wmiprvse.exe
+        MsMpEng.exe
+
+      Alert when SourceImage is not in the approved allowlist.
+
+      High-risk access masks such as 0x1010, 0x1410,
+      0x1438 and 0x1fffff increase investigation priority,
+      but an access mask alone does not prove credential dumping.
+    -->
+  </rule>
+
+</group>

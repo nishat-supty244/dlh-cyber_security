@@ -1,0 +1,48 @@
+<!--
+Rule ID: 100103
+Name: WMI Remote Child Process Anomaly
+ATT&CK: T1047
+Evidence: Task 5 - WMI Hunt
+-->
+
+<group name="healthbane,lateral_movement,wmi,">
+
+  <rule id="100103" level="11">
+    <field name="win.eventdata.parentImage">
+      (?i)\\(wmiprvse|wmic)\.exe$
+    </field>
+
+    <field name="win.eventdata.image">
+      (?i)\\(cmd|powershell|pwsh|cscript|wscript)\.exe$
+    </field>
+
+    <description>
+      HEALTHBANE: WMI-related process spawned a command shell
+      or scripting interpreter. Investigate for remote execution.
+    </description>
+
+    <mitre>
+      <id>T1047</id>
+    </mitre>
+
+    <!--
+    Baseline logic:
+
+      Compare source host, account, destination and time
+      against the normal administrator baseline.
+
+      Lower concern:
+        Authorized administrator
+        Authorized management host
+        Approved maintenance window
+
+      Higher concern:
+        Workstation source
+        Service account
+        Off-hours activity
+        Unusual destination
+        Followed by PsExec or PowerShell Remoting
+    -->
+  </rule>
+
+</group>

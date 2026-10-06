@@ -1,0 +1,39 @@
+<!--
+Rule ID: 100100
+Name: PsExec from Non-Admin Workstation
+ATT&CK: T1021.002
+Evidence: Task 4 - PsExec Hunt
+-->
+
+<group name="healthbane,lateral_movement,psexec,">
+
+  <rule id="100100" level="12">
+    <if_group>sysmon_event1</if_group>
+
+    <field name="win.eventdata.image">(?i)PsExec(\.exe)?</field>
+
+    <description>
+      HEALTHBANE: PsExec execution detected from a potentially
+      unauthorized source or outside the normal administrator baseline.
+    </description>
+
+    <mitre>
+      <id>T1021.002</id>
+    </mitre>
+
+    <!--
+    Baseline logic:
+      Normal administrator activity:
+        User: MEDDEFENSE\robert.kim
+        Source: WS-ADMIN-01
+        Time: 08:00-18:00
+        Maintenance days: reference/admin_schedule.txt
+
+      Alert when:
+        Source != WS-ADMIN-01
+        OR outside approved maintenance window
+        OR account is not an authorized administrator
+    -->
+  </rule>
+
+</group>

@@ -1,0 +1,56 @@
+<!--
+Rule ID: 9000030
+Name: SMB Lateral Movement - PsExec Service Installation
+ATT&CK: T1021.002
+Evidence: Task 4 - PsExec Hunt
+
+This is a network-level detection draft.
+Exact implementation depends on the available network
+telemetry / IDS / firewall logs.
+-->
+
+<network_rule>
+
+  <rule id="9000030" severity="high">
+
+    <behavior>
+      SMB connection associated with remote administrative
+      service creation consistent with PsExec.
+    </behavior>
+
+    <logic>
+      Detect:
+        Source workstation
+        -> SMB (TCP/445)
+        -> administrative share such as ADMIN$ or C$
+        -> remote service creation / Service Control activity
+
+      Correlate with:
+        - unusual source host
+        - unusual destination
+        - service account authentication
+        - off-hours activity
+        - subsequent process execution
+    </logic>
+
+    <description>
+      HEALTHBANE: Possible PsExec-style SMB lateral movement
+      and remote service installation.
+    </description>
+
+    <mitre>
+      <id>T1021.002</id>
+    </mitre>
+
+    <!--
+    Baseline:
+      WS-ADMIN-01 and authorized administrators may legitimately
+      access administrative shares during maintenance.
+
+      Alert when the source, account, destination or time
+      falls outside the approved administrative baseline.
+    -->
+
+  </rule>
+
+</network_rule>
