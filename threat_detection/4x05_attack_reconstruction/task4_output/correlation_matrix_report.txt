@@ -1,0 +1,777 @@
+================================================================
+   CROSS-EVIDENCE CORRELATION MATRIX
+================================================================
+
+Project: 4x05 Attack Reconstruction
+Generated: Wed Oct  7 05:08:23 PM EDT 2026
+
+Purpose:
+Correlate findings from previous analysis, IR memory, disk,
+firewall, and other available evidence sources.
+
+Important:
+This report only uses evidence actually present in the files.
+Example values from the task instructions are NOT treated as
+actual findings.
+
+
+================================================================
+   EVIDENCE INVENTORY
+================================================================
+
+Previous findings:
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x00_phishing_summary.txt
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x01_network_timeline.txt
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x02_attack_mapping.json
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x03_malware_summary.txt
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x04_hunting_report.txt
+
+IR evidence:
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/firewall_sessions_ws_recv_03.json
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/ir_team_notes.txt
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/memory_artifacts.txt
+
+Task outputs:
+
+[/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task1_output]
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task1_output/memory_analysis_report.txt
+
+[/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task2_output]
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task2_output/disk_analysis_report.txt
+
+[/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task3_output]
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task3_output/.external_sessions.tmp
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task3_output/firewall_analysis_report.txt
+
+================================================================
+   IOC CORRELATION
+================================================================
+
+The script searches the available evidence for:
+  - IPv4 addresses
+  - domains
+  - process/file names
+  - account names
+  - hashes
+
+Classification:
+  CONVERGED     = IOC appears in 2 or more independent sources
+  SINGLE-SOURCE = IOC appears in only one source
+  CONFLICTED    = IOC has evidence suggesting disagreement/context conflict
+
+IOC                                 4x00   4x01   4x02   4x03   4x04   IR     STATUS
+-------------------------------------------------------------------------------------------------------------
+0c3f6a9d2e5b8c1f4a7d0e3b6c9f2a5d    ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.0.12                          ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.1.10                          ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.1.11                          ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.1.20                          ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.2.0                           ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.20.0                          ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.20.10                         ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.20.15                         ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.20.30                         ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.20.31                         ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.20.40                         ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.20.50                         ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.20.80                         ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.3.0                           ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.3.1                           ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.3.19                          ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.3.20                          ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.3.21                          ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.3.22                          ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+10.10.9.0                           ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+157.240.22.35                       ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+172.217.14.78                       ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+185.220.101.45                      ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+185.220.101.46                      ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+203.0.113.47                        ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+35dd7a8965c100f7be58d8df9f5d9d6d    ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+3b8e7c1d4a9f2e0b6c5d8a1e4f7b0c3d    ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+3c6e9a0d2f5b8e1c4a7d0f3b6e9c2a5d    ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+45.142.214.108                      ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+4.7.1.4                             ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+4d2a8f5b1c7e0d3a6b9f2e5c8d1a4b7e    ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+6e9f2a5b8c1d4e7f0a3b6c9d2e5f8a1b    ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+72a589da586844d7f0818ce684948eea    ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+7a4c1e2b9f8d5a3c0e6b7d2f5a8c1e4b    ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+91.219.236.117                      ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+9a2f3e7b4c1d8a6e5f0b2c9d8e7a4f1b    ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+admin                               ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+c8e2a9b4d1f7c0a3e6b9d2c5f8a1e4b7    ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+chrome.exe                          ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+cmd.exe                             ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+compression.dll                     ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+conhost.exe                         ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+csrss.exe                           ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+d0c3f6a9e2b5d8c1f4a7e0b3d6c9f2a5    ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+d6e9f2a5b8c1d4e7f0a3b6c9d2e5f8a1    ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+d9c2f5a8e1b4d7c0f3a6b9d2e5c8f1a4    ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+data-sync.healthbane-c2.net         ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+debug_tool.exe                      ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+diane marsh                         ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+explorer.exe                        ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+f1e8a4c7b0d3e6a9c2b5d8e1f4a7c0b3    ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+healthbane-c2.net                   ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+healthsync                          ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+james chen                          ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+login.microsoft.com                 ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+lsass.exe                           ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+management.dll                      ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+meddefense-benefits.com             ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+meddefense-portal.com               ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+msmpeng.exe                         ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+outlook.exe                         ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+outlook-protection.com              ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+powershell.exe                      ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+psexec64.exe                        ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+psexec.exe                          ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+schemas.microsoft.com               ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+schtasks.exe                        ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+services.exe                        ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+smss.exe                            ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+spoolsv.exe                         ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+sqlclient.dll                       ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+stage1.ps1                          ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+svc_healthsync                      ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+svchost.exe                         ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+svchost_update.exe                  ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+sync.healthbane-c2.net              ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+sync_healthdata.ps1                 ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+system                              ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+system.io                           ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+update.healthbane-c2.net            ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+wevtutil.exe                        ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+wininit.exe                         ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+wmic.exe                            ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+wmiprvse.exe                        ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+wsmprovhost.exe                     ---    ---    ---    ---    ---    ---    SINGLE-SOURCE
+
+Note:
+A SINGLE-SOURCE IOC is not automatically false.
+It may reflect a visibility limitation in other evidence sources.
+
+----------------------------------------------------------------
+ NEW IOCs FROM IR EVIDENCE
+----------------------------------------------------------------
+IR IOCs that do not appear in the previous findings:
+
+  NEW: 10.10.20.0
+  NEW: 10.10.20.10
+  NEW: 10.10.20.30
+  NEW: 10.10.20.31
+  NEW: 10.10.20.40
+  NEW: 10.10.3.0
+  NEW: 10.10.3.1
+  NEW: 157.240.22.35
+  NEW: 172.217.14.78
+  NEW: 203.0.113.47
+  NEW: 4.7.1.4
+  NEW: schemas.microsoft.com
+  NEW: system.io
+
+New IOC count: 13
+
+================================================================
+   TIMELINE CORRELATION
+================================================================
+
+The following section extracts timestamped evidence from
+available sources.
+
+Interpretation:
+  CONVERGED = same event supported by multiple sources
+  LOWER CONFIDENCE = event appears in only one source
+  CONFLICT = same event appears with materially different times
+
+
+TIMESTAMP / SOURCE SUMMARY
+
+  2014-06-27 23:07:54 -> disk_forensics_report.txt
+  2026-04-14T13:14:22Z -> 4x01_network_timeline.txt
+  2026-04-14T13:18:05Z -> 4x00_phishing_summary.txt
+  2026-04-14T13:18:05Z -> 4x01_network_timeline.txt
+  2026-04-14T13:18:08Z -> 4x01_network_timeline.txt
+  2026-04-14T13:18:42Z -> 4x00_phishing_summary.txt
+  2026-04-14T13:18:42Z -> 4x01_network_timeline.txt
+  2026-04-14T13:18:50Z -> 4x01_network_timeline.txt
+  2026-04-15T08:43:18Z -> 4x01_network_timeline.txt
+  2026-04-15T08:51:09Z -> 4x01_network_timeline.txt
+  2026-04-15T08:51:11Z -> 4x01_network_timeline.txt
+  2026-04-15T08:51:11Z -> 4x03_malware_summary.txt
+  2026-04-15T08:51:38Z -> 4x01_network_timeline.txt
+  2026-04-15T13:42:11Z -> 4x01_network_timeline.txt
+  2026-04-15T13:42:14Z -> 4x01_network_timeline.txt
+  2026-04-15T23:59:42Z -> 4x01_network_timeline.txt
+  2026-04-16T00:00:00Z -> 4x01_network_timeline.txt
+  2026-04-22 06:14:17 -> memory_artifacts.txt
+  2026-04-22 06:14:18 -> memory_artifacts.txt
+  2026-04-22 06:14:19 -> memory_artifacts.txt
+  2026-04-22 06:14:20 -> memory_analysis_report.txt
+  2026-04-22 06:14:20 -> memory_artifacts.txt
+  2026-04-22 06:14:21 -> memory_analysis_report.txt
+  2026-04-22 06:14:21 -> memory_artifacts.txt
+  2026-04-22 06:14:30 -> memory_artifacts.txt
+  2026-04-22 06:14:32 -> memory_artifacts.txt
+  2026-04-22 06:14:38 -> disk_forensics_report.txt
+  2026-04-22 06:14:47 -> disk_forensics_report.txt
+  2026-04-22 06:14:47 -> memory_artifacts.txt
+  2026-04-22 06:15:08 -> memory_analysis_report.txt
+  2026-04-22 06:15:08 -> memory_artifacts.txt
+  2026-04-22T06:14:18Z -> disk_forensics_report.txt
+  2026-04-30 02:14:08 -> disk_forensics_report.txt
+  2026-05-02T00:00:00Z -> firewall_sessions_ws_recv_03.json
+  2026-05-02T08:14:08Z -> firewall_sessions_ws_recv_03.json
+  2026-05-02T08:14:14Z -> firewall_sessions_ws_recv_03.json
+  2026-05-02T08:19:11Z -> firewall_sessions_ws_recv_03.json
+  2026-05-02T08:19:17Z -> firewall_sessions_ws_recv_03.json
+  2026-05-02T13:42:18Z -> firewall_sessions_ws_recv_03.json
+  2026-05-02T13:42:21Z -> firewall_sessions_ws_recv_03.json
+  2026-05-02T14:11:32Z -> firewall_sessions_ws_recv_03.json
+  2026-05-02T14:14:52Z -> firewall_sessions_ws_recv_03.json
+  2026-05-04 18:11:08 -> disk_forensics_report.txt
+  2026-05-04 23:11:08 -> memory_artifacts.txt
+  2026-05-05 03:21:48 -> disk_forensics_report.txt
+  2026-05-05 03:22:14 -> disk_analysis_report.txt
+  2026-05-05 03:22:14 -> disk_forensics_report.txt
+  2026-05-05T08:22:14Z -> firewall_sessions_ws_recv_03.json
+  2026-05-05T08:22:42Z -> firewall_sessions_ws_recv_03.json
+  2026-05-06 01:58:14 -> disk_forensics_report.txt
+  2026-05-06 02:11:42 -> disk_analysis_report.txt
+  2026-05-06 02:11:42 -> disk_forensics_report.txt
+  2026-05-06 02:13:11 -> disk_forensics_report.txt
+  2026-05-06 02:13:48 -> disk_forensics_report.txt
+  2026-05-06 02:36:48 -> disk_forensics_report.txt
+  2026-05-06T07:11:46Z -> firewall_sessions_ws_recv_03.json
+  2026-05-06T07:13:11Z -> firewall_sessions_ws_recv_03.json
+  2026-05-06T07:13:18Z -> firewall_sessions_ws_recv_03.json
+  2026-05-06T07:14:42Z -> firewall_sessions_ws_recv_03.json
+  2026-05-06T07:42:18Z -> firewall_sessions_ws_recv_03.json
+  2026-05-07 01:47:33 -> disk_analysis_report.txt
+  2026-05-07 01:47:33 -> disk_forensics_report.txt
+  2026-05-07 01:47:33 -> ir_team_notes.txt
+  2026-05-07 01:47:33 -> memory_artifacts.txt
+  2026-05-07 06:47:33 -> memory_artifacts.txt
+  2026-05-07T01:47:33.4528916 -> disk_forensics_report.txt
+  2026-05-07T02:00:00 -> disk_analysis_report.txt
+  2026-05-07T02:00:00 -> disk_forensics_report.txt
+  2026-05-07T06:48:11Z -> firewall_sessions_ws_recv_03.json
+  2026-05-07T06:48:24Z -> firewall_sessions_ws_recv_03.json
+  2026-05-07T07:00:48Z -> firewall_sessions_ws_recv_03.json
+  2026-05-08 02:00:11 -> disk_analysis_report.txt
+  2026-05-08 02:00:11 -> disk_forensics_report.txt
+  2026-05-08 02:36:08 -> disk_forensics_report.txt
+  2026-05-08 02:38:11 -> disk_forensics_report.txt
+  2026-05-08 02:38:14 -> disk_analysis_report.txt
+  2026-05-08 02:38:14 -> disk_forensics_report.txt
+  2026-05-08T07:00:08Z -> firewall_sessions_ws_recv_03.json
+  2026-05-08T07:00:18Z -> firewall_sessions_ws_recv_03.json
+  2026-05-08T07:38:14Z -> firewall_sessions_ws_recv_03.json
+  2026-05-08T07:42:48Z -> firewall_sessions_ws_recv_03.json
+  2026-05-09 02:00:14 -> disk_forensics_report.txt
+  2026-05-09 02:46:11 -> disk_analysis_report.txt
+  2026-05-09 02:46:11 -> disk_forensics_report.txt
+  2026-05-09 02:49:22 -> disk_forensics_report.txt
+  2026-05-09 02:50:08 -> disk_forensics_report.txt
+  2026-05-09 02:51:14 -> disk_forensics_report.txt
+  2026-05-09T07:46:18Z -> firewall_sessions_ws_recv_03.json
+  2026-05-09T08:00:00Z -> firewall_sessions_ws_recv_03.json
+  2026-05-09T08:01:42Z -> firewall_sessions_ws_recv_03.json
+  2026-05-09T08:01:48Z -> firewall_sessions_ws_recv_03.json
+  2026-05-09T08:14:42Z -> firewall_sessions_ws_recv_03.json
+  2026-05-10 02:00:14 -> disk_forensics_report.txt
+  2026-05-11 02:00:11 -> disk_analysis_report.txt
+  2026-05-11 02:00:11 -> disk_forensics_report.txt
+  2026-05-11 03:14:42 -> disk_forensics_report.txt
+  2026-05-11 03:16:58 -> disk_forensics_report.txt
+  2026-05-11 03:17:01 -> disk_analysis_report.txt
+  2026-05-11 03:17:01 -> disk_forensics_report.txt
+  2026-05-11T08:17:18Z -> firewall_sessions_ws_recv_03.json
+  2026-05-11T08:21:08Z -> firewall_sessions_ws_recv_03.json
+  2026-05-12 02:00:14 -> disk_forensics_report.txt
+  2026-05-12 02:45:01 -> disk_analysis_report.txt
+  2026-05-12 02:45:01 -> disk_forensics_report.txt
+  2026-05-12 02:46:11 -> memory_artifacts.txt
+  2026-05-13 02:00:08 -> disk_forensics_report.txt
+  2026-05-13 02:08:56 -> disk_analysis_report.txt
+  2026-05-13 02:08:56 -> disk_forensics_report.txt
+  2026-05-13 02:09:34 -> memory_artifacts.txt
+  2026-05-13 02:11:11 -> disk_analysis_report.txt
+  2026-05-13 02:11:11 -> disk_forensics_report.txt
+  2026-05-13 02:12:02 -> disk_analysis_report.txt
+  2026-05-13 02:12:02 -> disk_forensics_report.txt
+  2026-05-13 02:13:38 -> disk_forensics_report.txt
+  2026-05-13 02:31:18 -> disk_forensics_report.txt
+  2026-05-13 02:33:42 -> disk_forensics_report.txt
+  2026-05-13 02:34:05 -> disk_analysis_report.txt
+  2026-05-13 02:34:05 -> disk_forensics_report.txt
+  2026-05-13 02:34:09 -> disk_analysis_report.txt
+  2026-05-13 02:34:09 -> disk_forensics_report.txt
+  2026-05-13T07:08:58Z -> firewall_sessions_ws_recv_03.json
+  2026-05-13T07:34:14Z -> firewall_sessions_ws_recv_03.json
+  2026-05-13T07:36:11Z -> firewall_sessions_ws_recv_03.json
+  2026-05-13T07:42:11Z -> firewall_sessions_ws_recv_03.json
+  2026-05-14 02:00:11 -> disk_forensics_report.txt
+  2026-05-15 02:00:11 -> disk_forensics_report.txt
+  2026-05-15 02:00:13 -> disk_forensics_report.txt
+  2026-05-15 02:00:14 -> disk_analysis_report.txt
+  2026-05-15 02:00:14 -> disk_forensics_report.txt
+  2026-05-15 02:00:14 -> memory_analysis_report.txt
+  2026-05-15 02:00:14 -> memory_artifacts.txt
+  2026-05-15 02:00:48 -> disk_analysis_report.txt
+  2026-05-15 02:00:48 -> disk_forensics_report.txt
+  2026-05-15 13:02:14 -> disk_analysis_report.txt
+  2026-05-15 13:02:14 -> disk_forensics_report.txt
+  2026-05-15 13:02:14 -> memory_analysis_report.txt
+  2026-05-15 13:02:14 -> memory_artifacts.txt
+  2026-05-15 13:03:09 -> memory_artifacts.txt
+  2026-05-15 13:11:42 -> memory_artifacts.txt
+  2026-05-15 14:18:42 -> disk_forensics_report.txt
+  2026-05-15 19:18:42 -> memory_artifacts.txt
+  2026-05-15T07:00:14Z -> firewall_sessions_ws_recv_03.json
+  2026-05-15T07:00:48Z -> firewall_sessions_ws_recv_03.json
+  2026-05-15T07:14:18Z -> firewall_sessions_ws_recv_03.json
+  2026-05-15T18:42:00Z -> firewall_sessions_ws_recv_03.json
+  2026-05-15T19:42:00Z -> firewall_sessions_ws_recv_03.json
+  2026-05-15T19:45:11Z -> disk_forensics_report.txt
+  2026-05-16T14:00:00Z -> firewall_sessions_ws_recv_03.json
+
+
+----------------------------------------------------------------
+ KEY ATTACK-STAGE EVIDENCE
+----------------------------------------------------------------
+
+[Persistence]
+  4x00_phishing_summary.txt
+  4x02_attack_mapping.json
+  4x03_malware_summary.txt
+  4x04_hunting_report.txt
+  memory_artifacts.txt
+  disk_forensics_report.txt
+  firewall_sessions_ws_recv_03.json
+  ir_team_notes.txt
+  memory_analysis_report.txt
+  disk_analysis_report.txt
+  Confidence: CONVERGED
+
+[Malware execution]
+  4x00_phishing_summary.txt
+  4x01_network_timeline.txt
+  4x02_attack_mapping.json
+  4x03_malware_summary.txt
+  4x04_hunting_report.txt
+  memory_artifacts.txt
+  disk_forensics_report.txt
+  ir_team_notes.txt
+  memory_analysis_report.txt
+  disk_analysis_report.txt
+  Confidence: CONVERGED
+
+[Phishing delivery]
+  4x00_phishing_summary.txt
+  4x01_network_timeline.txt
+  4x02_attack_mapping.json
+  4x03_malware_summary.txt
+  disk_forensics_report.txt
+  ir_team_notes.txt
+  disk_analysis_report.txt
+  Confidence: CONVERGED
+
+[Data staging]
+  4x01_network_timeline.txt
+  4x02_attack_mapping.json
+  4x03_malware_summary.txt
+  4x04_hunting_report.txt
+  memory_artifacts.txt
+  disk_forensics_report.txt
+  firewall_sessions_ws_recv_03.json
+  ir_team_notes.txt
+  memory_analysis_report.txt
+  disk_analysis_report.txt
+  Confidence: CONVERGED
+
+[C2 establishment]
+  4x00_phishing_summary.txt
+  4x01_network_timeline.txt
+  4x02_attack_mapping.json
+  4x03_malware_summary.txt
+  4x04_hunting_report.txt
+  memory_artifacts.txt
+  disk_forensics_report.txt
+  firewall_sessions_ws_recv_03.json
+  ir_team_notes.txt
+  memory_analysis_report.txt
+  disk_analysis_report.txt
+  Confidence: CONVERGED
+
+[Credential theft]
+  4x00_phishing_summary.txt
+  4x01_network_timeline.txt
+  4x02_attack_mapping.json
+  4x03_malware_summary.txt
+  4x04_hunting_report.txt
+  memory_artifacts.txt
+  disk_forensics_report.txt
+  firewall_sessions_ws_recv_03.json
+  ir_team_notes.txt
+  memory_analysis_report.txt
+  disk_analysis_report.txt
+  Confidence: CONVERGED
+
+[Lateral movement]
+  4x01_network_timeline.txt
+  4x02_attack_mapping.json
+  4x03_malware_summary.txt
+  4x04_hunting_report.txt
+  memory_artifacts.txt
+  disk_forensics_report.txt
+  firewall_sessions_ws_recv_03.json
+  ir_team_notes.txt
+  memory_analysis_report.txt
+  disk_analysis_report.txt
+  Confidence: CONVERGED
+
+[Exfiltration]
+  4x01_network_timeline.txt
+  4x02_attack_mapping.json
+  4x03_malware_summary.txt
+  4x04_hunting_report.txt
+  memory_artifacts.txt
+  disk_forensics_report.txt
+  firewall_sessions_ws_recv_03.json
+  ir_team_notes.txt
+  memory_analysis_report.txt
+  disk_analysis_report.txt
+  firewall_analysis_report.txt
+  Confidence: CONVERGED
+
+[Anti-forensics]
+  4x00_phishing_summary.txt
+  4x01_network_timeline.txt
+  4x03_malware_summary.txt
+  4x04_hunting_report.txt
+  memory_artifacts.txt
+  disk_forensics_report.txt
+  firewall_sessions_ws_recv_03.json
+  ir_team_notes.txt
+  memory_analysis_report.txt
+  disk_analysis_report.txt
+  Confidence: CONVERGED
+
+----------------------------------------------------------------
+ TIMELINE CONTRADICTIONS
+----------------------------------------------------------------
+Potential contradictions must be reviewed manually.
+
+Check for:
+  1. Same event with different timestamps
+  2. UTC vs local time
+  3. Firewall connection-start vs PCAP capture time
+  4. Endpoint collection time vs actual event time
+  5. Host clock skew
+  6. Evidence collection gaps
+
+Resolution rule:
+Prefer the source that directly records the event being
+reconstructed, and document why that source is authoritative.
+
+================================================================
+   TECHNIQUE CORRELATION
+================================================================
+
+ATT&CK techniques found across available evidence:
+
+TECHNIQUE            4x00   4x01   4x02   4x04   IR     UPDATE                        
+---------------------------------------------------------------------------------------------------------
+T1003.001            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1005                ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1021.002            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1021.006            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1027                ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1027.010            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1041                ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1047                ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1048.003            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1053.005            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1059.001            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1059.005            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1070.001            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1070.004            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1070.006            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1071.001            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1071.004            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1074.001            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1078                ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1078.002            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1105                ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1112                ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1140                ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1204.002            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1547.001            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1550.002            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1560.001            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1562.001            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1566.001            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1566.002            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1571                ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1573.001            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+T1583.001            ---    ---    ---    ---    ---                           
+SUPPORTED                                                                      
+
+
+----------------------------------------------------------------
+ TECHNIQUE STATUS
+----------------------------------------------------------------
+UPGRADED FROM INFERRED:
+  Review techniques appearing in 4x02 as INFERRED and
+  supported by independent evidence in 4x04 or IR.
+
+Techniques explicitly marked INFERRED in 4x02:
+26:    {"label": "INFERRED (advisory-mapped technique, not yet confirmed at MedDefense)", "color": "#ffcf00"},
+33:    {"name": "coverage_summary", "value": "11 OBSERVED / 5 INFERRED / 13 NOT COVERED = 38% OBSERVED, 55% MAPPED"},
+86:      "comment": "OBSERVED - 4x01 (TLS + RC4 wrap inferred from constant-size beacon body).",
+110:      "comment": "INFERRED - HC3 advisory describes .docm dropper requiring user enable-macros click. Sample not yet triaged at MedDefense (4x03 to confirm).",
+118:      "comment": "INFERRED - HC3 advisory mentions VBA macro execution.",
+126:      "comment": "INFERRED - Commercial intel feed reports PowerShell exfiltration script. Not yet observed at MedDefense.",
+134:      "comment": "INFERRED - HC3-002 references Run-key persistence in HEALTHBANE samples at other victims.",
+142:      "comment": "INFERRED - HC3 advisory describes obfuscated payloads. Not yet sample-confirmed at MedDefense.",
+166:      "comment": "INFERRED - HC3 advisory.  Commercial intel reports C2 upload of staged data at other victims.",
+174:      "comment": "INFERRED - HC3-002 mentions DNS exfiltration channel.",
+198:      "comment": "NOT COVERED - PsExec/SMB. Listed campaign-possible in HC3, not yet observed at MedDefense.",
+206:      "comment": "NOT COVERED - WinRM/PSRemoting. Listed campaign-possible.",
+214:      "comment": "NOT COVERED - WMI remote execution. Listed campaign-possible.",
+222:      "comment": "NOT COVERED - Domain service-account abuse hypothesis only.",
+230:      "comment": "NOT COVERED - Pass-the-Hash hypothesis only.",
+285:    "inferred": 5,
+
+NEW TECHNIQUES FROM IR:
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt:T1003.001
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt:T1005
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt:T1021.002
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt:T1021.006
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt:T1041
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt:T1047
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt:T1053.005
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt:T1070.001
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt:T1070.004
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt:T1074.001
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt:T1547.001
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt:T1560.001
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt:T1562.001
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/ir_team_notes.txt:T1070.004
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/ir_team_notes.txt:T1562.001
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/memory_artifacts.txt:T1005
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/memory_artifacts.txt:T1041
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/memory_artifacts.txt:T1053.005
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/memory_artifacts.txt:T1070.001
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/memory_artifacts.txt:T1074.001
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/memory_artifacts.txt:T1560.001
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/memory_artifacts.txt:T1562.001
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/memory_artifacts.txt:T1571
+
+================================================================
+   CRITICAL CONTRADICTIONS AND RESOLUTION
+================================================================
+
+This section searches for explicit contradiction language.
+
+
+SOURCE: 4x00_phishing_summary.txt
+92:                many unrelated campaigns) but timing and recipient
+104:  - Diane noticed the page did not match the internal portal
+115:(no logon-as-dmarsh observed at MedDefense after the rotation), but
+186:  Click attribution to dmarsh:  HIGH (browser history + user report
+203:on hosts beyond WS-RECV-03 -- but the credential-capture URLs
+206:ATT&CK MAPPING (CONTRIBUTION OF 4x00)
+227:  - The 4x00 sandbox confirmed credential capture but did NOT
+
+SOURCE: 4x01_network_timeline.txt
+23:HEALTHBANE-attributed flows, the C2 protocol fingerprint, and the
+27:TIMELINE OF HEALTHBANE-ATTRIBUTED FLOWS
+77:         but Diane's reply-to-yesterday's-helpdesk-ticket workflow
+163:window.  This was reported as "no lateral movement observed" but
+179:    185.220.101.45    (sync, update; HTTPS C2 + payload distribution)
+210:ATT&CK MAPPING (CONTRIBUTION OF 4x01)
+239:    exfiltration capability was deployed early but do NOT prove
+
+SOURCE: 4x02_attack_mapping.json
+5:  "description": "HEALTHBANE campaign ATT&CK coverage at the conclusion of project 4x02 (intelligence and threat-actor analysis). Combines IOCs from 4x00 phishing dissection, behavior from 4x01 network forensics, and HEALTHBANE attribution from HHS HC3 advisories 001-002, plus commercial threat-intel feeds. This layer represents what was KNOWN before the 4x03 malware triage and BEFORE direct on-host telemetry from the 4x04 hunt.",
+34:    {"name": "threat_model_size", "value": "29 techniques attributed to HEALTHBANE across all known victims"},
+182:      "comment": "NOT COVERED - Database targeting suspected from advisory but no MedDefense evidence.",
+246:      "comment": "NOT COVERED - Scheduled Task. Not described in HC3-001/002 but listed in commercial feed Q1 report.",
+
+SOURCE: 4x03_malware_summary.txt
+98:    the dropper but did NOT execute on WS-RECV-03 in 4x03.
+99:    (HOWEVER -- 4x05 IR forensics will need to verify this
+155:    (SetWindowsHookEx WH_KEYBOARD_LL) but it is gated by
+204:CAPABILITIES (NOT OBSERVED IN 4x03 SANDBOX BUT PRESENT IN CODE)
+249:                                            but no high-volume exfil
+271:ATT&CK MAPPING (CONTRIBUTION OF 4x03)
+298:exfiltrator was COPIED to SRV-HEALTH-DB but execution evidence
+
+SOURCE: 4x04_hunting_report.txt
+76:  AND agent.name DOES NOT MATCH "^WS-ADMIN-"
+104:       agent.name not matching WS-ADMIN.
+121:       agent.name not matching WS-ADMIN.
+181:without LSASS dump correlation, BUT H4 provided that
+225:             records03 (running tool) but PASSING svc_healthsync
+235:             Sysinternals binary but the 64-bit variant; Robert
+267:                   but could not confirm whether SQL queries
+293:ATT&CK MAPPING (CONTRIBUTION OF 4x04)
+339:    are the 4x04 contribution to the unified timeline.
+
+SOURCE: memory_artifacts.txt
+128:                                                              itself is no longer in memory but
+137:                                                              Sysinternals signed binary, but
+214:   SRV-HEALTH-DB but had no direct evidence of execution.
+298:but Section 8 confirms hb_cfg.json no longer exists in memory
+300:the bottom of the script.  However, the kernel's slack space
+349:are stale but the handle structures persist):
+375:   No discrepancies in either suspicious process.  This rules out
+417:        Tasks folder (see disk_forensics_report.txt Section 4) but
+440:        the event log retention policy.  However, see disk_forensics_report
+493:            two prior LSASS reads occurred (matching 4x04 H4) but the
+558:             references them but the files themselves are not in
+
+SOURCE: disk_forensics_report.txt
+60:                                            with exfil but does not
+150:      (SHA matches the official release).  However, its presence in
+176:but their MFT entries persist in the unallocated MFT range, and the
+250:         This includes service account attributes (which is how the
+410:                                but exfil staging was 1h later -- consistent
+465:   the SRV side, not on WS-RECV-03.  However WS-RECV-03 has its
+640:NOT observed (and would be suspicious if present, but are not):
+663:clearing, AV exclusion) but did not perform ADVANCED anti-forensics
+668:sufficient, but the cluster contents were still intact at the time
+
+SOURCE: firewall_sessions_ws_recv_03.json
+155:      "_note_aggregate": "[Between 2026-05-05T08:22 and 2026-05-05T20:00, KNOWN_C2 sessions show approximately 80 elevated-bytes sessions, summing to 23 884 219 bytes outbound -- consistent with the full LSASS dump (out.dat ~ 23 MB).  This is exfil of the credential-dump output.  Beacon cadence remains 5-minute but bytes_out per session climbed from 1 KB to 200 KB+ during this window.]"
+296:      "_note": "There is a 12-minute window where firewall sessions are CONTINUING to be logged (the firewall's logging is not affected by host-side wevtutil cl), but the host's Windows Security event log was cleared (per disk_forensics_report.txt Section 6, Security.evtx was deleted-and-recreated at 03:01:42 CDT = 08:01:42 UTC).  The discrepancy between firewall ts and host ts is the 4-second skew (firewall runs ~ 4s ahead).  Sessions continue to be reported below."
+379:      "_note": "Scheduled task 02:00 CDT trigger.  Exfiltrator ran but received an EMPTY query response from the C2 config (the C2 config returned no useful query that day -- attacker may have been preparing to wind down).  No exfil burst followed."
+468:      "F5.  HIPAA breach impact assessment based on firewall data: 47 138 + 51 002 = 98 140 patient + insurance records confirmed exfiltrated.  AD enumeration of 1184 records adds reconnaissance evidence but those are not patient records.  The 98 140-record figure is the basis for breach notification."
+
+SOURCE: ir_team_notes.txt
+7:  Contributors:          James Chen, Mike Torres (DFIR), Robert Kim
+29:Lines tagged [MED] are observations the author believes likely but has
+39:Lines tagged [TODO] are things the author intended to follow up on but
+64:       cannot attribute the ATTACKER's actions to any single individual --
+87:but powered).  This was a deliberate decision to preserve the live
+138:       it.  But "clean up obvious malware" before forensics is exactly how
+144:He named WS-RECV-04 and WS-RECV-07 specifically.  But he could NOT show
+184:       I lean (b) but cannot prove.
+219:size, but they should match within ~ 5% if my reading is right.
+233:A (JC): The host is isolated; the C2 traffic is blocked.  But svchost_update.exe
+242:       CSVs.  Plus 1184 AD user records (this is reconnaissance, not PHI, but
+284:       capability matrix entry which said "capability EXISTS but did NOT
+286:       it, but the C2 evidently sent a "klog":1-equivalent flag for the
+334:         being treated as observed-but-unmodified.  No integrity issue.
+357:      undetected for weeks more.  The exfil rate was steady but not
+379:       4x05.md.  I'm available for consultation but not for help
+402:          but the binary doesn't have the IP hardcoded (per disk
+410:          observed at MedDefense after the rotation" but did not say
+
+SOURCE: memory_analysis_report.txt
+125:375:   No discrepancies in either suspicious process.  This rules out
+316:493:            two prior LSASS reads occurred (matching 4x04 H4) but the
+448:  Indicator was observed in memory but is not present in the IOC database.
+452:  Related to a known indicator but appears as a variant or modified form.
+461:  Technique is logically consistent, but evidence is limited or ambiguous.
+
+SOURCE: disk_analysis_report.txt
+23:176:but their MFT entries persist in the unallocated MFT range, and the
+82:410:                                but exfil staging was 1h later -- consistent
+423:176:but their MFT entries persist in the unallocated MFT range, and the
+513:663:clearing, AV exclusion) but did not perform ADVANCED anti-forensics
+527:176:but their MFT entries persist in the unallocated MFT range, and the
+593:60:                                            with exfil but does not
+617:410:                                but exfil staging was 1h later -- consistent
+
+
+----------------------------------------------------------------
+ RECOMMENDED CONTRADICTION RESOLUTION PROCESS
+----------------------------------------------------------------
+For each contradiction:
+
+1. Identify the exact event.
+2. Record the timestamp from each source.
+3. Normalize timestamps to UTC.
+4. Check timezone differences.
+5. Check endpoint clock skew.
+6. Check whether one source records:
+     - event creation
+     - connection initiation
+     - packet capture
+     - evidence collection
+7. Prefer the source closest to the actual event.
+8. Document the reason for choosing the authoritative timestamp.
+9. If unresolved, keep the event as CONFLICTED.
+
+
+================================================================
+   CORRELATION SUMMARY
+================================================================
+
+Evidence files analyzed: 12
+
+IOC classification:
+  CONVERGED     = supported by multiple independent sources
+  SINGLE-SOURCE = supported by one source
+  CONFLICTED    = requires manual contradiction analysis
+
+New IR IOCs: 13
+
+Important interpretation:
+  CONVERGED evidence generally provides stronger confidence.
+  SINGLE-SOURCE evidence may still be valid if other sources
+  lacked visibility.
+  Absence of evidence is NOT automatically evidence of absence.
+
+Attack reconstruction should therefore combine:
+
+  4x00  -> Initial access / phishing evidence
+  4x01  -> Network activity
+  4x02  -> ATT&CK mapping
+  4x03  -> Malware behavior
+  4x04  -> Threat hunting / lateral movement
+  IR    -> Memory + disk + firewall + incident response evidence
+
+Final confidence should be assigned to the reconstructed attack
+chain only after reviewing convergences, contradictions, and gaps.
+
+================================================================
+   END OF CORRELATION REPORT
+================================================================
