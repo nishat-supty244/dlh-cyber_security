@@ -1,41 +1,77 @@
 #!/bin/bash
-#
+
+# ================================================================
 # 4-correlation_matrix.sh
 #
+# 4x05 Attack Reconstruction - Task 4
+#
 # Purpose:
-#   Cross-reference evidence from T0-T3, previous findings,
-#   and IR evidence to build:
-#     1. IOC correlation matrix
-#     2. Timeline correlation matrix
-#     3. ATT&CK technique correlation matrix
-#     4. Contradiction and evidence-gap summary
+#   Correlate evidence from:
+#     - T0 Evidence Inventory
+#     - T1 Memory Analysis
+#     - T2 Disk Analysis
+#     - T3 Firewall Analysis
+#     - 4x00 Phishing
+#     - 4x01 Network Timeline
+#     - 4x02 ATT&CK Mapping
+#     - 4x03 Malware Summary
+#     - 4x04 Threat Hunting
+#     - IR evidence
 #
-# Project:
-#   4x05 Attack Reconstruction
+# Output:
+#   task4_output/correlation_matrix_report.txt
 #
-# Requirements:
-#   jq, grep, sort, uniq, wc, date, awk, cut, tr
-#
-# Run from:
-#   threat_detection/4x05_attack_reconstruction/
-#
+# ================================================================
 
 set -uo pipefail
 
-# ================================================================
-# CONFIGURATION
-# ================================================================
-
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# ================================================================
+# REQUIRED DIRECTORIES
+# ================================================================
+
+PREVIOUS_DIR="$BASE_DIR/previous_findings"
 IR_DIR="$BASE_DIR/ir_evidence"
-PREV_DIR="$BASE_DIR/previous_findings"
-REF_DIR="$BASE_DIR/reference"
+
+TASK0_DIR="$BASE_DIR/task0_output"
+TASK1_DIR="$BASE_DIR/task1_output"
+TASK2_DIR="$BASE_DIR/task2_output"
+TASK3_DIR="$BASE_DIR/task3_output"
 
 OUTPUT_DIR="$BASE_DIR/task4_output"
-REPORT="$OUTPUT_DIR/correlation_matrix_report.txt"
 
 mkdir -p "$OUTPUT_DIR"
+
+REPORT="$OUTPUT_DIR/correlation_matrix_report.txt"
+
+# ================================================================
+# REQUIRED PREVIOUS FINDINGS
+# ================================================================
+
+PHISHING="$PREVIOUS_DIR/4x00_phishing_summary.txt"
+NETWORK="$PREVIOUS_DIR/4x01_network_timeline.txt"
+ATTACK_MAPPING="$PREVIOUS_DIR/4x02_attack_mapping.json"
+MALWARE="$PREVIOUS_DIR/4x03_malware_summary.txt"
+HUNTING="$PREVIOUS_DIR/4x04_hunting_report.txt"
+
+# ================================================================
+# REQUIRED CURRENT IR EVIDENCE
+# ================================================================
+
+MEMORY="$IR_DIR/memory_artifacts.txt"
+DISK="$IR_DIR/disk_forensics_report.txt"
+FIREWALL="$IR_DIR/firewall_sessions_ws_recv_03.json"
+IR_NOTES="$IR_DIR/ir_team_notes.txt"
+
+# ================================================================
+# T0-T3 OUTPUTS
+# ================================================================
+
+T0_OUTPUT="$TASK0_DIR/evidence_inventory_report.txt"
+T1_OUTPUT="$TASK1_DIR/memory_analysis_report.txt"
+T2_OUTPUT="$TASK2_DIR/disk_analysis_report.txt"
+T3_OUTPUT="$TASK3_DIR/firewall_analysis_report.txt"
 
 # ================================================================
 # HELPER FUNCTIONS
@@ -55,373 +91,377 @@ subsection() {
     echo "----------------------------------------------------------------"
 }
 
-file_exists() {
+exists() {
     [[ -f "$1" ]]
 }
 
-# Print file contents safely
-print_file_if_exists() {
-    local file="$1"
-
-    if [[ -f "$file" ]]; then
-        cat "$file"
-    else
-        echo "[MISSING] $file"
-    fi
+source_name() {
+    basename "$1"
 }
 
 # ================================================================
-# START REPORT
+# INITIAL REPORT
+# ================================================================
+
+cat > "$REPORT" <<EOF
+================================================================
+   CROSS-EVIDENCE CORRELATION MATRIX
+================================================================
+
+Project: 4x05 Attack Reconstruction
+Generated: $(date)
+
+Purpose:
+Correlate findings from current IR evidence, T0-T3 outputs,
+and all previous_findings summaries.
+
+Evidence confidence:
+  CONVERGED     = supported by 2 or more independent sources
+  SINGLE-SOURCE = supported by one source only
+  CONFLICTED    = sources provide apparently inconsistent evidence
+
+Important:
+Missing evidence is reported as a gap.
+Missing evidence is NOT treated as evidence that an event did not occur.
+
+================================================================
+
+EOF
+
+# ================================================================
+# 1. CHECK REQUIRED SOURCES
 # ================================================================
 
 {
-echo "================================================================"
-echo "   CROSS-EVIDENCE CORRELATION MATRIX"
-echo "================================================================"
-echo
-echo "Project: 4x05 Attack Reconstruction"
-echo "Generated: $(date)"
-echo
-echo "Purpose:"
-echo "Correlate findings from previous analysis, IR memory, disk,"
-echo "firewall, and other available evidence sources."
-echo
-echo "Important:"
-echo "This report only uses evidence actually present in the files."
-echo "Example values from the task instructions are NOT treated as"
-echo "actual findings."
-echo
-} > "$REPORT"
-
-# ================================================================
-# 1. DISCOVER AVAILABLE EVIDENCE
-# ================================================================
-
-{
-section "EVIDENCE INVENTORY"
+section "REQUIRED EVIDENCE SOURCES"
 
 echo
-echo "Previous findings:"
-if [[ -d "$PREV_DIR" ]]; then
-    find "$PREV_DIR" -type f -maxdepth 1 -print | sort
-else
-    echo "[MISSING] $PREV_DIR"
-fi
-
+echo "PREVIOUS FINDINGS:"
 echo
-echo "IR evidence:"
-if [[ -d "$IR_DIR" ]]; then
-    find "$IR_DIR" -type f -maxdepth 1 -print | sort
-else
-    echo "[MISSING] $IR_DIR"
-fi
 
-echo
-echo "Task outputs:"
-for dir in \
-    "$BASE_DIR/task0_output" \
-    "$BASE_DIR/task1_output" \
-    "$BASE_DIR/task2_output" \
-    "$BASE_DIR/task3_output"
+for file in \
+    "$PHISHING" \
+    "$NETWORK" \
+    "$ATTACK_MAPPING" \
+    "$MALWARE" \
+    "$HUNTING"
 do
-    if [[ -d "$dir" ]]; then
-        echo
-        echo "[$dir]"
-        find "$dir" -type f -maxdepth 1 -print | sort
+    if exists "$file"; then
+        echo "[OK]      $file"
+    else
+        echo "[MISSING] $file"
+    fi
+done
+
+echo
+echo "CURRENT IR EVIDENCE:"
+echo
+
+for file in \
+    "$MEMORY" \
+    "$DISK" \
+    "$FIREWALL" \
+    "$IR_NOTES"
+do
+    if exists "$file"; then
+        echo "[OK]      $file"
+    else
+        echo "[MISSING] $file"
+    fi
+done
+
+echo
+echo "T0-T3 OUTPUTS:"
+echo
+
+for file in \
+    "$T0_OUTPUT" \
+    "$T1_OUTPUT" \
+    "$T2_OUTPUT" \
+    "$T3_OUTPUT"
+do
+    if exists "$file"; then
+        echo "[OK]      $file"
+    else
+        echo "[MISSING] $file"
     fi
 done
 
 } >> "$REPORT"
 
 # ================================================================
-# 2. BUILD SOURCE LIST
+# 2. BUILD EXPLICIT SOURCE LIST
 # ================================================================
 
-# We collect the files that actually exist.
-# This prevents the script from treating missing files as evidence.
+# This list intentionally contains every required source explicitly.
 
-SOURCE_FILES=()
-
-for file in \
-    "$PREV_DIR/4x00_phishing_summary.txt" \
-    "$PREV_DIR/4x01_network_timeline.txt" \
-    "$PREV_DIR/4x02_attack_mapping.json" \
-    "$PREV_DIR/4x03_malware_summary.txt" \
-    "$PREV_DIR/4x04_hunting_report.txt" \
-    "$IR_DIR/memory_artifacts.txt" \
-    "$IR_DIR/disk_forensics_report.txt" \
-    "$IR_DIR/firewall_sessions_ws_recv_03.json" \
-    "$IR_DIR/ir_team_notes.txt" \
-    "$BASE_DIR/task0_output/evidence_inventory_report.txt" \
-    "$BASE_DIR/task1_output/memory_analysis_report.txt" \
-    "$BASE_DIR/task2_output/disk_analysis_report.txt" \
-    "$BASE_DIR/task3_output/firewall_analysis_report.txt"
-do
-    if [[ -f "$file" ]]; then
-        SOURCE_FILES+=("$file")
-    fi
-done
+SOURCE_FILES=(
+    "$PHISHING"
+    "$NETWORK"
+    "$ATTACK_MAPPING"
+    "$MALWARE"
+    "$HUNTING"
+    "$MEMORY"
+    "$DISK"
+    "$FIREWALL"
+    "$IR_NOTES"
+    "$T0_OUTPUT"
+    "$T1_OUTPUT"
+    "$T2_OUTPUT"
+    "$T3_OUTPUT"
+)
 
 # ================================================================
-# 3. IOC CORRELATION
+# 3. IOC CORRELATION MATRIX
 # ================================================================
 
 {
 section "IOC CORRELATION"
 
 echo
-echo "The script searches the available evidence for:"
-echo "  - IPv4 addresses"
+echo "IOC types searched:"
+echo "  - IP addresses"
 echo "  - domains"
-echo "  - process/file names"
-echo "  - account names"
+echo "  - file names"
+echo "  - process names"
 echo "  - hashes"
-echo
-echo "Classification:"
-echo "  CONVERGED     = IOC appears in 2 or more independent sources"
-echo "  SINGLE-SOURCE = IOC appears in only one source"
-echo "  CONFLICTED    = IOC has evidence suggesting disagreement/context conflict"
+echo "  - account names"
 echo
 
-# Temporary files
-IOC_ALL="/tmp/4x05_ioc_all_$$.txt"
-IOC_SOURCE="/tmp/4x05_ioc_source_$$.txt"
+echo "IOC MATRIX:"
+echo
 
-: > "$IOC_ALL"
-: > "$IOC_SOURCE"
+printf "%-32s %-5s %-5s %-5s %-5s %-5s %-5s %s\n" \
+    "IOC" "4x00" "4x01" "4x02" "4x03" "4x04" "IR" "STATUS"
+
+echo "------------------------------------------------------------------------------------------------"
+
+IOC_FILE="/tmp/4x05_iocs_$$.txt"
+: > "$IOC_FILE"
 
 # ------------------------------------------------
-# Extract IPv4 addresses
+# Extract IOCs from every source
 # ------------------------------------------------
 
 for file in "${SOURCE_FILES[@]}"; do
 
-    source_name="$(basename "$file")"
+    if [[ ! -f "$file" ]]; then
+        continue
+    fi
 
+    # IPv4 addresses
     grep -Eo \
         '\b([0-9]{1,3}\.){3}[0-9]{1,3}\b' \
         "$file" 2>/dev/null |
         sort -u |
-        while read -r ioc; do
-            echo "$ioc|$source_name" >> "$IOC_SOURCE"
-            echo "$ioc" >> "$IOC_ALL"
+        while read -r value; do
+            [[ -n "$value" ]] && echo "$value|$(basename "$file")" >> "$IOC_FILE"
         done
 
-done
-
-# ------------------------------------------------
-# Extract domains
-# ------------------------------------------------
-
-for file in "${SOURCE_FILES[@]}"; do
-
-    source_name="$(basename "$file")"
-
+    # Domains
     grep -Eio \
         '\b[a-z0-9][a-z0-9.-]+\.(com|net|org|io|xyz|info|biz|ru|top|site|online)\b' \
         "$file" 2>/dev/null |
         tr '[:upper:]' '[:lower:]' |
         sort -u |
-        while read -r ioc; do
-            echo "$ioc|$source_name" >> "$IOC_SOURCE"
-            echo "$ioc" >> "$IOC_ALL"
+        while read -r value; do
+            [[ -n "$value" ]] && echo "$value|$(basename "$file")" >> "$IOC_FILE"
         done
 
-done
-
-# ------------------------------------------------
-# Extract hashes
-# ------------------------------------------------
-
-for file in "${SOURCE_FILES[@]}"; do
-
-    source_name="$(basename "$file")"
-
+    # MD5 / SHA1 / SHA256
     grep -Eio \
         '\b[a-f0-9]{32}\b|\b[a-f0-9]{40}\b|\b[a-f0-9]{64}\b' \
         "$file" 2>/dev/null |
         tr '[:upper:]' '[:lower:]' |
         sort -u |
-        while read -r ioc; do
-            echo "$ioc|$source_name" >> "$IOC_SOURCE"
-            echo "$ioc" >> "$IOC_ALL"
+        while read -r value; do
+            [[ -n "$value" ]] && echo "$value|$(basename "$file")" >> "$IOC_FILE"
         done
 
-done
-
-# ------------------------------------------------
-# Extract common suspicious process/file names
-# ------------------------------------------------
-
-for file in "${SOURCE_FILES[@]}"; do
-
-    source_name="$(basename "$file")"
-
+    # Executable / script names
     grep -Eio \
-        '\b[a-zA-Z0-9_-]+\.(exe|dll|ps1|bat|cmd|vbs|js)\b' \
+        '\b[a-zA-Z0-9_.-]+\.(exe|dll|ps1|bat|cmd|vbs|js)\b' \
         "$file" 2>/dev/null |
         tr '[:upper:]' '[:lower:]' |
         sort -u |
-        while read -r ioc; do
-            echo "$ioc|$source_name" >> "$IOC_SOURCE"
-            echo "$ioc" >> "$IOC_ALL"
+        while read -r value; do
+            [[ -n "$value" ]] && echo "$value|$(basename "$file")" >> "$IOC_FILE"
         done
 
 done
 
-# ------------------------------------------------
-# Extract common account names
-# ------------------------------------------------
+# Remove empty lines
+sed -i '/^[[:space:]]*$/d' "$IOC_FILE" 2>/dev/null
 
-ACCOUNT_NAMES="administrator|admin|system|svc_healthsync|healthsync|james.chen|diane.marsh"
-
-for file in "${SOURCE_FILES[@]}"; do
-
-    source_name="$(basename "$file")"
-
-    grep -Eio \
-        "\b($ACCOUNT_NAMES)\b" \
-        "$file" 2>/dev/null |
-        tr '[:upper:]' '[:lower:]' |
-        sort -u |
-        while read -r ioc; do
-            echo "$ioc|$source_name" >> "$IOC_SOURCE"
-            echo "$ioc" >> "$IOC_ALL"
-        done
-
-done
+CONVERGED_COUNT=0
+SINGLE_COUNT=0
 
 # ------------------------------------------------
-# Remove empty values
+# Print IOC matrix
 # ------------------------------------------------
 
-sed -i '/^[[:space:]]*$/d' "$IOC_ALL" "$IOC_SOURCE" 2>/dev/null
+if [[ -s "$IOC_FILE" ]]; then
 
-# ------------------------------------------------
-# Print matrix
-# ------------------------------------------------
+    sort -u "$IOC_FILE" |
+    cut -d'|' -f1 |
+    sort -u |
+    while read -r ioc; do
 
-printf "%-35s %-6s %-6s %-6s %-6s %-6s %-6s %s\n" \
-    "IOC" "4x00" "4x01" "4x02" "4x03" "4x04" "IR" "STATUS"
+        [[ -z "$ioc" ]] && continue
 
-echo "-------------------------------------------------------------------------------------------------------------"
+        sources="$(grep -F "^$ioc|" "$IOC_FILE" |
+            cut -d'|' -f2 |
+            sort -u)"
 
-CONVERGED=0
-SINGLE=0
-CONFLICTED=0
+        count="$(echo "$sources" | grep -c . || true)"
 
-sort -u "$IOC_ALL" |
-while read -r ioc; do
-
-    [[ -z "$ioc" ]] && continue
-
-    sources="$(grep -F "^$ioc|" "$IOC_SOURCE" 2>/dev/null |
-        cut -d'|' -f2 |
-        sort -u)"
-
-    count="$(echo "$sources" | grep -c . || true)"
-
-    mark_source() {
-        local pattern="$1"
-
-        if echo "$sources" | grep -qi "$pattern"; then
-            echo "YES"
+        if echo "$sources" | grep -q "4x00"; then
+            s00="YES"
         else
-            echo "---"
+            s00="---"
         fi
-    }
 
-    s00="$(mark_source "4x00")"
-    s01="$(mark_source "4x01")"
-    s02="$(mark_source "4x02")"
-    s03="$(mark_source "4x03")"
-    s04="$(mark_source "4x04")"
+        if echo "$sources" | grep -q "4x01"; then
+            s01="YES"
+        else
+            s01="---"
+        fi
 
-    if echo "$sources" | grep -Eqi "memory_artifacts|disk_forensics|firewall_sessions|ir_team_notes|task[0-3]"; then
-        ir="YES"
-    else
-        ir="---"
-    fi
+        if echo "$sources" | grep -q "4x02"; then
+            s02="YES"
+        else
+            s02="---"
+        fi
 
-    if [[ "$count" -ge 2 ]]; then
-        status="CONVERGED"
-    else
-        status="SINGLE-SOURCE"
-    fi
+        if echo "$sources" | grep -q "4x03"; then
+            s03="YES"
+        else
+            s03="---"
+        fi
 
-    printf "%-35s %-6s %-6s %-6s %-6s %-6s %-6s %s\n" \
-        "$ioc" "$s00" "$s01" "$s02" "$s03" "$s04" "$ir" "$status"
+        if echo "$sources" | grep -q "4x04"; then
+            s04="YES"
+        else
+            s04="---"
+        fi
 
-done
+        if echo "$sources" |
+            grep -Eq "memory_artifacts|disk_forensics|firewall_sessions|ir_team_notes|analysis_report"; then
+            ir="YES"
+        else
+            ir="---"
+        fi
+
+        if [[ "$count" -ge 2 ]]; then
+            status="CONVERGED"
+        else
+            status="SINGLE-SOURCE"
+        fi
+
+        printf "%-32s %-5s %-5s %-5s %-5s %-5s %-5s %s\n" \
+            "$ioc" "$s00" "$s01" "$s02" "$s03" "$s04" "$ir" "$status"
+
+    done
+
+else
+
+    echo "No IOC values were extracted."
+
+fi
 
 echo
-echo "Note:"
-echo "A SINGLE-SOURCE IOC is not automatically false."
-echo "It may reflect a visibility limitation in other evidence sources."
+echo "IOC interpretation:"
+echo "  CONVERGED     = same IOC found across multiple sources."
+echo "  SINGLE-SOURCE = IOC found in only one evidence source."
+echo "  A single-source IOC is not automatically false."
 
 # ================================================================
-# 4. NEW IOC DETECTION
+# 4. NEW IOC ANALYSIS
 # ================================================================
 
 subsection "NEW IOCs FROM IR EVIDENCE"
 
-echo "IR IOCs that do not appear in the previous findings:"
 echo
-
-NEW_COUNT=0
+echo "Comparing IR evidence against previous findings."
 
 IR_IOCS="/tmp/4x05_ir_iocs_$$.txt"
-PREV_IOCS="/tmp/4x05_prev_iocs_$$.txt"
+PREVIOUS_IOCS="/tmp/4x05_previous_iocs_$$.txt"
 
 : > "$IR_IOCS"
-: > "$PREV_IOCS"
+: > "$PREVIOUS_IOCS"
 
-for file in "$IR_DIR"/*; do
+# IR evidence
+for file in \
+    "$MEMORY" \
+    "$DISK" \
+    "$FIREWALL" \
+    "$IR_NOTES" \
+    "$T1_OUTPUT" \
+    "$T2_OUTPUT" \
+    "$T3_OUTPUT"
+do
 
-    [[ -f "$file" ]] || continue
+    if [[ -f "$file" ]]; then
 
-    grep -Eo \
-        '\b([0-9]{1,3}\.){3}[0-9]{1,3}\b' \
-        "$file" 2>/dev/null >> "$IR_IOCS"
+        grep -Eo \
+            '\b([0-9]{1,3}\.){3}[0-9]{1,3}\b' \
+            "$file" 2>/dev/null >> "$IR_IOCS"
 
-    grep -Eio \
-        '\b[a-z0-9][a-z0-9.-]+\.(com|net|org|io|xyz|info|biz|ru|top|site|online)\b' \
-        "$file" 2>/dev/null |
-        tr '[:upper:]' '[:lower:]' >> "$IR_IOCS"
+        grep -Eio \
+            '\b[a-z0-9][a-z0-9.-]+\.(com|net|org|io|xyz|info|biz|ru|top|site|online)\b' \
+            "$file" 2>/dev/null |
+            tr '[:upper:]' '[:lower:]' >> "$IR_IOCS"
+
+    fi
 
 done
 
-for file in "$PREV_DIR"/*; do
+# Previous findings
+for file in \
+    "$PHISHING" \
+    "$NETWORK" \
+    "$ATTACK_MAPPING" \
+    "$MALWARE" \
+    "$HUNTING"
+do
 
-    [[ -f "$file" ]] || continue
+    if [[ -f "$file" ]]; then
 
-    grep -Eo \
-        '\b([0-9]{1,3}\.){3}[0-9]{1,3}\b' \
-        "$file" 2>/dev/null >> "$PREV_IOCS"
+        grep -Eo \
+            '\b([0-9]{1,3}\.){3}[0-9]{1,3}\b' \
+            "$file" 2>/dev/null >> "$PREVIOUS_IOCS"
 
-    grep -Eio \
-        '\b[a-z0-9][a-z0-9.-]+\.(com|net|org|io|xyz|info|biz|ru|top|site|online)\b' \
-        "$file" 2>/dev/null |
-        tr '[:upper:]' '[:lower:]' >> "$PREV_IOCS"
+        grep -Eio \
+            '\b[a-z0-9][a-z0-9.-]+\.(com|net|org|io|xyz|info|biz|ru|top|site|online)\b' \
+            "$file" 2>/dev/null |
+            tr '[:upper:]' '[:lower:]' >> "$PREVIOUS_IOCS"
+
+    fi
 
 done
 
 sort -u "$IR_IOCS" -o "$IR_IOCS"
-sort -u "$PREV_IOCS" -o "$PREV_IOCS"
+sort -u "$PREVIOUS_IOCS" -o "$PREVIOUS_IOCS"
 
-while read -r ioc; do
+NEW_COUNT=0
 
-    [[ -z "$ioc" ]] && continue
+if [[ -s "$IR_IOCS" ]]; then
 
-    if ! grep -Fxqi "$ioc" "$PREV_IOCS"; then
-        echo "  NEW: $ioc"
-        NEW_COUNT=$((NEW_COUNT + 1))
-    fi
+    while read -r ioc; do
 
-done < "$IR_IOCS"
+        [[ -z "$ioc" ]] && continue
+
+        if ! grep -Fxqi "$ioc" "$PREVIOUS_IOCS"; then
+            echo "  NEW IR IOC: $ioc"
+            NEW_COUNT=$((NEW_COUNT + 1))
+        fi
+
+    done < "$IR_IOCS"
+
+fi
 
 echo
-echo "New IOC count: $NEW_COUNT"
+echo "New IR IOC count: $NEW_COUNT"
 
 } >> "$REPORT"
 
@@ -433,119 +473,153 @@ echo "New IOC count: $NEW_COUNT"
 section "TIMELINE CORRELATION"
 
 echo
-echo "The following section extracts timestamped evidence from"
-echo "available sources."
-echo
-echo "Interpretation:"
-echo "  CONVERGED = same event supported by multiple sources"
-echo "  LOWER CONFIDENCE = event appears in only one source"
-echo "  CONFLICT = same event appears with materially different times"
+echo "The timeline compares major attack events across evidence."
 echo
 
-TIMELINE_TEMP="/tmp/4x05_timeline_$$.txt"
-: > "$TIMELINE_TEMP"
+# ------------------------------------------------
+# Event patterns
+# ------------------------------------------------
 
-for file in "${SOURCE_FILES[@]}"; do
+declare -A EVENT_PATTERNS
 
-    source_name="$(basename "$file")"
+EVENT_PATTERNS["Phishing delivery"]="phishing|phish|email|attachment|malicious document"
+EVENT_PATTERNS["Credential theft"]="credential|password|credential dumping|lsass|ntlm"
+EVENT_PATTERNS["C2 establishment"]="c2|command.and.control|beacon|callback"
+EVENT_PATTERNS["Malware execution"]="malware|payload|executed|process"
+EVENT_PATTERNS["Persistence"]="scheduled task|run key|runonce|service"
+EVENT_PATTERNS["Lateral movement"]="psexec|lateral movement|remote service|wmic"
+EVENT_PATTERNS["Data staging"]="staging|staged|archive|zip|rar|7z|collected data"
+EVENT_PATTERNS["Exfiltration"]="exfil|outbound|upload|bytes_out"
+EVENT_PATTERNS["Anti-forensics"]="log clear|log deletion|timestamp manipulation|artifact removal"
 
-    # ISO timestamps
-    grep -Eo \
-        '[0-9]{4}-[0-9]{2}-[0-9]{2}[T ][0-9]{2}:[0-9]{2}:[0-9]{2}([.][0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})?' \
-        "$file" 2>/dev/null |
-        sort -u |
-        while read -r timestamp; do
-            echo "$timestamp|$source_name" >> "$TIMELINE_TEMP"
-        done
+printf "%-28s %-45s %-20s\n" \
+    "EVENT" "SOURCES" "CONFIDENCE"
 
-    # Common date/time format
-    grep -Eo \
-        '[0-9]{4}-[0-9]{2}-[0-9]{2}[[:space:]][0-9]{2}:[0-9]{2}:[0-9]{2}' \
-        "$file" 2>/dev/null |
-        sort -u |
-        while read -r timestamp; do
-            echo "$timestamp|$source_name" >> "$TIMELINE_TEMP"
-        done
+echo "-----------------------------------------------------------------------------------------------"
 
-done
+for event in \
+    "Phishing delivery" \
+    "Credential theft" \
+    "C2 establishment" \
+    "Malware execution" \
+    "Persistence" \
+    "Lateral movement" \
+    "Data staging" \
+    "Exfiltration" \
+    "Anti-forensics"
+do
 
-echo
-echo "TIMESTAMP / SOURCE SUMMARY"
-echo
+    pattern="${EVENT_PATTERNS[$event]}"
 
-if [[ -s "$TIMELINE_TEMP" ]]; then
+    FOUND_SOURCES=""
 
-    sort -u "$TIMELINE_TEMP" |
-    awk -F'|' '
-    {
-        print "  " $1 " -> " $2
-    }'
+    for file in \
+        "$PHISHING" \
+        "$NETWORK" \
+        "$ATTACK_MAPPING" \
+        "$MALWARE" \
+        "$HUNTING" \
+        "$MEMORY" \
+        "$DISK" \
+        "$FIREWALL" \
+        "$IR_NOTES" \
+        "$T0_OUTPUT" \
+        "$T1_OUTPUT" \
+        "$T2_OUTPUT" \
+        "$T3_OUTPUT"
+    do
 
-else
-    echo "  No recognizable timestamps found."
-fi
+        if [[ -f "$file" ]] &&
+           grep -Eiq "$pattern" "$file" 2>/dev/null; then
 
-echo
-subsection "KEY ATTACK-STAGE EVIDENCE"
+            if [[ -z "$FOUND_SOURCES" ]]; then
+                FOUND_SOURCES="$(basename "$file")"
+            else
+                FOUND_SOURCES="$FOUND_SOURCES,$(basename "$file")"
+            fi
 
-# Instead of inventing exact events, search for actual evidence
-# describing common attack stages.
-
-declare -A STAGES
-
-STAGES["Phishing delivery"]="phishing|email|attachment|malicious document|macro"
-STAGES["Credential theft"]="credential|password|credential dumping|lsass|ntlm|hash"
-STAGES["C2 establishment"]="c2|command.and.control|beacon|callback|connection"
-STAGES["Malware execution"]="execute|executed|process|payload|malware|svchost"
-STAGES["Persistence"]="scheduled task|scheduled task|run key|runonce|service"
-STAGES["Lateral movement"]="psexec|lateral movement|remote service|wmic|admin share"
-STAGES["Data staging"]="staging|staged|collected|archive|zip|rar|7z|csv"
-STAGES["Exfiltration"]="exfil|outbound|bytes_out|data transfer|upload"
-STAGES["Anti-forensics"]="log clear|log deletion|timestamp|artifact removal|wevtutil"
-
-for stage in "${!STAGES[@]}"; do
-
-    pattern="${STAGES[$stage]}"
-
-    echo
-    echo "[$stage]"
-
-    FOUND=0
-
-    for file in "${SOURCE_FILES[@]}"; do
-
-        if grep -Eiq "$pattern" "$file" 2>/dev/null; then
-            echo "  $(basename "$file")"
-            FOUND=$((FOUND + 1))
         fi
 
     done
 
-    if [[ "$FOUND" -ge 2 ]]; then
-        echo "  Confidence: CONVERGED"
-    elif [[ "$FOUND" -eq 1 ]]; then
-        echo "  Confidence: LOWER CONFIDENCE / SINGLE-SOURCE"
+    SOURCE_COUNT=0
+
+    if [[ -n "$FOUND_SOURCES" ]]; then
+        SOURCE_COUNT="$(echo "$FOUND_SOURCES" | tr ',' '\n' | wc -l)"
+    fi
+
+    if [[ "$SOURCE_COUNT" -ge 2 ]]; then
+        CONFIDENCE="CONVERGED"
+    elif [[ "$SOURCE_COUNT" -eq 1 ]]; then
+        CONFIDENCE="LOWER CONFIDENCE"
     else
-        echo "  No supporting evidence found in available files."
+        CONFIDENCE="NO EVIDENCE"
+        FOUND_SOURCES="---"
+    fi
+
+    printf "%-28s %-45s %-20s\n" \
+        "$event" "$FOUND_SOURCES" "$CONFIDENCE"
+
+done
+
+# ------------------------------------------------
+# Timestamp extraction
+# ------------------------------------------------
+
+subsection "TIMESTAMP EVIDENCE"
+
+echo
+echo "Timestamps found in current and previous evidence:"
+echo
+
+for file in \
+    "$PHISHING" \
+    "$NETWORK" \
+    "$ATTACK_MAPPING" \
+    "$MALWARE" \
+    "$HUNTING" \
+    "$MEMORY" \
+    "$DISK" \
+    "$FIREWALL" \
+    "$IR_NOTES" \
+    "$T1_OUTPUT" \
+    "$T2_OUTPUT" \
+    "$T3_OUTPUT"
+do
+
+    if [[ -f "$file" ]]; then
+
+        matches="$(grep -Eo \
+            '[0-9]{4}-[0-9]{2}-[0-9]{2}[T ][0-9]{2}:[0-9]{2}:[0-9]{2}([.][0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})?' \
+            "$file" 2>/dev/null |
+            sort -u |
+            head -20)"
+
+        if [[ -n "$matches" ]]; then
+
+            echo
+            echo "SOURCE: $(basename "$file")"
+            echo "$matches"
+
+        fi
+
     fi
 
 done
 
-subsection "TIMELINE CONTRADICTIONS"
+echo
+echo "Timestamp resolution checks:"
+echo "  - UTC versus local time"
+echo "  - endpoint clock skew"
+echo "  - firewall connection-start time"
+echo "  - PCAP capture time"
+echo "  - evidence collection time"
+echo "  - timezone conversion"
 
-echo "Potential contradictions must be reviewed manually."
 echo
-echo "Check for:"
-echo "  1. Same event with different timestamps"
-echo "  2. UTC vs local time"
-echo "  3. Firewall connection-start vs PCAP capture time"
-echo "  4. Endpoint collection time vs actual event time"
-echo "  5. Host clock skew"
-echo "  6. Evidence collection gaps"
-echo
-echo "Resolution rule:"
-echo "Prefer the source that directly records the event being"
-echo "reconstructed, and document why that source is authoritative."
+echo "If two sources show different times for the same event,"
+echo "the difference must be explained before assigning HIGH"
+echo "confidence."
 
 } >> "$REPORT"
 
@@ -557,248 +631,295 @@ echo "reconstructed, and document why that source is authoritative."
 section "TECHNIQUE CORRELATION"
 
 echo
-echo "ATT&CK techniques found across available evidence:"
+echo "ATT&CK techniques found in the evidence:"
 echo
 
-TECHNIQUE_TEMP="/tmp/4x05_techniques_$$.txt"
-: > "$TECHNIQUE_TEMP"
+TECHNIQUES="/tmp/4x05_techniques_$$.txt"
+
+: > "$TECHNIQUES"
 
 for file in "${SOURCE_FILES[@]}"; do
 
-    source_name="$(basename "$file")"
+    if [[ -f "$file" ]]; then
 
-    grep -Eo \
-        'T[0-9]{4}([.][0-9]{3})?' \
-        "$file" 2>/dev/null |
-        sort -u |
-        while read -r technique; do
-            echo "$technique|$source_name" >> "$TECHNIQUE_TEMP"
-        done
+        grep -Eo \
+            'T[0-9]{4}([.][0-9]{3})?' \
+            "$file" 2>/dev/null |
+            sort -u |
+            while read -r technique; do
+                [[ -n "$technique" ]] &&
+                    echo "$technique|$(basename "$file")" >> "$TECHNIQUES"
+            done
+
+    fi
 
 done
 
-if [[ -s "$TECHNIQUE_TEMP" ]]; then
+if [[ -s "$TECHNIQUES" ]]; then
 
-    printf "%-20s %-6s %-6s %-6s %-6s %-6s %-30s\n" \
+    printf "%-18s %-5s %-5s %-5s %-5s %-5s %s\n" \
         "TECHNIQUE" "4x00" "4x01" "4x02" "4x04" "IR" "UPDATE"
 
-    echo "---------------------------------------------------------------------------------------------------------"
+    echo "--------------------------------------------------------------------------------"
 
-    sort -u "$TECHNIQUE_TEMP" |
+    sort -u "$TECHNIQUES" |
     cut -d'|' -f1 |
     sort -u |
     while read -r technique; do
 
-        sources="$(grep -F "^$technique|" "$TECHNIQUE_TEMP" |
+        sources="$(grep -F "^$technique|" "$TECHNIQUES" |
             cut -d'|' -f2 |
             sort -u)"
 
-        mark() {
-            local pattern="$1"
+        if echo "$sources" | grep -q "4x00"; then
+            s00="YES"
+        else
+            s00="---"
+        fi
 
-            if echo "$sources" | grep -qi "$pattern"; then
-                echo "YES"
-            else
-                echo "---"
-            fi
-        }
+        if echo "$sources" | grep -q "4x01"; then
+            s01="YES"
+        else
+            s01="---"
+        fi
 
-        s00="$(mark "4x00")"
-        s01="$(mark "4x01")"
-        s02="$(mark "4x02")"
-        s04="$(mark "4x04")"
+        if echo "$sources" | grep -q "4x02"; then
+            s02="YES"
+        else
+            s02="---"
+        fi
+
+        if echo "$sources" | grep -q "4x04"; then
+            s04="YES"
+        else
+            s04="---"
+        fi
 
         if echo "$sources" |
-            grep -Eqi "memory_artifacts|disk_forensics|firewall_sessions|ir_team_notes|task[0-3]"; then
+            grep -Eq "memory_artifacts|disk_forensics|firewall_sessions|ir_team_notes|analysis_report"; then
             ir="YES"
         else
             ir="---"
         fi
 
-        # Determine update
+        # Determine status
         if [[ "$s02" == "YES" &&
               "$s04" == "YES" &&
               "$ir" == "YES" ]]; then
+
             update="UPGRADED / CONVERGED"
 
         elif [[ "$s02" == "YES" &&
                 "$ir" == "YES" ]]; then
-            update="4x02 + IR"
+
+            update="UPGRADED WITH IR"
 
         elif [[ "$s02" != "YES" &&
                 "$ir" == "YES" ]]; then
+
             update="NEW FROM IR"
 
         elif [[ "$s02" == "YES" ]]; then
+
             update="FROM 4x02"
 
         else
+
             update="SUPPORTED"
+
         fi
 
-        printf "%-20s %-6s %-6s %-6s %-6s %-30s\n" \
+        printf "%-18s %-5s %-5s %-5s %-5s %-5s %s\n" \
             "$technique" "$s00" "$s01" "$s02" "$s04" "$ir" "$update"
 
     done
 
 else
-    echo "No ATT&CK technique IDs were found."
+
+    echo "No ATT&CK technique identifiers found."
+
 fi
 
 echo
-subsection "TECHNIQUE STATUS"
+subsection "4x02 INFERRED TECHNIQUES"
 
-echo "UPGRADED FROM INFERRED:"
-echo "  Review techniques appearing in 4x02 as INFERRED and"
-echo "  supported by independent evidence in 4x04 or IR."
-
-if [[ -f "$PREV_DIR/4x02_attack_mapping.json" ]]; then
-
-    echo
-    echo "Techniques explicitly marked INFERRED in 4x02:"
+if [[ -f "$ATTACK_MAPPING" ]]; then
 
     grep -Ein \
-        'inferred|infer|possible|hypothes' \
-        "$PREV_DIR/4x02_attack_mapping.json" 2>/dev/null |
-        head -50
+        'inferred|infer|possible|hypothes|confidence' \
+        "$ATTACK_MAPPING" 2>/dev/null |
+        head -80
 
 else
-    echo
-    echo "[MISSING] 4x02_attack_mapping.json"
+
+    echo "[MISSING] $ATTACK_MAPPING"
+
 fi
 
 echo
-echo "NEW TECHNIQUES FROM IR:"
-grep -Eio \
-    'T[0-9]{4}([.][0-9]{3})?' \
-    "$IR_DIR"/* 2>/dev/null |
-    sort -u |
-    head -100
+echo "Interpretation:"
+echo "  If a technique was INFERRED in 4x02 and later supported"
+echo "  by independent evidence, it can be upgraded."
+echo
+echo "  If later evidence contradicts the 4x02 inference, it should"
+echo "  be corrected rather than retained simply because it was"
+echo "  previously reported."
 
 } >> "$REPORT"
 
 # ================================================================
-# 7. CONTRADICTION ANALYSIS
+# 7. CONTRADICTIONS AND GAPS
 # ================================================================
 
 {
-section "CRITICAL CONTRADICTIONS AND RESOLUTION"
+section "CRITICAL CONTRADICTIONS AND GAPS"
 
 echo
-echo "This section searches for explicit contradiction language."
+echo "Searching for explicit contradiction indicators:"
 echo
 
-CONTRADICTION_PATTERNS="contradict|conflict|inconsistent|discrep|mismatch|different timestamp|does not match|not match|however|but"
+CONTRADICTION_PATTERN="contradict|conflict|inconsistent|mismatch|discrepancy|does not match|not match"
 
-FOUND_CONTRADICTIONS=0
+CONTRADICTION_FOUND=0
 
 for file in "${SOURCE_FILES[@]}"; do
 
-    matches="$(grep -Ein "$CONTRADICTION_PATTERNS" "$file" 2>/dev/null |
-        head -30)"
+    if [[ -f "$file" ]]; then
 
-    if [[ -n "$matches" ]]; then
+        result="$(grep -Ein \
+            "$CONTRADICTION_PATTERN" \
+            "$file" 2>/dev/null |
+            head -20)"
 
-        echo
-        echo "SOURCE: $(basename "$file")"
-        echo "$matches"
+        if [[ -n "$result" ]]; then
 
-        FOUND_CONTRADICTIONS=$((FOUND_CONTRADICTIONS + 1))
+            echo
+            echo "SOURCE: $(basename "$file")"
+            echo "$result"
+
+            CONTRADICTION_FOUND=1
+
+        fi
+
     fi
 
 done
 
-if [[ "$FOUND_CONTRADICTIONS" -eq 0 ]]; then
-
-    echo "No explicit contradiction language was found."
-    echo
-    echo "This does NOT prove that no contradiction exists."
-    echo "Analysts should still compare timestamps and event descriptions."
-
+if [[ "$CONTRADICTION_FOUND" -eq 0 ]]; then
+    echo "No explicit contradiction statements found."
 fi
 
 echo
-subsection "RECOMMENDED CONTRADICTION RESOLUTION PROCESS"
+subsection "EVIDENCE GAPS"
 
-echo "For each contradiction:"
 echo
-echo "1. Identify the exact event."
-echo "2. Record the timestamp from each source."
-echo "3. Normalize timestamps to UTC."
-echo "4. Check timezone differences."
-echo "5. Check endpoint clock skew."
-echo "6. Check whether one source records:"
-echo "     - event creation"
-echo "     - connection initiation"
-echo "     - packet capture"
-echo "     - evidence collection"
-echo "7. Prefer the source closest to the actual event."
-echo "8. Document the reason for choosing the authoritative timestamp."
-echo "9. If unresolved, keep the event as CONFLICTED."
+echo "A missing source or missing event does NOT automatically mean"
+echo "the event did not happen."
+
+for file in \
+    "$PHISHING" \
+    "$NETWORK" \
+    "$ATTACK_MAPPING" \
+    "$MALWARE" \
+    "$HUNTING" \
+    "$MEMORY" \
+    "$DISK" \
+    "$FIREWALL" \
+    "$IR_NOTES" \
+    "$T0_OUTPUT" \
+    "$T1_OUTPUT" \
+    "$T2_OUTPUT" \
+    "$T3_OUTPUT"
+do
+
+    if [[ ! -f "$file" ]]; then
+        echo "  MISSING SOURCE: $file"
+    fi
+
+done
+
 echo
+echo "Possible visibility gaps to consider:"
+echo "  - PCAP collection window may be shorter than firewall logs."
+echo "  - Memory is a point-in-time snapshot."
+echo "  - Deleted files may not be fully recoverable."
+echo "  - Firewall metadata does not provide packet contents."
+echo "  - Absence of an IOC from a source may reflect collection limits."
 
 } >> "$REPORT"
 
 # ================================================================
-# 8. OVERALL SUMMARY
+# 8. FINAL SUMMARY
 # ================================================================
 
 {
-section "CORRELATION SUMMARY"
+section "FINAL CORRELATION SUMMARY"
 
 echo
-echo "Evidence files analyzed: ${#SOURCE_FILES[@]}"
+echo "The purpose of this task is to combine all evidence into one"
+echo "defensible attack reconstruction."
 echo
-echo "IOC classification:"
-echo "  CONVERGED     = supported by multiple independent sources"
-echo "  SINGLE-SOURCE = supported by one source"
-echo "  CONFLICTED    = requires manual contradiction analysis"
+
+echo "Evidence chain:"
 echo
-echo "New IR IOCs: $NEW_COUNT"
-echo
-echo "Important interpretation:"
-echo "  CONVERGED evidence generally provides stronger confidence."
-echo "  SINGLE-SOURCE evidence may still be valid if other sources"
-echo "  lacked visibility."
-echo "  Absence of evidence is NOT automatically evidence of absence."
-echo
-echo "Attack reconstruction should therefore combine:"
-echo
-echo "  4x00  -> Initial access / phishing evidence"
+echo "  4x00  -> Phishing / initial access"
 echo "  4x01  -> Network activity"
 echo "  4x02  -> ATT&CK mapping"
 echo "  4x03  -> Malware behavior"
-echo "  4x04  -> Threat hunting / lateral movement"
-echo "  IR    -> Memory + disk + firewall + incident response evidence"
+echo "  4x04  -> Threat hunting"
+echo "  IR    -> Memory / disk / firewall / IR notes"
 echo
-echo "Final confidence should be assigned to the reconstructed attack"
-echo "chain only after reviewing convergences, contradictions, and gaps."
 
-section "END OF CORRELATION REPORT"
+echo "Correlation rules:"
+echo
+echo "  CONVERGED:"
+echo "    Multiple independent sources support the same finding."
+echo
+echo "  SINGLE-SOURCE:"
+echo "    Only one source currently supports the finding."
+echo
+echo "  CONFLICTED:"
+echo "    Sources appear to disagree and require investigation."
+echo
+
+echo "Timeline rule:"
+echo "  Do not resolve timestamp differences by guessing."
+echo "  Check timezone, clock skew, collection timing and event type."
+
+echo
+echo "Technique rule:"
+echo "  A technique marked INFERRED in 4x02 should be upgraded only"
+echo "  when later evidence actually supports it."
+
+echo
+echo "Final analyst question:"
+echo
+echo "  Do the independent evidence sources converge on one attack"
+echo "  story, or are important parts still uncertain?"
+
+section "END OF CROSS-EVIDENCE CORRELATION"
 
 } >> "$REPORT"
 
 # ================================================================
-# CLEAN TEMP FILES
+# CLEAN TEMPORARY FILES
 # ================================================================
 
 rm -f \
-    "$IOC_ALL" \
-    "$IOC_SOURCE" \
+    "$IOC_FILE" \
     "$IR_IOCS" \
-    "$PREV_IOCS" \
-    "$TIMELINE_TEMP" \
-    "$TECHNIQUE_TEMP" \
+    "$PREVIOUS_IOCS" \
+    "$TECHNIQUES" \
     2>/dev/null
 
 # ================================================================
-# DISPLAY REPORT
+# DISPLAY RESULT
 # ================================================================
 
 cat "$REPORT"
 
 echo
 echo "================================================================"
-echo "Report saved to:"
+echo "Correlation report saved to:"
 echo "$REPORT"
 echo "================================================================"
