@@ -18,19 +18,19 @@ Common severity language for all MedDefense incidents. Applied from first alert 
 **SEV1**
 
 - Ransomware affecting Epic clinical systems across multiple MedDefense sites.
-- Confirmed exfiltration of patient records at scale from the approximately 180,000 active patient records held by MedDefense.
-- Epic or a patient monitoring system unavailable during active patient care at Main Hospital.
+- Confirmed exfiltration of patient records at scale.
+- Epic or patient monitoring systems unavailable during active patient care at Main Hospital.
 
 **SEV2**
 
-- Confirmed compromise of an account with access to Epic or the MedDefense LIS.
+- Confirmed compromise of an account with access to Epic or the MedDefense Laboratory Information System (LIS).
 - Malware confirmed on a clinical workstation at West Campus (wst-ws-NN.meddefense.local).
-- Suspected exfiltration of patient information from a clinical system under investigation.
+- Confirmed limited exposure of patient records or a partial outage affecting clinical services.
 
 **SEV3**
 
-- Suspicious authentication activity involving an account in meddefense.local, with no confirmed compromise.
-- Malware alert on a non-critical workstation with no evidence of spread to clinical systems.
+- Suspected unauthorized access to a MedDefense account, with no confirmed data exposure.
+- Malware detected on a non-critical workstation with no evidence of spread to clinical systems.
 - Degraded performance of Nexus Patient Scheduling without significant patient safety impact.
 
 **SEV4**
