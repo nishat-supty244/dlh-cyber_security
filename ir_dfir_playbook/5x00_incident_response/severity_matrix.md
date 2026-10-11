@@ -2,7 +2,7 @@
 
 **Purpose**
 
-Establish a common severity classification for all MedDefense incidents, from initial detection through closure. Severity is based on patient safety, data exposure, and service availability.
+Common severity language for all MedDefense incidents. Applied from first alert through closure.
 
 **Severity Matrix**
 
@@ -17,28 +17,28 @@ Establish a common severity classification for all MedDefense incidents, from in
 
 **SEV1**
 
-- Ransomware affecting clinical systems across multiple MedDefense sites.
-- Confirmed exfiltration of patient records at scale.
-- Patient monitoring systems offline during active patient care.
+- Ransomware affecting Epic clinical systems across multiple MedDefense sites.
+- Confirmed exfiltration of patient records at scale from the approximately 180,000 active patient records held by MedDefense.
+- Epic or a patient monitoring system unavailable during active patient care at Main Hospital.
 
 **SEV2**
 
-- Confirmed compromise of an account with access to clinical systems or patient records.
-- Malware confirmed on a workstation at a clinical site, with potential to spread.
-- Confirmed limited exposure of patient information or a partial outage affecting clinical services.
+- Confirmed compromise of an account with access to Epic or the MedDefense LIS.
+- Malware confirmed on a clinical workstation at West Campus (wst-ws-NN.meddefense.local).
+- Suspected exfiltration of patient information from a clinical system under investigation.
 
 **SEV3**
 
-- Suspected unauthorized access to a MedDefense system, with no confirmed data exposure.
-- Malware detected on a non-critical workstation, with no evidence of spread to clinical systems.
-- Degraded performance of a non-critical application or internal service without significant patient safety impact.
+- Suspicious authentication activity involving an account in meddefense.local, with no confirmed compromise.
+- Malware alert on a non-critical workstation with no evidence of spread to clinical systems.
+- Degraded performance of Nexus Patient Scheduling without significant patient safety impact.
 
 **SEV4**
 
 - A blocked phishing email with no evidence of user interaction or compromise.
-- A low-confidence security alert that requires routine validation.
-- An isolated policy violation with no confirmed compromise, data exposure, or service disruption.
+- A low-confidence Wazuh EDR or Splunk alert requiring routine validation.
+- An isolated security policy violation with no confirmed compromise, data exposure, or service disruption.
 
 **Escalation Rule**
 
-Severity must be reviewed at every incident status update and whenever new evidence becomes available. Raise severity immediately when evidence indicates greater patient safety impact, data exposure, or service disruption; use the highest applicable severity criterion. Lower severity only after containment is confirmed, the relevant risks are reassessed, and the IR Commander approves the downgrade. Record every severity change, its supporting evidence, and the approving role in the incident log.
+Severity is reviewed at every status update. It increases when new evidence raises patient safety, data exposure, or service availability to the next tier. It decreases only after confirmed containment and IR Commander approval.
