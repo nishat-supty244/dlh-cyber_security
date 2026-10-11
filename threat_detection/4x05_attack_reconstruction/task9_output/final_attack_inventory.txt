@@ -1,0 +1,162 @@
+========================================================================
+   HEALTHBANE ATT&CK TECHNIQUE INVENTORY (FINAL)
+   Techniques in generated inventory: 34
+   Threat-model denominator: 29
+========================================================================
+  #  Technique    Tactic               Conf       First ID   Status
+------------------------------------------------------------------------------------------
+  1  T1003.001    Credential Access    POSSIBLE   4x02       UNCHANGED
+  2  T1005        Collection           POSSIBLE   4x02       UNCHANGED
+  3  T1021.001    Review               POSSIBLE   4x05       NEW
+  4  T1021.002    Lateral Movement     POSSIBLE   4x02       UNCHANGED
+  5  T1021.006    Lateral Movement     POSSIBLE   4x02       UNCHANGED
+  6  T1027        Defense Evasion      POSSIBLE   4x02       UNCHANGED
+  7  T1027.010    Defense Evasion      POSSIBLE   4x02       UNCHANGED
+  8  T1041        Exfiltration         POSSIBLE   4x02       UNCHANGED
+  9  T1047        Lateral Movement     POSSIBLE   4x02       UNCHANGED
+ 10  T1048.003    Exfiltration         POSSIBLE   4x02       UNCHANGED
+ 11  T1053.005    Persistence          CONFIRMED  4x02       UPGRADED
+ 12  T1059.001    Execution            POSSIBLE   4x02       UNCHANGED
+ 13  T1059.005    Execution            POSSIBLE   4x02       UNCHANGED
+ 14  T1070.001    Defense Evasion      CONFIRMED  4x02       UPGRADED
+ 15  T1070.004    Review               POSSIBLE   4x05-IR    NEW
+ 16  T1070.006    Review               POSSIBLE   4x05       NEW
+ 17  T1071.001    Command And Control  POSSIBLE   4x01       UNCHANGED
+ 18  T1071.004    Command And Control  POSSIBLE   4x01       UNCHANGED
+ 19  T1074.001    Collection           CONFIRMED  4x02       UPGRADED
+ 20  T1078        Defense Evasion      POSSIBLE   4x00       UNCHANGED
+ 21  T1078.002    Defense Evasion      POSSIBLE   4x02       UNCHANGED
+ 22  T1105        Command And Control  POSSIBLE   4x01       UNCHANGED
+ 23  T1112        Defense Evasion      POSSIBLE   4x02       UNCHANGED
+ 24  T1140        Defense Evasion      POSSIBLE   4x02       UNCHANGED
+ 25  T1204.002    Execution            POSSIBLE   4x02       UNCHANGED
+ 26  T1547.001    Persistence          POSSIBLE   4x02       UNCHANGED
+ 27  T1550.002    Lateral Movement     POSSIBLE   4x02       UNCHANGED
+ 28  T1560.001    Collection           PROBABLE   4x02       UPGRADED
+ 29  T1562.001    Review               POSSIBLE   4x05-IR    NEW
+ 30  T1566.001    Initial Access       POSSIBLE   4x00       UNCHANGED
+ 31  T1566.002    Initial Access       POSSIBLE   4x00       UNCHANGED
+ 32  T1571        Review               POSSIBLE   4x05-IR    NEW
+ 33  T1573.001    Command And Control  POSSIBLE   4x01       UNCHANGED
+ 34  T1583.001    Resource Development POSSIBLE   4x00       UNCHANGED
+
+COVERAGE
+  Post-4x02 benchmark:         12/29 (41.4%)
+  Post-4x03 benchmark:         16/29 (55.2%)
+  Post-4x04 benchmark:         23/29 (79.3%)
+  Final evidence-supported:    4/29 (13.8%)
+
+STATUS COUNTS
+  UPGRADED: 4
+    T1053.005 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x05-IR:disk_forensics_report.txt; 4x05-IR:memory_artifacts.txt; 4x05:stage_4_reconstruction.txt
+    T1070.001 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt; 4x05-IR:disk_forensics_report.txt; 4x05-IR:memory_artifacts.txt; 4x05:stage_4_reconstruction.txt; 4x05:unified_timeline.txt
+    T1074.001 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt; 4x05-IR:disk_forensics_report.txt; 4x05-IR:memory_artifacts.txt; 4x05:stage_4_reconstruction.txt
+    T1560.001 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt; 4x05-IR:disk_forensics_report.txt; 4x05-IR:memory_artifacts.txt; 4x05:stage_4_reconstruction.txt
+  NEW: 5
+    T1021.001 Name/tactic require ATT&CK lookup | 4x05:stage_4_reconstruction.txt
+    T1070.004 Name/tactic require ATT&CK lookup | 4x05-IR:disk_forensics_report.txt
+    T1070.006 Name/tactic require ATT&CK lookup | 4x05:stage_4_reconstruction.txt
+    T1562.001 Name/tactic require ATT&CK lookup | 4x05-IR:memory_artifacts.txt
+    T1571 Name/tactic require ATT&CK lookup | 4x05-IR:memory_artifacts.txt
+  CORRECTED: 0
+  DOWNGRADED: 0
+  UNCHANGED: 25
+    T1003.001 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x04:4x04_hunting_report.txt; 4x05-IR:disk_forensics_report.txt; 4x05:stage_4_reconstruction.txt
+    T1005 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt; 4x05-IR:disk_forensics_report.txt; 4x05-IR:memory_artifacts.txt; 4x05:stage_4_reconstruction.txt
+    T1021.002 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x04:4x04_hunting_report.txt; 4x05-IR:disk_forensics_report.txt; 4x05:stage_4_reconstruction.txt
+    T1021.006 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x04:4x04_hunting_report.txt; 4x05-IR:disk_forensics_report.txt; 4x05:stage_4_reconstruction.txt
+    T1027 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+    T1027.010 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+    T1041 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt; 4x05-IR:disk_forensics_report.txt; 4x05-IR:memory_artifacts.txt
+    T1047 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x04:4x04_hunting_report.txt; 4x05-IR:disk_forensics_report.txt; 4x05:stage_4_reconstruction.txt
+    T1048.003 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+    T1059.001 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+    T1059.005 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+    T1071.001 Name not supplied in Navigator | 4x01:4x01_network_timeline.txt; 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+    T1071.004 Name not supplied in Navigator | 4x01:4x01_network_timeline.txt; 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+    T1078 Name not supplied in Navigator | 4x00:4x00_phishing_summary.txt; 4x01:4x01_network_timeline.txt; 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt; 4x04:4x04_hunting_report.txt; 4x05:stage_4_reconstruction.txt
+    T1078.002 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt; 4x04:4x04_hunting_report.txt; 4x05:stage_4_reconstruction.txt
+    T1105 Name not supplied in Navigator | 4x01:4x01_network_timeline.txt; 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+    T1112 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+    T1140 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+    T1204.002 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+    T1547.001 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt; 4x05-IR:disk_forensics_report.txt; 4x05:stage_4_reconstruction.txt
+    T1550.002 Name not supplied in Navigator | 4x02:4x02_attack_mapping.json; 4x04:4x04_hunting_report.txt; 4x05:stage_4_reconstruction.txt
+    T1566.001 Name not supplied in Navigator | 4x00:4x00_phishing_summary.txt; 4x02:4x02_attack_mapping.json
+    T1566.002 Name not supplied in Navigator | 4x00:4x00_phishing_summary.txt; 4x02:4x02_attack_mapping.json
+    T1573.001 Name not supplied in Navigator | 4x01:4x01_network_timeline.txt; 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+    T1583.001 Name not supplied in Navigator | 4x00:4x00_phishing_summary.txt; 4x02:4x02_attack_mapping.json
+
+REVIEW ITEMS / EVIDENCE GAPS
+  T1003.001 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x04:4x04_hunting_report.txt; 4x05-IR:disk_forensics_report.txt; 4x05:stage_4_reconstruction.txt
+  T1005 Name not supplied in Navigator: Review IR artifact patterns and prior mapping
+    Evidence: 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt; 4x05-IR:disk_forensics_report.txt; 4x05-IR:memory_artifacts.txt; 4x05:stage_4_reconstruction.txt
+  T1021.001 Name/tactic require ATT&CK lookup: Validate technique ID, name, tactic, and supporting artifact
+    Evidence: 4x05:stage_4_reconstruction.txt
+  T1021.002 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x04:4x04_hunting_report.txt; 4x05-IR:disk_forensics_report.txt; 4x05:stage_4_reconstruction.txt
+  T1021.006 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x04:4x04_hunting_report.txt; 4x05-IR:disk_forensics_report.txt; 4x05:stage_4_reconstruction.txt
+  T1027 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+  T1027.010 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+  T1041 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt; 4x05-IR:disk_forensics_report.txt; 4x05-IR:memory_artifacts.txt
+  T1047 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x04:4x04_hunting_report.txt; 4x05-IR:disk_forensics_report.txt; 4x05:stage_4_reconstruction.txt
+  T1048.003 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+  T1059.001 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+  T1059.005 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+  T1070.004 Name/tactic require ATT&CK lookup: Validate technique ID, name, tactic, and supporting artifact
+    Evidence: 4x05-IR:disk_forensics_report.txt
+  T1070.006 Name/tactic require ATT&CK lookup: Validate technique ID, name, tactic, and supporting artifact
+    Evidence: 4x05:stage_4_reconstruction.txt
+  T1071.001 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x01:4x01_network_timeline.txt; 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+  T1071.004 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x01:4x01_network_timeline.txt; 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+  T1078 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x00:4x00_phishing_summary.txt; 4x01:4x01_network_timeline.txt; 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt; 4x04:4x04_hunting_report.txt; 4x05:stage_4_reconstruction.txt
+  T1078.002 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt; 4x04:4x04_hunting_report.txt; 4x05:stage_4_reconstruction.txt
+  T1105 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x01:4x01_network_timeline.txt; 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+  T1112 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+  T1140 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+  T1204.002 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+  T1547.001 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt; 4x05-IR:disk_forensics_report.txt; 4x05:stage_4_reconstruction.txt
+  T1550.002 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x02:4x02_attack_mapping.json; 4x04:4x04_hunting_report.txt; 4x05:stage_4_reconstruction.txt
+  T1562.001 Name/tactic require ATT&CK lookup: Validate technique ID, name, tactic, and supporting artifact
+    Evidence: 4x05-IR:memory_artifacts.txt
+  T1566.001 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x00:4x00_phishing_summary.txt; 4x02:4x02_attack_mapping.json
+  T1566.002 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x00:4x00_phishing_summary.txt; 4x02:4x02_attack_mapping.json
+  T1571 Name/tactic require ATT&CK lookup: Validate technique ID, name, tactic, and supporting artifact
+    Evidence: 4x05-IR:memory_artifacts.txt
+  T1573.001 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x01:4x01_network_timeline.txt; 4x02:4x02_attack_mapping.json; 4x03:4x03_malware_summary.txt
+  T1583.001 Name not supplied in Navigator: Verify artifact and confidence against source evidence
+    Evidence: 4x00:4x00_phishing_summary.txt; 4x02:4x02_attack_mapping.json
+
+IMPORTANT LIMITATIONS
+  - Navigator score is used as a rough prior confidence only.
+  - Mentioning a technique ID or name is not proof it occurred.
+  - Keyword matches require manual validation against the original artifact.
+  - CORRECTED must be assigned by an analyst when earlier mapping is demonstrably wrong.
+  - Historical percentages above are assignment benchmarks, not recalculated history.
+  - Check the actual denominator and remaining gap before submitting.
+
+CSV inventory: /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task9_output/final_attack_inventory.csv
+Full report:   /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task9_output/final_attack_inventory.txt
+========================================================================
