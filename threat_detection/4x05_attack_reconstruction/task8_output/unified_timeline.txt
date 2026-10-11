@@ -1,0 +1,271 @@
+
+============================================================
+UNIFIED ATTACK TIMELINE - HEALTHBANE vs MedDefense
+============================================================
+Generated: 2026-10-11 16:55:00 UTC
+
+SOURCE REPORTS
+[AVAILABLE] T5 Stage 1-2: /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task5_output/stages_1_2_reconstruction.txt
+[MISSING] T6 Stage 3: not found
+[AVAILABLE] T7 Stage 4: /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt
+[AVAILABLE] 4x04 Hunt: /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x04_hunting_report.txt
+[AVAILABLE] IR Notes: /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/ir_team_notes.txt
+
+NOTE: Missing reports reduce timeline completeness.
+No example timestamp is treated as an actual finding.
+
+============================================================
+CHRONOLOGICAL SEQUENCE
+============================================================
+TIMESTAMP AS REPORTED        | ATT&CK        | SOURCE              | CONFIDENCE           | EVENT
+----------------------------+---------------+---------------------+----------------------+------------------------------
+2026-04-14                   | ---           | T7                  | REVIEW               | 247:A (JC): The phishing email reached Diane Marsh on 2026-04-14.  The Stage 2 RAT
+2026-04-14                   | ---           | T7                  | REVIEW               | 407:       E. The ~ 17-minute gap on 2026-04-14 between Diane's credential
+2026-04-14                   | ---           | T7                  | REVIEW               | 45:                                            logon was 2026-04-14)
+2026-04-14                   | ---           | T7                  | REVIEW               | 58:       Diane is the same user whose credentials were phished on 2026-04-14
+2026-04-14                   | ---           | T7                  | REVIEW               | 58:       Diane is the same user whose credentials were phished on 2026-04-14
+2026-04-14 13:18 UTC         | ---           | T7                  | REVIEW               | 168:474:            User: dmarsh@MEDDEFENSE.LOCAL    (last logon 2026-04-14 13:18 UTC)
+2026-04-14 13:18 UTC         | ---           | T7                  | REVIEW               | 168:474:            User: dmarsh@MEDDEFENSE.LOCAL    (last logon 2026-04-14 13:18 UTC)
+2026-04-14 13:18 UTC         | ---           | T7                  | REVIEW               | 474:            User: dmarsh@MEDDEFENSE.LOCAL    (last logon 2026-04-14 13:18 UTC)
+2026-04-22                   | ---           | T7                  | REVIEW               | 165:401:        2026-04-22.  Confirms persistence has been established for
+2026-04-22                   | ---           | T7                  | REVIEW               | 401:        2026-04-22.  Confirms persistence has been established for
+2026-04-22 06:14:20          | ---           | T7                  | REVIEW               | 283:64:648    564    lsass.exe                  SYSTEM              2026-04-22 06:14:20
+2026-04-22 06:14:20          | ---           | T7                  | REVIEW               | 64:648    564    lsass.exe                  SYSTEM              2026-04-22 06:14:20
+2026-05-04                   | ---           | T7                  | REVIEW               | 306:451:        2026-05-04 at 18:11 CDT.  This pre-dates the first credential
+2026-05-04                   | ---           | T7                  | REVIEW               | 451:        2026-05-04 at 18:11 CDT.  This pre-dates the first credential
+2026-05-04                   | ---           | T7                  | REVIEW               | 472:SECTION 6 -- $MFT TIMELINE  (relevant entries 2026-05-04 through 2026-05-13)
+2026-05-04 18:11             | ---           | T7                  | REVIEW               | 527:            2026-05-04 18:11 CDT, ~ 9h before first cred dump.
+2026-05-05  03:22            | ---           | T7                  | REVIEW               | 190:2026-05-05  03:22 CDT  Credential dump #1 (debug_tool.exe -> LSASS
+2026-05-05 03:22             | ---           | T7                  | REVIEW               | 452:        dump (2026-05-05 03:22 CDT) by ~ 9 hours and is consistent with
+2026-05-05 03:22:14          | ---           | T7                  | REVIEW               | 439:     2026-05-05 03:22:14     (cred dump #1)
+2026-05-05  03:22:18         | ---           | T7                  | REVIEW               | 485:2026-05-05  03:22:18   B,M,C C:\Windows\Temp\out.dat               [LSASS
+2026-05-06  01:58:14         | ---           | T7                  | REVIEW               | 280:491:2026-05-06  01:58:14   B,M,C C:\Users\Public\Tmp\PsExec64.exe       [tool
+2026-05-06  01:58:14         | ---           | T7                  | REVIEW               | 342:491:2026-05-06  01:58:14   B,M,C C:\Users\Public\Tmp\PsExec64.exe       [tool
+2026-05-06  01:58:14         | ---           | T7                  | REVIEW               | 460:491:2026-05-06  01:58:14   B,M,C C:\Users\Public\Tmp\PsExec64.exe       [tool
+2026-05-06  02:11:42         | ---           | T7                  | REVIEW               | 253:493:2026-05-06  02:11:42   A     PsExec64.exe                           [first exec]
+2026-05-06  02:11:42         | ---           | T7                  | REVIEW               | 281:493:2026-05-06  02:11:42   A     PsExec64.exe                           [first exec]
+2026-05-06  02:11:42         | ---           | T7                  | REVIEW               | 343:493:2026-05-06  02:11:42   A     PsExec64.exe                           [first exec]
+2026-05-06 02:11:42          | ---           | T7                  | REVIEW               | 203:429:     2026-05-06 02:11:42     (target SRV-HEALTH-DB per H1)
+2026-05-06 02:11:42          | ---           | T7                  | REVIEW               | 203:429:     2026-05-06 02:11:42     (target SRV-HEALTH-DB per H1)
+2026-05-06 02:11:42          | ---           | T7                  | REVIEW               | 429:     2026-05-06 02:11:42     (target SRV-HEALTH-DB per H1)
+2026-05-06  02:12            | ---           | T7                  | REVIEW               | 192:2026-05-06  02:12 CDT  PsExec session #1: WS-RECV-03 -> SRV-HEALTH-DB
+2026-05-06  02:12            | ---           | T7                  | REVIEW               | 192:2026-05-06  02:12 CDT  PsExec session #1: WS-RECV-03 -> SRV-HEALTH-DB
+2026-05-06  02:13:11         | ---           | T7                  | REVIEW               | 282:494:2026-05-06  02:13:11   A     C:\Windows\System32\Wbem\WMIC.exe      [exec, WMI]
+2026-05-06  02:13:11         | ---           | T7                  | REVIEW               | 344:494:2026-05-06  02:13:11   A     C:\Windows\System32\Wbem\WMIC.exe      [exec, WMI]
+2026-05-06 02:36:48          | ---           | T7                  | REVIEW               | 603:     \\SRV-HEALTH-DB\C$           (last access 2026-05-06 02:36:48)
+2026-05-07 01:47:33          | ---           | T7                  | REVIEW               | 679:                  Created 2026-05-07 01:47:33 CDT.  Daily 02:00.
+2026-05-07 01:47:33          | ---           | T7                  | REVIEW               | 240:392:SCHTASKS.EXE-B7E198C4.pf                2026-05-07 01:47:33     1 *          C:\Windows\System32\
+2026-05-07 01:47:33          | ---           | T7                  | REVIEW               | 392:SCHTASKS.EXE-B7E198C4.pf                2026-05-07 01:47:33     1 *          C:\Windows\System32\
+2026-05-08 02:00:11          | ---           | T7                  | REVIEW               | 149:414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip
+2026-05-08 02:00:11          | ---           | T7                  | REVIEW               | 200:414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip
+2026-05-08 02:00:11          | ---           | T7                  | REVIEW               | 414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip
+2026-05-08 02:00:11          | ---           | T7                  | REVIEW               | 414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip
+2026-05-08 02:00:11          | ---           | T7                  | REVIEW               | 619:414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip
+2026-05-08 02:00:11          | ---           | T7                  | REVIEW               | 83:414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip
+2026-05-08  02:38:14         | ---           | T7                  | REVIEW               | 161:513:2026-05-08  02:38:14   D     C:\Users\Public\Tmp\out_20260508023559.csv
+2026-05-08  02:38:14         | ---           | T7                  | REVIEW               | 466:513:2026-05-08  02:38:14   D     C:\Users\Public\Tmp\out_20260508023559.csv
+2026-05-08  02:38:14         | ---           | T7                  | REVIEW               | 513:2026-05-08  02:38:14   D     C:\Users\Public\Tmp\out_20260508023559.csv
+2026-05-08  02:38:14         | ---           | T7                  | REVIEW               | 513:2026-05-08  02:38:14   D     C:\Users\Public\Tmp\out_20260508023559.csv
+2026-05-08  02:38:14         | ---           | T7                  | REVIEW               | 89:513:2026-05-08  02:38:14   D     C:\Users\Public\Tmp\out_20260508023559.csv
+2026-05-09                   | ---           | T7                  | REVIEW               | 553:The Security.evtx file was deleted-and-recreated at 2026-05-09
+2026-05-09  02:46:11         | ---           | T7                  | REVIEW               | 284:519:2026-05-09  02:46:11   M     PsExec64.exe                           [second
+2026-05-09  02:46:11         | ---           | T7                  | REVIEW               | 345:519:2026-05-09  02:46:11   M     PsExec64.exe                           [second
+2026-05-09 03:00-03:12       | ---           | T7                  | REVIEW               | 509:629:  T1070.001  Clear Windows Event Logs   2026-05-09 03:00-03:12 CDT
+2026-05-09 03:00-03:12       | ---           | T7                  | REVIEW               | 629:  T1070.001  Clear Windows Event Logs   2026-05-09 03:00-03:12 CDT
+2026-05-09  03:40            | ---           | T7                  | REVIEW               | 196:2026-05-09  03:40 CDT  PsExec session #2: WS-RECV-03 -> SRV-INS-DB
+2026-05-11 02:00:11          | ---           | T7                  | REVIEW               | 148:408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip
+2026-05-11 02:00:11          | ---           | T7                  | REVIEW               | 199:408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip
+2026-05-11 02:00:11          | ---           | T7                  | REVIEW               | 408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip
+2026-05-11 02:00:11          | ---           | T7                  | REVIEW               | 408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip
+2026-05-11 02:00:11          | ---           | T7                  | REVIEW               | 616:408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip
+2026-05-11 02:00:11          | ---           | T7                  | REVIEW               | 81:408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip
+2026-05-11  03:17:01         | ---           | T7                  | REVIEW               | 165:537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]
+2026-05-11  03:17:01         | ---           | T7                  | REVIEW               | 166:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+2026-05-11  03:17:01         | ---           | T7                  | REVIEW               | 210:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+2026-05-11  03:17:01         | ---           | T7                  | REVIEW               | 48:537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]
+2026-05-11  03:17:01         | ---           | T7                  | REVIEW               | 49:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+2026-05-11  03:17:01         | ---           | T7                  | REVIEW               | 537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]
+2026-05-11  03:17:01         | ---           | T7                  | REVIEW               | 537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]
+2026-05-11  03:17:01         | ---           | T7                  | REVIEW               | 538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+2026-05-11  03:17:01         | ---           | T7                  | REVIEW               | 538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+2026-05-11  03:17:01         | ---           | T7                  | REVIEW               | 547:537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]
+2026-05-11  03:17:01         | ---           | T7                  | REVIEW               | 548:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+2026-05-11  03:17:01         | ---           | T7                  | REVIEW               | 627:537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]
+2026-05-11  03:17:01         | ---           | T7                  | REVIEW               | 628:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+2026-05-11  03:17:01         | ---           | T7                  | REVIEW               | 93:537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]
+2026-05-11  03:17:01         | ---           | T7                  | REVIEW               | 94:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+2026-05-12  02:45            | ---           | T7                  | REVIEW               | 199:2026-05-12  02:45 CDT  Credential dump #2 (re-dump of LSASS).
+2026-05-12  02:45:01         | ---           | T7                  | REVIEW               | 539:2026-05-12  02:45:01   M     C:\Windows\Temp\debug_tool.exe          [LSASS
+2026-05-12 02:45:01          | ---           | T7                  | REVIEW               | 438:     2026-05-12 02:45:01     (cred dump #2)
+2026-05-13                   | ---           | T7                  | REVIEW               | 422:   staging output (D1, D2 above).  Run on 2026-05-13 produced the
+2026-05-13                   | ---           | T7                  | REVIEW               | 620:422:   staging output (D1, D2 above).  Run on 2026-05-13 produced the
+2026-05-13                   | ---           | T7                  | REVIEW               | 84:422:   staging output (D1, D2 above).  Run on 2026-05-13 produced the
+2026-05-13  01:56            | ---           | T7                  | REVIEW               | 200:2026-05-13  01:56 CDT  PsExec session #3: WS-RECV-03 -> SRV-DC-01
+2026-05-13  02:08:56         | ---           | T7                  | REVIEW               | 287:544:2026-05-13  02:08:56   A     PsExec64.exe                            [3rd PsExec
+2026-05-13  02:08:56         | ---           | T7                  | REVIEW               | 347:544:2026-05-13  02:08:56   A     PsExec64.exe                            [3rd PsExec
+2026-05-13 02:08:56          | ---           | T7                  | REVIEW               | 236:386:PSEXEC64.EXE-7C291843.pf                2026-05-13 02:08:56     3 *          C:\Users\Public\Tmp\
+2026-05-13 02:08:56          | ---           | T7                  | REVIEW               | 271:386:PSEXEC64.EXE-7C291843.pf                2026-05-13 02:08:56     3 *          C:\Users\Public\Tmp\
+2026-05-13 02:08:56          | ---           | T7                  | REVIEW               | 336:386:PSEXEC64.EXE-7C291843.pf                2026-05-13 02:08:56     3 *          C:\Users\Public\Tmp\
+2026-05-13 02:08:56          | ---           | T7                  | REVIEW               | 442:386:PSEXEC64.EXE-7C291843.pf                2026-05-13 02:08:56     3 *          C:\Users\Public\Tmp\
+2026-05-13 02:11:11          | ---           | T7                  | REVIEW               | 237:387:WMIC.EXE-5C84B919.pf                    2026-05-13 02:11:11     5 *          C:\Windows\System32\
+2026-05-13 02:11:11          | ---           | T7                  | REVIEW               | 272:387:WMIC.EXE-5C84B919.pf                    2026-05-13 02:11:11     5 *          C:\Windows\System32\
+2026-05-13 02:11:11          | ---           | T7                  | REVIEW               | 337:387:WMIC.EXE-5C84B919.pf                    2026-05-13 02:11:11     5 *          C:\Windows\System32\
+2026-05-13  02:31:18         | ---           | T7                  | REVIEW               | 169:547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD
+2026-05-13  02:31:18         | ---           | T7                  | REVIEW               | 473:547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD
+2026-05-13  02:31:18         | ---           | T7                  | REVIEW               | 547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD
+2026-05-13  02:31:18         | ---           | T7                  | REVIEW               | 547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD
+2026-05-13  02:31:18         | ---           | T7                  | REVIEW               | 629:547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD
+2026-05-13  02:31:18         | ---           | T7                  | REVIEW               | 95:547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD
+2026-05-13  02:34:05         | ---           | T7                  | REVIEW               | 170:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+2026-05-13  02:34:05         | ---           | T7                  | REVIEW               | 474:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+2026-05-13  02:34:05         | ---           | T7                  | REVIEW               | 50:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+2026-05-13  02:34:05         | ---           | T7                  | REVIEW               | 549:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+2026-05-13  02:34:05         | ---           | T7                  | REVIEW               | 550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+2026-05-13  02:34:05         | ---           | T7                  | REVIEW               | 550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+2026-05-13  02:34:05         | ---           | T7                  | REVIEW               | 630:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+2026-05-13  02:34:05         | ---           | T7                  | REVIEW               | 96:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+2026-05-15                   | ---           | T7                  | REVIEW               | 322:R1-R3 were initiated 2026-05-15.  WS-RECV-03 was isolated at
+2026-05-15                   | ---           | T7                  | REVIEW               | 322:R1-R3 were initiated 2026-05-15.  WS-RECV-03 was isolated at
+2026-05-15                   | ---           | T7                  | REVIEW               | 330:212:   WS-RECV-03 at 02:00 CDT 2026-05-15.  This is a NEW data
+2026-05-15                   | ---           | T7                  | REVIEW               | 5:  Period covered:        2026-05-15 (isolation) through 2026-05-18 (handoff)
+2026-05-15                   | ---           | T7                  | REVIEW               | 79:[HIGH] WinPmem 4.0.1 used.  Image: WS-RECV-03_2026-05-15_141842.raw
+2026-05-15 13:02 UTC         | ---           | T7                  | REVIEW               | 169:475:            User: records03@MEDDEFENSE.LOCAL (last logon 2026-05-15 13:02 UTC)
+2026-05-15 13:02 UTC         | ---           | T7                  | REVIEW               | 169:475:            User: records03@MEDDEFENSE.LOCAL (last logon 2026-05-15 13:02 UTC)
+2026-05-15 13:02 UTC         | ---           | T7                  | REVIEW               | 475:            User: records03@MEDDEFENSE.LOCAL (last logon 2026-05-15 13:02 UTC)
+2026-05-16                   | ---           | T7                  | REVIEW               | 159:       with the IR team; the full 1.8 GB JSON is in IR-FW-EXPORT-2026-05-16.
+2026-05-18 17:30             | ---           | T7                  | REVIEW               | 13:  IR escalation issued:    2026-05-18 17:30 CDT for WS-RECV-03
+2026-05-18 17:30             | ---           | T7                  | REVIEW               | 13:  IR escalation issued:    2026-05-18 17:30 CDT for WS-RECV-03
+
+IMPORTANT:
+This is a candidate sequence, not yet a deduplicated final timeline.
+Review repeated events appearing in multiple stage reports.
+Verify timezone offsets and source independence.
+
+============================================================
+TEMPORAL METRICS
+============================================================
+The stage reports may contain local time, UTC, or dates without
+a timezone. Do not calculate exact durations until timestamps
+are normalized to a common timezone.
+
+Candidate event dates:
+2026-04-14
+2026-04-14 13:18 UTC
+2026-04-22
+2026-04-22 06:14:20
+2026-05-04
+2026-05-04 18:11 
+2026-05-05  03:22 
+2026-05-05 03:22 
+2026-05-05 03:22:14     
+2026-05-05  03:22:18   
+2026-05-06  01:58:14   
+2026-05-06  02:11:42   
+2026-05-06 02:11:42     
+2026-05-06  02:12 
+2026-05-06  02:13:11   
+2026-05-06 02:36:48
+2026-05-07 01:47:33 
+2026-05-07 01:47:33     
+2026-05-08 02:00:11   
+2026-05-08  02:38:14   
+2026-05-09
+2026-05-09  02:46:11   
+2026-05-09 03:00-03:12
+2026-05-09  03:40 
+2026-05-11 02:00:11   
+2026-05-11  03:17:01   
+2026-05-12  02:45 
+2026-05-12  02:45:01   
+2026-05-12 02:45:01     
+2026-05-13
+2026-05-13  01:56 
+2026-05-13  02:08:56   
+2026-05-13 02:08:56     
+2026-05-13 02:11:11     
+2026-05-13  02:31:18   
+2026-05-13  02:34:05   
+2026-05-15
+2026-05-15 13:02 UTC
+2026-05-16
+2026-05-18 17:30 
+
+Metrics requiring verified UTC timestamps:
+  Total dwell time: first confirmed access to containment.
+  Breakout time: initial access to first confirmed lateral movement.
+  Time to persistence: initial access to confirmed persistence.
+  Time to data staging: initial access to first confirmed staging event.
+  Detection-to-containment: hunt detection to actual IR isolation.
+  Operational tempo: intervals between verified attack phases.
+
+Exact duration calculations are withheld unless the source events
+can be reliably identified and normalized.
+
+============================================================
+TIMELINE GAPS
+============================================================
+A gap means the evidence does not establish what happened
+during a period. It does not prove the attacker was inactive.
+
+Review:
+  * Periods between confirmed events with no relevant telemetry.
+  * Time periods outside PCAP collection coverage.
+  * Events recorded by only one source.
+  * Missing host, account, or timezone details.
+  * Firewall sessions that cannot be attributed to an attack.
+
+Source coverage notes:
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt:221:UNKNOWN_TIME	10.10.3.21	10.10.20.10	0	UNKNOWN_PROTOCOL	64
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt:222:UNKNOWN_TIME	10.10.3.21	10.10.20.10	445	UNKNOWN_PROTOCOL	184419
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt:223:UNKNOWN_TIME	10.10.3.21	10.10.20.10	53	UNKNOWN_PROTOCOL	36
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt:224:UNKNOWN_TIME	10.10.3.21	10.10.20.30	135	UNKNOWN_PROTOCOL	482
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt:225:UNKNOWN_TIME	10.10.3.21	10.10.20.30	445	UNKNOWN_PROTOCOL	484122
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt:226:UNKNOWN_TIME	10.10.3.21	10.10.20.30	49664	UNKNOWN_PROTOCOL	12814
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt:227:UNKNOWN_TIME	10.10.3.21	10.10.20.31	445	UNKNOWN_PROTOCOL	412842
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt:228:UNKNOWN_TIME	10.10.3.21	10.10.20.40	445	UNKNOWN_PROTOCOL	8412
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt:430:407:       E. The ~ 17-minute gap on 2026-04-14 between Diane's credential
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt:687:157:[HIGH] Network Engineering exported 14 days of firewall sessions for
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt:902:559:gap aligns precisely with the second exfil session (T1070.001).
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt:927:633:559:gap aligns precisely with the second exfil session (T1070.001).
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt:928:679:  - A log gap automatically proves log deletion.
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt:932:253:  Anti-forensics:  No queries for log gaps or wevtutil cl events.
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x04_hunting_report.txt:6:  Hunt window:             2026-05-04 through 2026-05-18 (14 days)
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x04_hunting_report.txt:239:REMAINING GAPS AT END OF 4x04
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x04_hunting_report.txt:253:  Anti-forensics:  No queries for log gaps or wevtutil cl events.
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x04_hunting_report.txt:304:Coverage moves from 55% to 80% (16/29 to 23/29).
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x04_hunting_report.txt:314:  R3.  IMMEDIATE: Pull 14 days of firewall session logs for the
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x04_hunting_report.txt:316:  R4.  IMMEDIATE: Pull 14 days of authentication logs for any
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/ir_team_notes.txt:157:[HIGH] Network Engineering exported 14 days of firewall sessions for
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/ir_team_notes.txt:310:         (12-minute gap, confirmed by $MFT BORN time on the new
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/ir_team_notes.txt:397:          why?  This is the most important detection-gap question of
+/home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/ir_team_notes.txt:407:       E. The ~ 17-minute gap on 2026-04-14 between Diane's credential
+
+============================================================
+SEQUENCING UNCERTAINTIES
+============================================================
+Review candidate events where:
+  * Two sources report different timestamps for the same event.
+  * Timezones or host clock offsets are unknown.
+  * A stage report contains an event without a direct source citation.
+  * Event ordering depends on an assumed, rather than measured, delay.
+
+No clock-skew adjustment is applied automatically.
+Document the original timestamp, corrected timestamp, offset,
+reason for adjustment, and supporting evidence.
+
+============================================================
+TIMELINE SUMMARY
+============================================================
+Candidate timestamped records: 116
+These are records, not necessarily unique attack events.
+Deduplicate only after matching event time, host, action,
+and supporting evidence across stage reports.
+
+Output files:
+  Timeline report: /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task8_output/unified_timeline.txt
+  Candidate events: /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task8_output/timeline_events.tsv
+
+Next step:
+Verify and normalize timestamps, merge duplicate events,
+calculate metrics, and document gaps before final reporting.
+================================================================

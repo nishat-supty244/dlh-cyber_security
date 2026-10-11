@@ -1,0 +1,116 @@
+2026-05-18 17:30 	13:  IR escalation issued:    2026-05-18 17:30 CDT for WS-RECV-03	See source record	---	T7	REVIEW
+2026-05-06  02:12 	192:2026-05-06  02:12 CDT  PsExec session #1: WS-RECV-03 -> SRV-HEALTH-DB	See source record	---	T7	REVIEW
+2026-05-09  03:40 	196:2026-05-09  03:40 CDT  PsExec session #2: WS-RECV-03 -> SRV-INS-DB	See source record	---	T7	REVIEW
+2026-05-13  01:56 	200:2026-05-13  01:56 CDT  PsExec session #3: WS-RECV-03 -> SRV-DC-01	See source record	---	T7	REVIEW
+2026-05-15	322:R1-R3 were initiated 2026-05-15.  WS-RECV-03 was isolated at	See source record	---	T7	REVIEW
+2026-04-14 13:18 UTC	168:474:            User: dmarsh@MEDDEFENSE.LOCAL    (last logon 2026-04-14 13:18 UTC)	See source record	---	T7	REVIEW
+2026-05-15 13:02 UTC	169:475:            User: records03@MEDDEFENSE.LOCAL (last logon 2026-05-15 13:02 UTC)	See source record	---	T7	REVIEW
+2026-05-15	330:212:   WS-RECV-03 at 02:00 CDT 2026-05-15.  This is a NEW data	See source record	---	T7	REVIEW
+2026-05-06 02:11:42     	203:429:     2026-05-06 02:11:42     (target SRV-HEALTH-DB per H1)	See source record	---	T7	REVIEW
+2026-05-13 02:08:56     	236:386:PSEXEC64.EXE-7C291843.pf                2026-05-13 02:08:56     3 *          C:\Users\Public\Tmp\	See source record	---	T7	REVIEW
+2026-05-13 02:11:11     	237:387:WMIC.EXE-5C84B919.pf                    2026-05-13 02:11:11     5 *          C:\Windows\System32\	See source record	---	T7	REVIEW
+2026-05-06  02:11:42   	253:493:2026-05-06  02:11:42   A     PsExec64.exe                           [first exec]	See source record	---	T7	REVIEW
+2026-05-13 02:08:56     	271:386:PSEXEC64.EXE-7C291843.pf                2026-05-13 02:08:56     3 *          C:\Users\Public\Tmp\	See source record	---	T7	REVIEW
+2026-05-13 02:11:11     	272:387:WMIC.EXE-5C84B919.pf                    2026-05-13 02:11:11     5 *          C:\Windows\System32\	See source record	---	T7	REVIEW
+2026-05-06  01:58:14   	280:491:2026-05-06  01:58:14   B,M,C C:\Users\Public\Tmp\PsExec64.exe       [tool	See source record	---	T7	REVIEW
+2026-05-06  02:11:42   	281:493:2026-05-06  02:11:42   A     PsExec64.exe                           [first exec]	See source record	---	T7	REVIEW
+2026-05-06  02:13:11   	282:494:2026-05-06  02:13:11   A     C:\Windows\System32\Wbem\WMIC.exe      [exec, WMI]	See source record	---	T7	REVIEW
+2026-05-09  02:46:11   	284:519:2026-05-09  02:46:11   M     PsExec64.exe                           [second	See source record	---	T7	REVIEW
+2026-05-13  02:08:56   	287:544:2026-05-13  02:08:56   A     PsExec64.exe                            [3rd PsExec	See source record	---	T7	REVIEW
+2026-05-13 02:08:56     	336:386:PSEXEC64.EXE-7C291843.pf                2026-05-13 02:08:56     3 *          C:\Users\Public\Tmp\	See source record	---	T7	REVIEW
+2026-05-13 02:11:11     	337:387:WMIC.EXE-5C84B919.pf                    2026-05-13 02:11:11     5 *          C:\Windows\System32\	See source record	---	T7	REVIEW
+2026-05-06  01:58:14   	342:491:2026-05-06  01:58:14   B,M,C C:\Users\Public\Tmp\PsExec64.exe       [tool	See source record	---	T7	REVIEW
+2026-05-06  02:11:42   	343:493:2026-05-06  02:11:42   A     PsExec64.exe                           [first exec]	See source record	---	T7	REVIEW
+2026-05-06  02:13:11   	344:494:2026-05-06  02:13:11   A     C:\Windows\System32\Wbem\WMIC.exe      [exec, WMI]	See source record	---	T7	REVIEW
+2026-05-09  02:46:11   	345:519:2026-05-09  02:46:11   M     PsExec64.exe                           [second	See source record	---	T7	REVIEW
+2026-05-13  02:08:56   	347:544:2026-05-13  02:08:56   A     PsExec64.exe                            [3rd PsExec	See source record	---	T7	REVIEW
+2026-05-13 02:08:56     	442:386:PSEXEC64.EXE-7C291843.pf                2026-05-13 02:08:56     3 *          C:\Users\Public\Tmp\	See source record	---	T7	REVIEW
+2026-05-06  01:58:14   	460:491:2026-05-06  01:58:14   B,M,C C:\Users\Public\Tmp\PsExec64.exe       [tool	See source record	---	T7	REVIEW
+2026-05-15	79:[HIGH] WinPmem 4.0.1 used.  Image: WS-RECV-03_2026-05-15_141842.raw	See source record	---	T7	REVIEW
+2026-05-05  03:22 	190:2026-05-05  03:22 CDT  Credential dump #1 (debug_tool.exe -> LSASS	See source record	---	T7	REVIEW
+2026-05-12  02:45 	199:2026-05-12  02:45 CDT  Credential dump #2 (re-dump of LSASS).	See source record	---	T7	REVIEW
+2026-04-14	45:                                            logon was 2026-04-14)	See source record	---	T7	REVIEW
+2026-04-22 06:14:20	64:648    564    lsass.exe                  SYSTEM              2026-04-22 06:14:20	See source record	---	T7	REVIEW
+2026-05-04	451:        2026-05-04 at 18:11 CDT.  This pre-dates the first credential	See source record	---	T7	REVIEW
+2026-05-05 03:22 	452:        dump (2026-05-05 03:22 CDT) by ~ 9 hours and is consistent with	See source record	---	T7	REVIEW
+2026-04-14 13:18 UTC	474:            User: dmarsh@MEDDEFENSE.LOCAL    (last logon 2026-04-14 13:18 UTC)	See source record	---	T7	REVIEW
+2026-05-15 13:02 UTC	475:            User: records03@MEDDEFENSE.LOCAL (last logon 2026-05-15 13:02 UTC)	See source record	---	T7	REVIEW
+2026-05-04 18:11 	527:            2026-05-04 18:11 CDT, ~ 9h before first cred dump.	See source record	---	T7	REVIEW
+2026-04-14 13:18 UTC	168:474:            User: dmarsh@MEDDEFENSE.LOCAL    (last logon 2026-04-14 13:18 UTC)	See source record	---	T7	REVIEW
+2026-05-15 13:02 UTC	169:475:            User: records03@MEDDEFENSE.LOCAL (last logon 2026-05-15 13:02 UTC)	See source record	---	T7	REVIEW
+2026-04-22 06:14:20	283:64:648    564    lsass.exe                  SYSTEM              2026-04-22 06:14:20	See source record	---	T7	REVIEW
+2026-05-04	306:451:        2026-05-04 at 18:11 CDT.  This pre-dates the first credential	See source record	---	T7	REVIEW
+2026-05-12 02:45:01     	438:     2026-05-12 02:45:01     (cred dump #2)	See source record	---	T7	REVIEW
+2026-05-05 03:22:14     	439:     2026-05-05 03:22:14     (cred dump #1)	See source record	---	T7	REVIEW
+2026-05-05  03:22:18   	485:2026-05-05  03:22:18   B,M,C C:\Windows\Temp\out.dat               [LSASS	See source record	---	T7	REVIEW
+2026-05-12  02:45:01   	539:2026-05-12  02:45:01   M     C:\Windows\Temp\debug_tool.exe          [LSASS	See source record	---	T7	REVIEW
+2026-04-14	58:       Diane is the same user whose credentials were phished on 2026-04-14	See source record	---	T7	REVIEW
+2026-04-14	407:       E. The ~ 17-minute gap on 2026-04-14 between Diane's credential	See source record	---	T7	REVIEW
+2026-05-06  02:12 	192:2026-05-06  02:12 CDT  PsExec session #1: WS-RECV-03 -> SRV-HEALTH-DB	See source record	---	T7	REVIEW
+2026-05-11 02:00:11   	408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip	See source record	---	T7	REVIEW
+2026-05-08 02:00:11   	414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip	See source record	---	T7	REVIEW
+2026-05-13	422:   staging output (D1, D2 above).  Run on 2026-05-13 produced the	See source record	---	T7	REVIEW
+2026-05-06 02:11:42     	429:     2026-05-06 02:11:42     (target SRV-HEALTH-DB per H1)	See source record	---	T7	REVIEW
+2026-05-08  02:38:14   	513:2026-05-08  02:38:14   D     C:\Users\Public\Tmp\out_20260508023559.csv	See source record	---	T7	REVIEW
+2026-05-11  03:17:01   	537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]	See source record	---	T7	REVIEW
+2026-05-11  03:17:01   	538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]	See source record	---	T7	REVIEW
+2026-05-13  02:31:18   	547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD	See source record	---	T7	REVIEW
+2026-05-13  02:34:05   	550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]	See source record	---	T7	REVIEW
+2026-05-06 02:36:48	603:     \\SRV-HEALTH-DB\C$           (last access 2026-05-06 02:36:48)	See source record	---	T7	REVIEW
+2026-05-11  03:17:01   	48:537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]	See source record	---	T7	REVIEW
+2026-05-11  03:17:01   	49:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]	See source record	---	T7	REVIEW
+2026-05-13  02:34:05   	50:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]	See source record	---	T7	REVIEW
+2026-05-11 02:00:11   	81:408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip	See source record	---	T7	REVIEW
+2026-05-08 02:00:11   	83:414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip	See source record	---	T7	REVIEW
+2026-05-13	84:422:   staging output (D1, D2 above).  Run on 2026-05-13 produced the	See source record	---	T7	REVIEW
+2026-05-08  02:38:14   	89:513:2026-05-08  02:38:14   D     C:\Users\Public\Tmp\out_20260508023559.csv	See source record	---	T7	REVIEW
+2026-05-11  03:17:01   	93:537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]	See source record	---	T7	REVIEW
+2026-05-11  03:17:01   	94:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]	See source record	---	T7	REVIEW
+2026-05-13  02:31:18   	95:547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD	See source record	---	T7	REVIEW
+2026-05-13  02:34:05   	96:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]	See source record	---	T7	REVIEW
+2026-05-11 02:00:11   	148:408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip	See source record	---	T7	REVIEW
+2026-05-08 02:00:11   	149:414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip	See source record	---	T7	REVIEW
+2026-05-08  02:38:14   	161:513:2026-05-08  02:38:14   D     C:\Users\Public\Tmp\out_20260508023559.csv	See source record	---	T7	REVIEW
+2026-05-11  03:17:01   	165:537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]	See source record	---	T7	REVIEW
+2026-05-11  03:17:01   	166:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]	See source record	---	T7	REVIEW
+2026-05-13  02:31:18   	169:547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD	See source record	---	T7	REVIEW
+2026-05-13  02:34:05   	170:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]	See source record	---	T7	REVIEW
+2026-05-11 02:00:11   	199:408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip	See source record	---	T7	REVIEW
+2026-05-08 02:00:11   	200:414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip	See source record	---	T7	REVIEW
+2026-05-06 02:11:42     	203:429:     2026-05-06 02:11:42     (target SRV-HEALTH-DB per H1)	See source record	---	T7	REVIEW
+2026-05-11  03:17:01   	210:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]	See source record	---	T7	REVIEW
+2026-05-08  02:38:14   	466:513:2026-05-08  02:38:14   D     C:\Users\Public\Tmp\out_20260508023559.csv	See source record	---	T7	REVIEW
+2026-05-13  02:31:18   	473:547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD	See source record	---	T7	REVIEW
+2026-05-13  02:34:05   	474:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]	See source record	---	T7	REVIEW
+2026-05-11  03:17:01   	547:537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]	See source record	---	T7	REVIEW
+2026-05-11  03:17:01   	548:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]	See source record	---	T7	REVIEW
+2026-05-13  02:34:05   	549:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]	See source record	---	T7	REVIEW
+2026-05-11 02:00:11   	616:408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip	See source record	---	T7	REVIEW
+2026-05-08 02:00:11   	619:414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip	See source record	---	T7	REVIEW
+2026-05-13	620:422:   staging output (D1, D2 above).  Run on 2026-05-13 produced the	See source record	---	T7	REVIEW
+2026-05-11  03:17:01   	627:537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]	See source record	---	T7	REVIEW
+2026-05-11  03:17:01   	628:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]	See source record	---	T7	REVIEW
+2026-05-13  02:31:18   	629:547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD	See source record	---	T7	REVIEW
+2026-05-13  02:34:05   	630:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]	See source record	---	T7	REVIEW
+2026-04-14	58:       Diane is the same user whose credentials were phished on 2026-04-14	See source record	---	T7	REVIEW
+2026-05-16	159:       with the IR team; the full 1.8 GB JSON is in IR-FW-EXPORT-2026-05-16.	See source record	---	T7	REVIEW
+2026-04-14	247:A (JC): The phishing email reached Diane Marsh on 2026-04-14.  The Stage 2 RAT	See source record	---	T7	REVIEW
+2026-05-11 02:00:11   	408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip	See source record	---	T7	REVIEW
+2026-05-08 02:00:11   	414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip	See source record	---	T7	REVIEW
+2026-05-04	472:SECTION 6 -- $MFT TIMELINE  (relevant entries 2026-05-04 through 2026-05-13)	See source record	---	T7	REVIEW
+2026-05-08  02:38:14   	513:2026-05-08  02:38:14   D     C:\Users\Public\Tmp\out_20260508023559.csv	See source record	---	T7	REVIEW
+2026-05-11  03:17:01   	537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]	See source record	---	T7	REVIEW
+2026-05-11  03:17:01   	538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]	See source record	---	T7	REVIEW
+2026-05-13  02:31:18   	547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD	See source record	---	T7	REVIEW
+2026-05-13  02:34:05   	550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]	See source record	---	T7	REVIEW
+2026-05-09	553:The Security.evtx file was deleted-and-recreated at 2026-05-09	See source record	---	T7	REVIEW
+2026-05-07 01:47:33 	679:                  Created 2026-05-07 01:47:33 CDT.  Daily 02:00.	See source record	---	T7	REVIEW
+2026-04-22	401:        2026-04-22.  Confirms persistence has been established for	See source record	---	T7	REVIEW
+2026-05-07 01:47:33     	392:SCHTASKS.EXE-B7E198C4.pf                2026-05-07 01:47:33     1 *          C:\Windows\System32\	See source record	---	T7	REVIEW
+2026-04-22	165:401:        2026-04-22.  Confirms persistence has been established for	See source record	---	T7	REVIEW
+2026-05-07 01:47:33     	240:392:SCHTASKS.EXE-B7E198C4.pf                2026-05-07 01:47:33     1 *          C:\Windows\System32\	See source record	---	T7	REVIEW
+2026-05-09 03:00-03:12	629:  T1070.001  Clear Windows Event Logs   2026-05-09 03:00-03:12 CDT	See source record	---	T7	REVIEW
+2026-05-09 03:00-03:12	509:629:  T1070.001  Clear Windows Event Logs   2026-05-09 03:00-03:12 CDT	See source record	---	T7	REVIEW
+2026-05-18 17:30 	13:  IR escalation issued:    2026-05-18 17:30 CDT for WS-RECV-03	See source record	---	T7	REVIEW
+2026-05-15	322:R1-R3 were initiated 2026-05-15.  WS-RECV-03 was isolated at	See source record	---	T7	REVIEW
+2026-05-15	5:  Period covered:        2026-05-15 (isolation) through 2026-05-18 (handoff)	See source record	---	T7	REVIEW
