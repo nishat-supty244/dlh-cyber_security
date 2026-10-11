@@ -1,4 +1,4 @@
-
+#!/bin/bash
 #!/usr/bin/env bash
 # Task 9: Final HEALTHBANE ATT&CK technique inventory
 # Uses Python 3 to read the Navigator JSON and search local evidence.
