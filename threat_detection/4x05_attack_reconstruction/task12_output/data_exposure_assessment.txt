@@ -1,0 +1,353 @@
+========================================================================
+                 DATA EXPOSURE ASSESSMENT
+========================================================================
+
+EVIDENCE SOURCES
+  Asset inventory: FOUND
+  Firewall JSON:   PARSED
+  T1 memory: ir_evidence/memory_artifacts.txt
+  T2 disk: ir_evidence/disk_forensics_report.txt
+  T3 firewall: ir_evidence/firewall_sessions_ws_recv_03.json
+  IR notes: ir_evidence/ir_team_notes.txt
+  T4 hunt: previous_findings/4x04_hunting_report.txt
+  T5 stages 1-2: task5_output/stages_1_2_reconstruction.txt
+  T7 stage 4: task7_output/stage_4_reconstruction.txt
+  T8 timeline: task8_output/unified_timeline.txt
+  Other expected files not found:
+    - task5_output/stage_1_2_reconstruction.txt
+    - task6_output/stage_3_reconstruction.txt
+
+COMPROMISED / RELEVANT HOST MAPPING
+  Access labels are evidence leads; verify against original records.
+------------------------------------------------------------------------
+  Host: APP-ID
+    Data profile: Review asset inventory for data type
+    Sensitivity:  Unknown
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      T3 firewall:firewall_sessions_ws_recv_03.json
+
+  Host: BILLING_LINKS
+    Data profile: Insurance / billing / financial data
+    Sensitivity:  HIGH
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: FILE-CREATION
+    Data profile: Shared files; content needs validation
+    Sensitivity:  MEDIUM
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      T4 hunt:4x04_hunting_report.txt; T7 stage 4:stage_4_reconstruction.txt
+
+  Host: SRV-AV-01
+    Data profile: Review asset inventory for data type
+    Sensitivity:  Unknown
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: SRV-BACKUP-01
+    Data profile: Review asset inventory for data type
+    Sensitivity:  Unknown
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: SRV-DC-01
+    Data profile: Authentication / identity data
+    Sensitivity:  HIGH
+    Assessment:   POTENTIAL ACCESS
+    Basis:        Host-related movement or connection indicator found; direct data interaction not established.
+    Sources:      IR notes:ir_team_notes.txt; T1 memory:memory_artifacts.txt; T2 disk:disk_forensics_report.txt; T3 firewall:firewall_sessions_ws_recv_03.json; T4 hunt:4x04_hunting_report.txt; T7 stage 4:stage_4_reconstruction.txt; T8 timeline:unified_timeline.txt
+
+  Host: SRV-DC-02
+    Data profile: Authentication / identity data
+    Sensitivity:  HIGH
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: SRV-FILE-01
+    Data profile: Shared files; content needs validation
+    Sensitivity:  MEDIUM
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      T1 memory:memory_artifacts.txt; T3 firewall:firewall_sessions_ws_recv_03.json
+
+  Host: SRV-HEALTH-DB
+    Data profile: Patient health records / possible PHI
+    Sensitivity:  CRITICAL
+    Assessment:   POTENTIAL ACCESS
+    Basis:        Host-related movement or connection indicator found; direct data interaction not established.
+    Sources:      IR notes:ir_team_notes.txt; T1 memory:memory_artifacts.txt; T2 disk:disk_forensics_report.txt; T3 firewall:firewall_sessions_ws_recv_03.json; T4 hunt:4x04_hunting_report.txt; T7 stage 4:stage_4_reconstruction.txt; T8 timeline:unified_timeline.txt
+
+  Host: SRV-INS-DB
+    Data profile: Insurance / billing / financial data
+    Sensitivity:  HIGH
+    Assessment:   POTENTIAL ACCESS
+    Basis:        Host-related movement or connection indicator found; direct data interaction not established.
+    Sources:      IR notes:ir_team_notes.txt; T2 disk:disk_forensics_report.txt; T3 firewall:firewall_sessions_ws_recv_03.json; T4 hunt:4x04_hunting_report.txt; T7 stage 4:stage_4_reconstruction.txt; T8 timeline:unified_timeline.txt
+
+  Host: SRV-MAIL-01
+    Data profile: Review asset inventory for data type
+    Sensitivity:  Unknown
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      T3 firewall:firewall_sessions_ws_recv_03.json
+
+  Host: SRV-PATCH-01
+    Data profile: Review asset inventory for data type
+    Sensitivity:  Unknown
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: WS-ADMIN
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   POTENTIAL ACCESS
+    Basis:        Host-related movement or connection indicator found; direct data interaction not established.
+    Sources:      T2 disk:disk_forensics_report.txt; T3 firewall:firewall_sessions_ws_recv_03.json; T4 hunt:4x04_hunting_report.txt; T7 stage 4:stage_4_reconstruction.txt
+
+  Host: WS-ADMIN-01
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   POTENTIAL ACCESS
+    Basis:        Host-related movement or connection indicator found; direct data interaction not established.
+    Sources:      T2 disk:disk_forensics_report.txt; T3 firewall:firewall_sessions_ws_recv_03.json; T4 hunt:4x04_hunting_report.txt; T7 stage 4:stage_4_reconstruction.txt
+
+  Host: WS-ADMIN-02
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: WS-AP-01
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: WS-AP-02
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: WS-BILL-01
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: WS-BILL-04
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: WS-DOC-01
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: WS-DOC-04
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: WS-NET-01
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: WS-NURSE-01
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: WS-NURSE-08
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: WS-RECV-01
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: WS-RECV-02
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: WS-RECV-03
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   POTENTIAL ACCESS
+    Basis:        Host-related movement or connection indicator found; direct data interaction not established.
+    Sources:      IR notes:ir_team_notes.txt; T1 memory:memory_artifacts.txt; T2 disk:disk_forensics_report.txt; T3 firewall:firewall_sessions_ws_recv_03.json; T4 hunt:4x04_hunting_report.txt; T7 stage 4:stage_4_reconstruction.txt; T8 timeline:unified_timeline.txt
+
+  Host: WS-RECV-03-ISOLATED
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      T3 firewall:firewall_sessions_ws_recv_03.json
+
+  Host: WS-RECV-03_2026-05-15_141842
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      IR notes:ir_team_notes.txt; T1 memory:memory_artifacts.txt; T7 stage 4:stage_4_reconstruction.txt; T8 timeline:unified_timeline.txt
+
+  Host: WS-RECV-04
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      IR notes:ir_team_notes.txt
+
+  Host: WS-RECV-05
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      No matching evidence source
+
+  Host: WS-RECV-07
+    Data profile: Local workstation data; user access may broaden scope
+    Sensitivity:  Depends on user and files
+    Assessment:   NO EVIDENCE FOUND
+    Basis:        No matching access indicator found in searched evidence; this does not prove no access occurred.
+    Sources:      IR notes:ir_team_notes.txt
+
+STAGING ASSESSMENT
+  Staging status: INDICATED - VALIDATE ARTIFACT
+  Matching disk-evidence lines:
+    - [D1]  C:\Users\Public\Tmp\staging_export_001.zip   (DELETED)
+    - [D2]  C:\Users\Public\Tmp\staging_export_002.zip   (DELETED)
+    - [D3]  C:\Users\Public\Tmp\query_results.csv   (DELETED)
+    - identifies the staging directory used for D1, D2, D3.]
+    - 2026-05-11 02:00:11   <-- correlates with staging_export_002.zip
+    - 2026-05-08 02:00:11   <-- correlates with staging_export_001.zip
+    - staging_export_001.zip                [archive
+    - staging_export_001.zip                [DELETED]
+    - staging_export_002.zip                [archive 2]
+    - 2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+    - 2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD
+    - 2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+    - staging_export_<NNN>.zip  in C:\Users\Public\Tmp\
+
+EXTERNAL TRANSMISSION ASSESSMENT
+  Candidate internal-to-external sessions: 11
+  These are candidate flows, not proof that attacker data was exfiltrated.
+    Source: 10.10.3.21 -> Destination: 185.220.101.45
+      Byte field: 1.04 KB
+      Basis: Internal source to external destination
+      Raw record: {"session_id": 1041829418, "ts_start": "2026-05-02T08:14:08Z", "ts_end": "2026-05-02T08:14:14Z", "duration_sec": 6, "src_ip": "10.10.3.21", "src_port": 50104, "dst_ip": "185.220.101.45", "dst_port": 443, "proto": "tcp", "app": "ssl", "action": "ALLOW", "rule": "users-to-internet-https", "bytes_in": 596, "bytes_out": 1042, "packets_in": 7, "packets_out": 8, "classification": "KNOWN_C2", "_note": "Daily ~ 5-min HEALTHBANE C2 beacon to sync.healthbane-c2.net.  This 5-min beacon repeats ~ 288 times 
+    Source: 10.10.3.21 -> Destination: 185.220.101.45
+      Byte field: 1.04 KB
+      Basis: Internal source to external destination
+      Raw record: {"session_id": 1041829841, "ts_start": "2026-05-02T08:19:11Z", "ts_end": "2026-05-02T08:19:17Z", "duration_sec": 6, "src_ip": "10.10.3.21", "src_port": 50108, "dst_ip": "185.220.101.45", "dst_port": 443, "proto": "tcp", "app": "ssl", "action": "ALLOW", "rule": "users-to-internet-https", "bytes_in": 596, "bytes_out": 1042, "packets_in": 7, "packets_out": 8, "classification": "KNOWN_C2"}
+    Source: 10.10.3.21 -> Destination: 172.217.14.78
+      Byte field: 84.22 KB
+      Basis: Internal source to external destination
+      Raw record: {"session_id": 1041851922, "ts_start": "2026-05-02T14:11:32Z", "ts_end": "2026-05-02T14:14:52Z", "duration_sec": 200, "src_ip": "10.10.3.21", "src_port": 50412, "dst_ip": "172.217.14.78", "dst_port": 443, "proto": "tcp", "app": "ssl", "action": "ALLOW", "rule": "users-to-internet-https", "bytes_in": 1428901, "bytes_out": 84221, "packets_in": 1041, "packets_out": 814, "classification": "BROWSING", "_note": "Google services -- records03 Gmail / Maps."}
+    Source: 10.10.3.21 -> Destination: 185.220.101.45
+      Byte field: 24.81 KB
+      Basis: Internal source to external destination
+      Raw record: {"session_id": 1042103817, "ts_start": "2026-05-05T08:22:14Z", "ts_end": "2026-05-05T08:22:42Z", "duration_sec": 28, "src_ip": "10.10.3.21", "src_port": 49892, "dst_ip": "185.220.101.45", "dst_port": 443, "proto": "tcp", "app": "ssl", "action": "ALLOW", "rule": "users-to-internet-https", "bytes_in": 1428, "bytes_out": 24814, "packets_in": 14, "packets_out": 22, "classification": "KNOWN_C2", "_note": "Beacon size INCREASED -- the typical beacon is 596/1042 bytes, this one is 1428/24814.  The 24 K
+    Source: 10.10.3.21 -> Destination: 185.220.101.45
+      Byte field: 2.15 KB
+      Basis: Internal source to external destination
+      Raw record: {"session_id": 1042418419, "ts_start": "2026-05-08T07:00:08Z", "ts_end": "2026-05-08T07:00:18Z", "duration_sec": 10, "src_ip": "10.10.3.21", "src_port": 50412, "dst_ip": "185.220.101.45", "dst_port": 443, "proto": "tcp", "app": "ssl", "action": "ALLOW", "rule": "users-to-internet-https", "bytes_in": 1024, "bytes_out": 2148, "packets_in": 8, "packets_out": 8, "classification": "KNOWN_C2", "_note": "Scheduled task 02:00 CDT trigger (07:00 UTC).  This beacon is the kick-off for the day's exfiltrato
+    Source: 10.10.3.21 -> Destination: 185.220.101.45
+      Byte field: 14.22 MB
+      Basis: Internal source to external destination
+      Raw record: {"session_id": 1042419081, "ts_start": "2026-05-08T07:38:14Z", "ts_end": "2026-05-08T07:42:48Z", "duration_sec": 274, "src_ip": "10.10.3.21", "src_port": 50428, "dst_ip": "185.220.101.45", "dst_port": 443, "proto": "tcp", "app": "ssl", "action": "ALLOW", "rule": "users-to-internet-https", "bytes_in": 4218, "bytes_out": 14219484, "packets_in": 84, "packets_out": 9714, "classification": "EXFIL_BURST", "_note": "EXFIL BURST #1: 14.2 MB outbound to HEALTHBANE C2.  Size matches staging_export_001.zip
+    Source: 10.10.3.21 -> Destination: 185.220.101.45
+      Byte field: 824.00 B
+      Basis: Internal source to external destination
+      Raw record: {"session_id": 1042521144, "ts_start": "2026-05-09T08:01:42Z", "ts_end": "2026-05-09T08:01:48Z", "duration_sec": 6, "src_ip": "10.10.3.21", "src_port": 50689, "dst_ip": "185.220.101.45", "dst_port": 443, "proto": "tcp", "app": "ssl", "action": "ALLOW", "rule": "users-to-internet-https", "bytes_in": 184, "bytes_out": 824, "packets_in": 4, "packets_out": 4, "classification": "KNOWN_C2", "_note": "Notification beacon -- short upload after the log clear.  Possibly status / completion message back to
+    Source: 10.10.3.21 -> Destination: 185.220.101.45
+      Byte field: 11.80 MB
+      Basis: Internal source to external destination
+      Raw record: {"session_id": 1042714823, "ts_start": "2026-05-11T08:17:18Z", "ts_end": "2026-05-11T08:21:08Z", "duration_sec": 230, "src_ip": "10.10.3.21", "src_port": 50814, "dst_ip": "185.220.101.45", "dst_port": 443, "proto": "tcp", "app": "ssl", "action": "ALLOW", "rule": "users-to-internet-https", "bytes_in": 3914, "bytes_out": 11802944, "packets_in": 71, "packets_out": 8108, "classification": "EXFIL_BURST", "_note": "EXFIL BURST #2: 11.8 MB outbound to HEALTHBANE C2.  Size matches staging_export_002.zip
+    Source: 10.10.3.21 -> Destination: 185.220.101.45
+      Byte field: 8.42 MB
+      Basis: Internal source to external destination
+      Raw record: {"session_id": 1042918714, "ts_start": "2026-05-13T07:34:14Z", "ts_end": "2026-05-13T07:36:11Z", "duration_sec": 117, "src_ip": "10.10.3.21", "src_port": 51081, "dst_ip": "185.220.101.45", "dst_port": 443, "proto": "tcp", "app": "ssl", "action": "ALLOW", "rule": "users-to-internet-https", "bytes_in": 2148, "bytes_out": 8419232, "packets_in": 41, "packets_out": 5814, "classification": "EXFIL_BURST", "_note": "EXFIL BURST #3: 8.4 MB outbound.  Matches query_results.csv (disk D3, AD enumeration exp
+    Source: 10.10.3.21 -> Destination: 185.220.101.45
+      Byte field: 4.22 KB
+      Basis: Internal source to external destination
+      Raw record: {"session_id": 1043118419, "ts_start": "2026-05-15T07:00:14Z", "ts_end": "2026-05-15T07:00:48Z", "duration_sec": 34, "src_ip": "10.10.3.21", "src_port": 51212, "dst_ip": "185.220.101.45", "dst_port": 443, "proto": "tcp", "app": "ssl", "action": "ALLOW", "rule": "users-to-internet-https", "bytes_in": 824, "bytes_out": 4218, "packets_in": 14, "packets_out": 18, "classification": "KNOWN_C2", "_note": "Scheduled task 02:00 CDT trigger.  Exfiltrator ran but received an EMPTY query response from the C
+    Source: 10.10.3.21 -> Destination: 185.220.101.45
+      Byte field: 0.00 B
+      Basis: Internal source to external destination
+      Raw record: {"session_id": 1043122814, "ts_start": "2026-05-15T18:42:00Z", "ts_end": "2026-05-15T18:42:00Z", "duration_sec": 0, "src_ip": "10.10.3.21", "src_port": 51298, "dst_ip": "185.220.101.45", "dst_port": 443, "proto": "tcp", "app": "ssl", "action": "DENY", "rule": "ws-recv-03-isolated", "bytes_in": 0, "bytes_out": 0, "packets_in": 0, "packets_out": 1, "classification": "KNOWN_C2", "_note": "13:42 CDT 2026-05-15:  WS-RECV-03 isolated by IR.  Outbound traffic to the C2 begins to be DENIED.  The RAT con
+
+DATA EXPOSURE BY TYPE
+  Patient health records (PHI):
+    Evidence references: IR notes:ir_team_notes.txt; T1 memory:memory_artifacts.txt; T2 disk:disk_forensics_report.txt; T3 firewall:firewall_sessions_ws_recv_03.json; T4 hunt:4x04_hunting_report.txt; T7 stage 4:stage_4_reconstruction.txt; T8 timeline:unified_timeline.txt
+    Status: REVIEW REQUIRED - a reference alone does not prove exposure.
+    Record count: UNKNOWN unless a verified source gives a defensible count.
+  Insurance and billing data:
+    Evidence references: IR notes:ir_team_notes.txt; T2 disk:disk_forensics_report.txt; T3 firewall:firewall_sessions_ws_recv_03.json; T4 hunt:4x04_hunting_report.txt; T7 stage 4:stage_4_reconstruction.txt; T8 timeline:unified_timeline.txt
+    Status: REVIEW REQUIRED - a reference alone does not prove exposure.
+    Record count: UNKNOWN unless a verified source gives a defensible count.
+  Employee records:
+    Status: NOT ESTABLISHED - no matching reference found.
+    Record count: UNKNOWN unless a verified source gives a defensible count.
+  Operational data:
+    Evidence references: IR notes:ir_team_notes.txt; T1 memory:memory_artifacts.txt; T2 disk:disk_forensics_report.txt; T3 firewall:firewall_sessions_ws_recv_03.json; T4 hunt:4x04_hunting_report.txt; T7 stage 4:stage_4_reconstruction.txt; T8 timeline:unified_timeline.txt
+    Status: REVIEW REQUIRED - a reference alone does not prove exposure.
+    Record count: UNKNOWN unless a verified source gives a defensible count.
+
+REGULATORY / OPERATIONAL ASSESSMENT
+  HIPAA reportability: UNDETERMINED BY THIS SCRIPT
+  Basis:
+    - Determine whether unsecured PHI was accessed, acquired, used, or disclosed.
+    - Verify the actual data involved, affected individuals, encryption status,
+      and whether there is evidence of acquisition or exfiltration.
+    - Have the privacy officer and legal counsel assess applicable obligations.
+  Estimated records at risk: UNKNOWN until files, database queries, and record
+  counts are validated. File size alone cannot establish a record count.
+
+MITIGATING FACTORS TO VERIFY
+  - Whether affected data was encrypted and whether keys were compromised.
+  - Whether egress controls blocked or limited external transfer.
+  - Detection and containment timestamps from verified incident records.
+  - Whether the attacker accessed only local files or queried remote databases.
+  - Whether outbound sessions can be tied to the staged files and attacker activity.
+
+CONCLUSION
+  This automated report identifies exposure leads; it does not establish that
+  exfiltration occurred or that a HIPAA breach is or is not reportable.
+  Review the source artifacts before reaching a final conclusion.
+
+Host inventory CSV: /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task12_output/host_exposure.csv
+Full report:        /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task12_output/data_exposure_assessment.txt
+========================================================================
