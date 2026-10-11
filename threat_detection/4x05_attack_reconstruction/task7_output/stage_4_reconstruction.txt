@@ -1,0 +1,1044 @@
+
+============================================================
+ATTACK RECONSTRUCTION: Stage 4
+============================================================
+Lateral Movement, Data Staging, and Containment
+
+============================================================
+1. EVIDENCE SOURCE INVENTORY
+============================================================
+[AVAILABLE] 4x04 threat hunting report
+[AVAILABLE] IR memory artifacts
+[AVAILABLE] IR disk forensics report
+[AVAILABLE] IR firewall session data
+[AVAILABLE] IR team notes
+[AVAILABLE] Task 1 memory analysis output
+[AVAILABLE] Task 2 disk analysis output
+[AVAILABLE] Task 3 firewall analysis output
+
+============================================================
+2. LATERAL MOVEMENT CHAIN
+============================================================
+Search for source hosts, target hosts, tools, accounts and times.
+Compare findings across the hunt, memory and firewall sources.
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x04_hunting_report.txt ---
+3:  HEALTHBANE Stage 4 Lateral Movement and Credential Access
+13:  IR escalation issued:    2026-05-18 17:30 CDT for WS-RECV-03
+39:H1.  PsExec usage from a non-administrative source host.
+40:     Rationale: Stage 4 in HC3-004 describes PsExec lateral
+42:     uses PsExec from WS-ADMIN-01 only; any other source is
+45:H2.  WMI remote execution from a non-administrative host
+46:     (parent process wmiprvse.exe).
+49:H3.  PowerShell Remoting (Enter-PSSession / Invoke-Command)
+60:     LogonType in (2, 10, 11), or with NTLM authentication
+64:     workstation source / interactive logon / NTLM is by
+71:H1 - PsExec from non-admin source
+75:  AND data.win.eventdata.image MATCHES "(?i)\\\\PsExec(64)?\\.exe$"
+79:Source host:             WS-RECV-03 (10.10.3.21) -- SOLE source
+82:  SRV-HEALTH-DB    3 events
+86:                         on WS-RECV-03)
+87:Credential PASSED via PsExec (-u flag):  svc_healthsync
+90:                         on WS-RECV-03 was records03)
+94:                         svc_healthsync may not be invoked from
+97:                         runs from WS-RECV-03 ever.
+101:H2 - WMI from non-admin source
+103:Query: Sysmon EID 1 with parentImage matching wmiprvse.exe AND
+107:Source host:             WS-RECV-03 -- SOLE source
+108:Targets:                 SRV-HEALTH-DB (3), SRV-INS-DB (2)
+117:H3 - PSRemoting from non-admin source
+124:Source host:             WS-RECV-03 -- SOLE source
+125:Targets:                 SRV-HEALTH-DB (2), SRV-INS-DB (1),
+128:                         on SRV-HEALTH-DB, Copy-Item of
+130:                         SRV-HEALTH-DB, Get-ADUser enumeration
+143:Source host:             WS-RECV-03 -- SOLE source
+160:       AND (workstationName matching ^WS- OR logonType in
+164:TargetUserName:          svc_healthsync (5 events)
+165:                         svc_healthsync (1 event on SRV-DC-01 as
+166:                         target, paired with H3 PSRemoting)
+167:WorkstationName:         WS-RECV-03 (all 6)
+168:LogonType:               3 (Network)
+172:Targets:                 SRV-HEALTH-DB (3), SRV-INS-DB (2),
+183:before the first lateral movement event, and again before the
+191:                       -> out.dat) on WS-RECV-03.
+192:2026-05-06  02:12 CDT  PsExec session #1: WS-RECV-03 -> SRV-HEALTH-DB
+193:                       (svc_healthsync via NTLM, off-hours).
+194:                       Subsequent activity: WMI dir/sc query,
+196:2026-05-09  03:40 CDT  PsExec session #2: WS-RECV-03 -> SRV-INS-DB
+197:                       (svc_healthsync via NTLM).  WMI + PSRemoting
+200:2026-05-13  01:56 CDT  PsExec session #3: WS-RECV-03 -> SRV-DC-01
+201:                       (svc_healthsync via NTLM).  PSRemoting +
+213:  Robert's PsExec count:        44 events
+214:  Anomalous PsExec count:        6 events  (NEVER overlap with
+217:  Robert's WMI count:           31 events
+218:  Anomalous WMI count:           5 events
+219:  Robert's PSRemoting count:    18 events
+220:  Anomalous PSRemoting count:    4 events
+223:  Source:    Robert from WS-ADMIN-01 only.  Anomalies from WS-RECV-03.
+225:             records03 (running tool) but PASSING svc_healthsync
+232:  Tools:     Robert uses Microsoft-signed PsExec (PsExec.exe),
+233:             Sysinternals build.  Anomalies use PsExec64.exe with
+250:                   WS-RECV-03.  Open hypothesis for IR disk
+265:  SRV-HEALTH-DB
+266:  data interaction: The hunt confirmed access to SRV-HEALTH-DB
+273:                   scope for 4x04 -- 4x05 IR scope is WS-RECV-03
+283:  [R2]  wlb_psexec_nonadmin_source: alert when image matches
+284:        psexec.*.exe AND source host not in admin-PAW set.
+297:  T1021.002  SMB / Windows Admin Shares        (PsExec)
+298:  T1021.006  PowerShell Remoting               (Enter-PSSession)
+299:  T1047      WMI                               (wmiprvse.exe)
+300:  T1078.002  Domain Account                    (svc_healthsync)
+310:  R1.  IMMEDIATE: Isolate WS-RECV-03.  Capture volatile memory
+312:  R2.  IMMEDIATE: Rotate svc_healthsync credentials.  Audit
+313:       SRV-HEALTH-DB for unauthorized SELECT activity.
+315:       WS-RECV-03 segment.
+322:R1-R3 were initiated 2026-05-15.  WS-RECV-03 was isolated at
+334:    timestamps come from Sysmon and 4624 events on WS-RECV-03,
+336:  - 4x04 found exactly 21 anomalous events (6 PsExec + 5 WMI +
+337:    4 PSRemoting + 2 LSASS + 6 service-account auths -- with
+344:  - WS-RECV-03 is the SINGLE pivot host across all 21 anomalous
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task1_output/memory_analysis_report.txt ---
+4:Host: WS-RECV-03
+91:143:                                                              [ANALYST: parent of PsExec64.exe
+168:474:            User: dmarsh@MEDDEFENSE.LOCAL    (last logon 2026-04-14 13:18 UTC)
+169:475:            User: records03@MEDDEFENSE.LOCAL (last logon 2026-05-15 13:02 UTC)
+247:[KNOWN] PsExec64.exe
+256:[KNOWN] SRV-HEALTH-DB
+259:[KNOWN] svc_healthsync
+271:[KNOWN] WS-RECV-03
+304:377:   WS-RECV-03 specifically (it does NOT rule out Mimikatz running
+312:484:            [ANALYST: there is no svc_healthsync ticket or hash in LSASS
+330:212:   WS-RECV-03 at 02:00 CDT 2026-05-15.  This is a NEW data
+332:267:# Connect using current security context (svc_healthsync via PsExec
+341:484:            [ANALYST: there is no svc_healthsync ticket or hash in LSASS
+346:531:   [NEW-4]  Stage 3 exfiltrator EXECUTED on WS-RECV-03 at 02:00 CDT
+380:267:# Connect using current security context (svc_healthsync via PsExec
+395:484:            [ANALYST: there is no svc_healthsync ticket or hash in LSASS
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task2_output/disk_analysis_report.txt ---
+2:   DISK FORENSICS ANALYSIS - WS-RECV-03
+38:265:      including "svc_healthsync" appearing four times in the recovered
+64:168:      \\SRV-HEALTH-DB\C$\Users\Public\stage1.ps1; this is the
+65:169:      LOCAL copy on WS-RECV-03 (the staging point).]
+86:496:                              \\SRV-HEALTH-DB\C$\Users\Public\stage1.ps1
+136:278:         {"sql_host":"SRV-HEALTH-DB","sql_port":1433,
+174:587:         4. Use the dumped credential for lateral movement.
+198:390:                                                                              (PSRemoting target)
+203:429:     2026-05-06 02:11:42     (target SRV-HEALTH-DB per H1)
+204:464:   This is a target-side PSRemoting prefetch -- it would be on
+223:Programs executed on WS-RECV-03:
+227:52:                     T1021.006)            : Prefetch entries CONFIRM
+236:386:PSEXEC64.EXE-7C291843.pf                2026-05-13 02:08:56     3 *          C:\Users\Public\Tmp\
+237:387:WMIC.EXE-5C84B919.pf                    2026-05-13 02:11:11     5 *          C:\Windows\System32\
+243:425:PSEXEC64.EXE-7C291843.pf
+244:430:   [ANALYST: prefetch corroborates 4x04 H1 (PsExec) -- 3 of the 6
+245:431:   PsExec events came from this prefetched binary (the others were
+249:453:WMIC.EXE-5C84B919.pf
+251:464:   This is a target-side PSRemoting prefetch -- it would be on
+252:467:   from WS-RECV-03 to a remote host that prefetches the local
+253:493:2026-05-06  02:11:42   A     PsExec64.exe                           [first exec]
+256:616:     PsExec64.exe        run count: 3   (matches prefetch)
+263:lateral movement tools:
+265:139:[F4]  C:\Users\Public\Tmp\PsExec64.exe
+266:147:      SHA256:      [Microsoft Sysinternals PsExec64 v2.4 SHA, not repeated]
+267:149:      [ANALYST: this is the legitimate Sysinternals PsExec64 binary
+271:386:PSEXEC64.EXE-7C291843.pf                2026-05-13 02:08:56     3 *          C:\Users\Public\Tmp\
+272:387:WMIC.EXE-5C84B919.pf                    2026-05-13 02:11:11     5 *          C:\Windows\System32\
+276:425:PSEXEC64.EXE-7C291843.pf
+277:430:   [ANALYST: prefetch corroborates 4x04 H1 (PsExec) -- 3 of the 6
+278:431:   PsExec events came from this prefetched binary (the others were
+279:453:WMIC.EXE-5C84B919.pf
+280:491:2026-05-06  01:58:14   B,M,C C:\Users\Public\Tmp\PsExec64.exe       [tool
+281:493:2026-05-06  02:11:42   A     PsExec64.exe                           [first exec]
+282:494:2026-05-06  02:13:11   A     C:\Windows\System32\Wbem\WMIC.exe      [exec, WMI]
+284:519:2026-05-09  02:46:11   M     PsExec64.exe                           [second
+285:520:                                                                    PsExec
+287:544:2026-05-13  02:08:56   A     PsExec64.exe                            [3rd PsExec
+288:616:     PsExec64.exe        run count: 3   (matches prefetch)
+289:617:     wmic.exe            run count: 5
+290:716:            debug_tool.exe or PsExec64.exe?  Disk forensics on
+303:40:(SMB-445, WinRM-5985/5986, DNS-53, AD-88/389/445) with full session
+312:88:  WS-RECV-03         10.10.3.21    records03 (day shift)           Win10
+321:140:  SRV-HEALTH-DB      10.10.20.15   Patient health records DB       Win Srv 2019
+326:189:  - WMIC remote process creation (wmic /node:... process call create)
+333:139:[F4]  C:\Users\Public\Tmp\PsExec64.exe
+334:147:      SHA256:      [Microsoft Sysinternals PsExec64 v2.4 SHA, not repeated]
+335:149:      [ANALYST: this is the legitimate Sysinternals PsExec64 binary
+336:386:PSEXEC64.EXE-7C291843.pf                2026-05-13 02:08:56     3 *          C:\Users\Public\Tmp\
+337:387:WMIC.EXE-5C84B919.pf                    2026-05-13 02:11:11     5 *          C:\Windows\System32\
+338:425:PSEXEC64.EXE-7C291843.pf
+339:430:   [ANALYST: prefetch corroborates 4x04 H1 (PsExec) -- 3 of the 6
+340:431:   PsExec events came from this prefetched binary (the others were
+341:453:WMIC.EXE-5C84B919.pf
+342:491:2026-05-06  01:58:14   B,M,C C:\Users\Public\Tmp\PsExec64.exe       [tool
+343:493:2026-05-06  02:11:42   A     PsExec64.exe                           [first exec]
+344:494:2026-05-06  02:13:11   A     C:\Windows\System32\Wbem\WMIC.exe      [exec, WMI]
+345:519:2026-05-09  02:46:11   M     PsExec64.exe                           [second
+346:520:                                                                    PsExec
+347:544:2026-05-13  02:08:56   A     PsExec64.exe                            [3rd PsExec
+348:616:     PsExec64.exe        run count: 3   (matches prefetch)
+349:617:     wmic.exe            run count: 5
+350:716:            debug_tool.exe or PsExec64.exe?  Disk forensics on
+360:265:      including "svc_healthsync" appearing four times in the recovered
+418:139:[F4]  C:\Users\Public\Tmp\PsExec64.exe
+442:386:PSEXEC64.EXE-7C291843.pf                2026-05-13 02:08:56     3 *          C:\Users\Public\Tmp\
+450:434:   lateral movement" timestamp.]
+460:491:2026-05-06  01:58:14   B,M,C C:\Users\Public\Tmp\PsExec64.exe       [tool
+596:169:      LOCAL copy on WS-RECV-03 (the staging point).]
+602:202:         exfiltrator queried SRV-HEALTH-DB and received the full
+618:411:                                with WMI/PSRemote pivot before exfil)
+660:   Compare PsExec/remote tools with memory network connections.
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task3_output/firewall_analysis_report.txt ---
+2:   FIREWALL SESSION ANALYSIS - WS-RECV-03
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/ir_team_notes.txt ---
+2:  IR TEAM WORKING NOTES -- HEALTHBANE / WS-RECV-03
+48:[HIGH] WS-RECV-03 (10.10.3.21) isolated at 13:42 CDT.  Network ACL applied
+51:[HIGH] Trigger: 4x04 hunt findings R1 (3 PsExec to SRV-HEALTH-DB / SRV-INS-DB
+79:[HIGH] WinPmem 4.0.1 used.  Image: WS-RECV-03_2026-05-15_141842.raw
+85:Note for 4x05 analyst: I did NOT shut down WS-RECV-03 before imaging;
+111:         - C:\Users\Public\Tmp\ exists and contains PsExec64.exe
+125:[HIGH] At 20:11 CDT, Robert Kim attempted to remote into WS-RECV-03 from
+134:       NO FURTHER REMEDIATION is to be performed on WS-RECV-03 until
+240:A (JC): Disk forensics estimates 47 138 patient records (SRV-HEALTH-DB) and
+249:       svchost_update.exe in the AppData folder).  The first lateral movement
+251:       lateral movement, then 9 more days before we caught it.  Total dwell:
+285:       execute on WS-RECV-03 in 4x03."  The 4x03 sandbox didn't trigger
+330:       - WS-RECV-03 isolation: 4 records-clerks affected; mitigated with
+332:       - SRV-HEALTH-DB and SRV-INS-DB are NOT being taken offline; the
+335:       - svc_healthsync credential is being rotated tomorrow morning
+385:       A. Did 4x04 miss a workstation other than WS-RECV-03?
+409:          at all in those 17 minutes?  4x00 said "no logon-as-dmarsh
+419:                  installs on WS-RECV-03.
+426:         May 06:  Attacker passes svc_healthsync hash via PsExec to
+427:                  SRV-HEALTH-DB; recon performed.
+432:         May 09:  Lateral movement to SRV-INS-DB; 12-min log clear.
+436:         May 13:  Lateral movement to SRV-DC-01; AD enumeration
+
+--- Firewall sessions involving internal systems ---
+UNKNOWN_TIME	10.10.3.21	10.10.20.10	0	UNKNOWN_PROTOCOL	64
+UNKNOWN_TIME	10.10.3.21	10.10.20.10	445	UNKNOWN_PROTOCOL	184419
+UNKNOWN_TIME	10.10.3.21	10.10.20.10	53	UNKNOWN_PROTOCOL	36
+UNKNOWN_TIME	10.10.3.21	10.10.20.30	135	UNKNOWN_PROTOCOL	482
+UNKNOWN_TIME	10.10.3.21	10.10.20.30	445	UNKNOWN_PROTOCOL	484122
+UNKNOWN_TIME	10.10.3.21	10.10.20.30	49664	UNKNOWN_PROTOCOL	12814
+UNKNOWN_TIME	10.10.3.21	10.10.20.31	445	UNKNOWN_PROTOCOL	412842
+UNKNOWN_TIME	10.10.3.21	10.10.20.40	445	UNKNOWN_PROTOCOL	8412
+
+ATT&CK references to validate against evidence:
+  T1021.002 - SMB/Windows Admin Shares (if supported)
+  T1047     - Windows Management Instrumentation (if supported)
+  T1021.006 - Windows Remote Management (if supported)
+  T1021.001 - Remote Desktop Protocol (if supported)
+
+A firewall connection alone does not prove remote execution.
+Confirm tool/account/host details using hunt and endpoint evidence.
+
+============================================================
+3. CREDENTIAL ACCESS
+============================================================
+Look for LSASS access, credential dumping, account names,
+authentication events and possible additional credentials.
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x04_hunting_report.txt ---
+3:  HEALTHBANE Stage 4 Lateral Movement and Credential Access
+47:     Rationale: same advisory, alternative LOLBin path.
+51:     Rationale: same advisory, third LOLBin path.
+53:H4.  LSASS process access (Sysmon EID 10) from a non-system,
+55:     Rationale: HC3-004 describes credential theft via LSASS
+56:     dumping prior to Stage 4 service-account abuse.
+60:     LogonType in (2, 10, 11), or with NTLM authentication
+63:     service accounts are server-bound and Kerberos-only;
+64:     workstation source / interactive logon / NTLM is by
+87:Credential PASSED via PsExec (-u flag):  svc_healthsync
+88:                         (this is the credential being passed
+94:                         svc_healthsync may not be invoked from
+112:Timing:                  Same off-hours window as H1
+135:H4 - LSASS access by non-system process
+138:       (lsass.exe, MsMpEng.exe, svchost.exe under SYSTEM,
+144:Target process:          C:\Windows\System32\lsass.exe (PID 648)
+152:H4 RESULT: CONFIRMED credential dump. 2 sessions, 7 days apart.
+153:The second dump may indicate the attacker re-acquired credentials
+155:credential was revoked).
+157:H5 - Service-account auth from workstation / interactive / NTLM
+160:       AND (workstationName matching ^WS- OR logonType in
+161:       {2,10,11} OR authenticationPackageName == "NTLM").
+164:TargetUserName:          svc_healthsync (5 events)
+165:                         svc_healthsync (1 event on SRV-DC-01 as
+168:LogonType:               3 (Network)
+169:AuthenticationPackage:   NTLM (all 6) -- VIOLATES RULE 3 of the
+171:                         Kerberos)
+178:H5 RESULT: CONFIRMED service-account abuse. The NTLM
+179:authentication on a Kerberos-only account is consistent with
+181:without LSASS dump correlation, BUT H4 provided that
+182:correlation: debug_tool.exe dumped LSASS approximately 23 hours
+190:2026-05-05  03:22 CDT  Credential dump #1 (debug_tool.exe -> LSASS
+193:                       (svc_healthsync via NTLM, off-hours).
+197:                       (svc_healthsync via NTLM).  WMI + PSRemoting
+199:2026-05-12  02:45 CDT  Credential dump #2 (re-dump of LSASS).
+201:                       (svc_healthsync via NTLM).  PSRemoting +
+211:Robert Kim's recurring admin maintenance over the same 14-day window:
+225:             records03 (running tool) but PASSING svc_healthsync
+226:             credential.
+230:  Auth:      Robert uses Kerberos to all targets.  Anomalies use
+231:             NTLM exclusively.
+280:  [R1]  wlb_ntlm_offhours: alert when target_user matches ^svc_
+281:        AND auth_package = NTLM AND time-of-day not in business
+285:  [R3]  wlb_lsass_nonsystem: alert when Sysmon EID 10 sourceImage
+296:  T1003.001  LSASS Memory                      (debug_tool.exe)
+300:  T1078.002  Domain Account                    (svc_healthsync)
+301:  T1550.002  Pass-the-Hash                     (NTLM on Kerberos
+312:  R2.  IMMEDIATE: Rotate svc_healthsync credentials.  Audit
+333:    credential-access timeline at the host-event level.  Its
+337:    4 PSRemoting + 2 LSASS + 6 service-account auths -- with
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/memory_artifacts.txt ---
+28:artifacts, network indicators, credential-access traces.
+45:                                            logon was 2026-04-14)
+64:648    564    lsass.exe                  SYSTEM              2026-04-22 06:14:20
+96:                                                              [MATCHES 4x03 sample S2 hash]
+125:                                                              [ANALYST: this is the LSASS dumper
+179:the same RAT process that maintains the known beacon to
+211:   sync_healthdata.ps1 (4x03 sample S3) was executed on
+267:# Connect using current security context (svc_healthsync via PsExec
+338:   0x52c   Process     QueryLimited PID 648 (lsass.exe)
+343:                                    dump credentials.  The actual LSASS
+344:                                    dump was performed by debug_tool.exe
+350:   debug_tool.exe -> Process     <0x1010>     PID 648 (lsass.exe)
+355:   used by Mimikatz-class LSASS dumpers and matches the 4x04 H4 finding.]
+376:   reflective DLL injection as a credential-access path on
+377:   WS-RECV-03 specifically (it does NOT rule out Mimikatz running
+414:        branch in the 4x03 dropper sample.
+451:        2026-05-04 at 18:11 CDT.  This pre-dates the first credential
+452:        dump (2026-05-05 03:22 CDT) by ~ 9 hours and is consistent with
+453:        an attacker preparing the host for the LSASS dump.  Exclusion
+466:SECTION 10 -- CACHED CREDENTIALS  (lsadump.cachedump, lsadump.lsa)
+469:WARNING: this section reports artifact PRESENCE, not the credential
+474:            User: dmarsh@MEDDEFENSE.LOCAL    (last logon 2026-04-14 13:18 UTC)
+475:            User: records03@MEDDEFENSE.LOCAL (last logon 2026-05-15 13:02 UTC)
+476:            [ANALYST: these are normal cached-domain-credential entries
+479:[CRED-2]  LSASS process at the moment of capture contains:
+480:            Logon sessions:    2 active (records03, SYSTEM)
+481:            Kerberos tickets in records03 session: TGT for records03
+483:            NTLM hashes in cache: records03
+484:            [ANALYST: there is no svc_healthsync ticket or hash in LSASS
+487:            on this host.  The credential abuse window from 4x04 had
+488:            already ended; lsass at capture time reflects normal records03
+491:[CRED-3]  Residual evidence of debug_tool.exe access to LSASS:
+493:            two prior LSASS reads occurred (matching 4x04 H4) but the
+494:            extracted material is not present in lsass at capture time
+495:            (the dumped data was written to C:\Windows\Temp\out.dat
+504:   [4x03 S2]   svchost_update.exe in-memory hash matches sample.    CONFIRMED
+509:   [4x04 H4]   debug_tool.exe LSASS access (handle 0x1010).         CONFIRMED
+527:            2026-05-04 18:11 CDT, ~ 9h before first cred dump.
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task1_output/memory_analysis_report.txt ---
+41:211:   sync_healthdata.ps1 (4x03 sample S3) was executed on
+60:504:   [4x03 S2]   svchost_update.exe in-memory hash matches sample.    CONFIRMED
+97:179:the same RAT process that maintains the known beacon to
+115:338:   0x52c   Process     QueryLimited PID 648 (lsass.exe)
+118:350:   debug_tool.exe -> Process     <0x1010>     PID 648 (lsass.exe)
+128:479:[CRED-2]  LSASS process at the moment of capture contains:
+129:504:   [4x03 S2]   svchost_update.exe in-memory hash matches sample.    CONFIRMED
+138:28:artifacts, network indicators, credential-access traces.
+168:474:            User: dmarsh@MEDDEFENSE.LOCAL    (last logon 2026-04-14 13:18 UTC)
+169:475:            User: records03@MEDDEFENSE.LOCAL (last logon 2026-05-15 13:02 UTC)
+259:[KNOWN] svc_healthsync
+279:Potential credential-access or security-tool related modules:
+282:28:artifacts, network indicators, credential-access traces.
+283:64:648    564    lsass.exe                  SYSTEM              2026-04-22 06:14:20
+284:96:                                                              [MATCHES 4x03 sample S2 hash]
+285:125:                                                              [ANALYST: this is the LSASS dumper
+286:179:the same RAT process that maintains the known beacon to
+287:211:   sync_healthdata.ps1 (4x03 sample S3) was executed on
+288:338:   0x52c   Process     QueryLimited PID 648 (lsass.exe)
+289:343:                                    dump credentials.  The actual LSASS
+290:350:   debug_tool.exe -> Process     <0x1010>     PID 648 (lsass.exe)
+291:355:   used by Mimikatz-class LSASS dumpers and matches the 4x04 H4 finding.]
+303:376:   reflective DLL injection as a credential-access path on
+304:377:   WS-RECV-03 specifically (it does NOT rule out Mimikatz running
+305:414:        branch in the 4x03 dropper sample.
+306:451:        2026-05-04 at 18:11 CDT.  This pre-dates the first credential
+307:453:        an attacker preparing the host for the LSASS dump.  Exclusion
+308:466:SECTION 10 -- CACHED CREDENTIALS  (lsadump.cachedump, lsadump.lsa)
+309:469:WARNING: this section reports artifact PRESENCE, not the credential
+310:476:            [ANALYST: these are normal cached-domain-credential entries
+311:479:[CRED-2]  LSASS process at the moment of capture contains:
+312:484:            [ANALYST: there is no svc_healthsync ticket or hash in LSASS
+313:487:            on this host.  The credential abuse window from 4x04 had
+314:488:            already ended; lsass at capture time reflects normal records03
+315:491:[CRED-3]  Residual evidence of debug_tool.exe access to LSASS:
+316:493:            two prior LSASS reads occurred (matching 4x04 H4) but the
+317:494:            extracted material is not present in lsass at capture time
+318:504:   [4x03 S2]   svchost_update.exe in-memory hash matches sample.    CONFIRMED
+319:509:   [4x04 H4]   debug_tool.exe LSASS access (handle 0x1010).         CONFIRMED
+332:267:# Connect using current security context (svc_healthsync via PsExec
+341:484:            [ANALYST: there is no svc_healthsync ticket or hash in LSASS
+375:211:   sync_healthdata.ps1 (4x03 sample S3) was executed on
+380:267:# Connect using current security context (svc_healthsync via PsExec
+395:484:            [ANALYST: there is no svc_healthsync ticket or hash in LSASS
+396:504:   [4x03 S2]   svchost_update.exe in-memory hash matches sample.    CONFIRMED
+433:T1003.001 - OS Credential Dumping: LSASS Memory
+434:  Evidence source: memory_artifacts.txt if LSASS/credential-access
+472:  - A loaded DLL alone does not prove credential dumping.
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt ---
+6:  Disk imaged:           Internal NVMe (Samsung 980 PRO 512 GB)
+54:   Credential Access (T1003.001)          : Prefetch + AppCompat for
+105:      [ANALYST: matches 4x03 sample S2.  HB-IOC-0014.]
+116:      [ANALYST: NEW IOC (HB-IOC-NEW-003).  This is the LSASS dumping
+118:      it is a stripped-down Mimikatz fork (no console UI, single
+119:      "sekurlsa::logonpasswords -> %TEMP%\out.dat" path).  Hashed
+121:      classified as "HackTool/Mimikatz.Variant".]
+166:      [ANALYST: matches 4x03 sample S3.  HB-IOC-0017.  4x04 hunt
+203:         patient table, not just a sample.  HIPAA breach scope:
+245:            sAMAccountName,displayName,memberOf,lastLogon,
+261:      [ANALYST: this is the LSASS dump output from debug_tool.exe.
+263:      it is a Mimikatz-format dump (recognizable header structures,
+265:      including "svc_healthsync" appearing four times in the recovered
+267:      finding and identifies WHICH credential was harvested.]
+293:The 4x03 dropper sample (HEALTHBANE_S2_invoice.docm) was opened by
+329:      <LogonType>InteractiveToken</LogonType>
+438:     2026-05-12 02:45:01     (cred dump #2)
+439:     2026-05-05 03:22:14     (cred dump #1)
+441:   dumps is consistent with the credential-rotation hypothesis from
+483:                              [LSASS dumper deployed, owner records03]
+485:2026-05-05  03:22:18   B,M,C C:\Windows\Temp\out.dat               [LSASS
+486:                                                                    dump
+539:2026-05-12  02:45:01   M     C:\Windows\Temp\debug_tool.exe          [LSASS
+540:                                                                    dump #2]
+542:                                                                    of dump
+582:        token (records03 is local admin).  Pre-dates the LSASS dump
+586:         3. Run debug_tool.exe to dump LSASS
+587:         4. Use the dumped credential for lateral movement.
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/ir_team_notes.txt ---
+58:       Diane is the same user whose credentials were phished on 2026-04-14
+66:       attacker pivoted into via the LSASS dump.
+146:NO LSASS-access events on those hosts.  My working hypothesis is that
+199:[MED]  These bursts are too small to be a full clinical-records dump if
+209:       the days of the LSASS dumps.  I think those days carried the
+210:       LSASS dump output up over many small beacons rather than a
+211:       single burst.  This makes the dump exfil HARDER to detect with
+217:are the SAME bytes -- the firewall sees compressed-on-wire size and
+316:[OPEN] Did the attacker exfiltrate the LSASS dump file (out.dat) or just
+317:       the credentials inside it?  Disk recovery is partial (~ 11 MB of
+320:       summing to ~ 23 MB.  Strong inference: the dump file WAS exfiltrated
+335:       - svc_healthsync credential is being rotated tomorrow morning
+407:       E. The ~ 17-minute gap on 2026-04-14 between Diane's credential
+408:          submission and AD rotation:  was the dmarsh credential used
+409:          at all in those 17 minutes?  4x00 said "no logon-as-dmarsh
+415:         Apr 14:  Diane phished, credential captured.  17-min window
+424:         May 05:  debug_tool.exe (Mimikatz fork) deployed via RAT
+425:                  "drop" command, dumps LSASS, exfils dump.
+426:         May 06:  Attacker passes svc_healthsync hash via PsExec to
+429:                  Secondary C2 to 203.0.113.47:8443 stood up same
+434:         May 12:  Second LSASS dump (probably for re-acquired creds
+
+Assessment rules:
+  * LSASS access is not, by itself, proof that credentials were recovered.
+  * A service account appearing in a report does not prove its
+    password or secret was successfully extracted.
+  * Report additional compromised accounts only when supported
+    by explicit evidence.
+  * Do not print passwords, tokens, or other secret values.
+
+============================================================
+4. DATA ACCESS AND STAGING
+============================================================
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x04_hunting_report.txt ---
+82:  SRV-HEALTH-DB    3 events
+108:Targets:                 SRV-HEALTH-DB (3), SRV-INS-DB (2)
+125:Targets:                 SRV-HEALTH-DB (2), SRV-INS-DB (1),
+127:Activity on target:      Get-ChildItem in patient-record paths
+128:                         on SRV-HEALTH-DB, Copy-Item of
+130:                         SRV-HEALTH-DB, Get-ADUser enumeration
+172:Targets:                 SRV-HEALTH-DB (3), SRV-INS-DB (2),
+192:2026-05-06  02:12 CDT  PsExec session #1: WS-RECV-03 -> SRV-HEALTH-DB
+248:  Data staging:    No file-creation events were queried in
+265:  SRV-HEALTH-DB
+266:  data interaction: The hunt confirmed access to SRV-HEALTH-DB
+268:                   actually returned patient records (Wazuh
+272:                   disk forensics on the database server (out of
+313:       SRV-HEALTH-DB for unauthorized SELECT activity.
+324:completed at 19:45 CDT.  Firewall logs were exported by Mike
+340:  - The hunt deliberately did NOT touch persistence, data staging,
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt ---
+9:  Image format:          E01 (compressed, verified)
+25:case (~ 18 GB of recovered files, parsed timelines, registry exports,
+28:recovered staging files, persistence artifacts, prefetch evidence of
+50:                                            staging files (NEW)
+57:   Collection (T1005, T1074.001, T1560.001) : Recovered staging
+58:                                                archives CONFIRM (NEW)
+167:      observed Copy-Item of this script to SRV-HEALTH-DB at
+168:      \\SRV-HEALTH-DB\C$\Users\Public\stage1.ps1; this is the
+169:      LOCAL copy on WS-RECV-03 (the staging point).]
+180:[D1]  C:\Users\Public\Tmp\staging_export_001.zip   (DELETED)
+193:         out_20260508023559.csv   (14 211 304 bytes)
+194:         CSV header:         patient_id,first_name,last_name,dob,ssn,
+199:         health_records.dbo.patients table.  Schema matches the
+202:         exfiltrator queried SRV-HEALTH-DB and received the full
+203:         patient table, not just a sample.  HIPAA breach scope:
+205:         (Cross-reference: SRV-HEALTH-DB inventory in
+206:         meddefense_asset_inventory.txt lists ~ 47 000 patient
+209:[D2]  C:\Users\Public\Tmp\staging_export_002.zip   (DELETED)
+220:         out_20260511031408.csv   (11 794 117 bytes)
+226:         insurance_db.dbo.policies table.  This is from the SECOND
+228:         is not limited to SRV-HEALTH-DB; SRV-INS-DB was also
+231:         insurance member records.)
+233:[D3]  C:\Users\Public\Tmp\query_results.csv   (DELETED)
+244:         AD enumeration export.  Header:
+249:         The CSV contains a full Get-ADUser export from SRV-DC-01.
+278:         {"sql_host":"SRV-HEALTH-DB","sql_port":1433,
+280:          "query_template":"SELECT TOP 100000 patient_id, first_name, ...",
+288:      identifies the staging directory used for D1, D2, D3.]
+366:produced staging output -- the others encountered C2 noop /
+408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip
+410:                                but exfil staging was 1h later -- consistent
+414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip
+422:   staging output (D1, D2 above).  Run on 2026-05-13 produced the
+429:     2026-05-06 02:11:42     (target SRV-HEALTH-DB per H1)
+492:                                                                    staging]
+496:                              \\SRV-HEALTH-DB\C$\Users\Public\stage1.ps1
+508:                              out_20260508023559.csv                [SQL
+511:                              staging_export_001.zip                [archive
+513:2026-05-08  02:38:14   D     C:\Users\Public\Tmp\out_20260508023559.csv
+518:                              staging_export_001.zip                [DELETED]
+533:                              out_20260511031408.csv                [SQL
+536:                              staging_export_002.zip                [archive 2]
+537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]
+538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD
+550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+603:     \\SRV-HEALTH-DB\C$           (last access 2026-05-06 02:36:48)
+686:  HB-IOC-NEW-005  staged_filename    out_<YYYYMMDDHHMMSS>.csv
+687:                  staging_export_<NNN>.zip  in C:\Users\Public\Tmp\
+697:            staging archives?  Disk evidence shows the archives
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task2_output/disk_analysis_report.txt ---
+15:25:case (~ 18 GB of recovered files, parsed timelines, registry exports,
+16:28:recovered staging files, persistence artifacts, prefetch evidence of
+18:57:   Collection (T1005, T1074.001, T1560.001) : Recovered staging
+25:180:[D1]  C:\Users\Public\Tmp\staging_export_001.zip   (DELETED)
+28:209:[D2]  C:\Users\Public\Tmp\staging_export_002.zip   (DELETED)
+31:233:[D3]  C:\Users\Public\Tmp\query_results.csv   (DELETED)
+47:518:                              staging_export_001.zip                [DELETED]
+48:537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]
+49:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+50:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+56:Potential data-staging files:
+58:9:  Image format:          E01 (compressed, verified)
+59:25:case (~ 18 GB of recovered files, parsed timelines, registry exports,
+60:28:recovered staging files, persistence artifacts, prefetch evidence of
+61:50:                                            staging files (NEW)
+62:57:   Collection (T1005, T1074.001, T1560.001) : Recovered staging
+63:58:                                                archives CONFIRM (NEW)
+64:168:      \\SRV-HEALTH-DB\C$\Users\Public\stage1.ps1; this is the
+65:169:      LOCAL copy on WS-RECV-03 (the staging point).]
+66:180:[D1]  C:\Users\Public\Tmp\staging_export_001.zip   (DELETED)
+67:193:         out_20260508023559.csv   (14 211 304 bytes)
+68:194:         CSV header:         patient_id,first_name,last_name,dob,ssn,
+69:199:         health_records.dbo.patients table.  Schema matches the
+70:203:         patient table, not just a sample.  HIPAA breach scope:
+71:206:         meddefense_asset_inventory.txt lists ~ 47 000 patient
+72:209:[D2]  C:\Users\Public\Tmp\staging_export_002.zip   (DELETED)
+73:220:         out_20260511031408.csv   (11 794 117 bytes)
+74:233:[D3]  C:\Users\Public\Tmp\query_results.csv   (DELETED)
+75:244:         AD enumeration export.  Header:
+76:249:         The CSV contains a full Get-ADUser export from SRV-DC-01.
+77:280:          "query_template":"SELECT TOP 100000 patient_id, first_name, ...",
+79:288:      identifies the staging directory used for D1, D2, D3.]
+80:366:produced staging output -- the others encountered C2 noop /
+81:408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip
+82:410:                                but exfil staging was 1h later -- consistent
+83:414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip
+84:422:   staging output (D1, D2 above).  Run on 2026-05-13 produced the
+85:492:                                                                    staging]
+86:496:                              \\SRV-HEALTH-DB\C$\Users\Public\stage1.ps1
+87:508:                              out_20260508023559.csv                [SQL
+88:511:                              staging_export_001.zip                [archive
+89:513:2026-05-08  02:38:14   D     C:\Users\Public\Tmp\out_20260508023559.csv
+90:518:                              staging_export_001.zip                [DELETED]
+91:533:                              out_20260511031408.csv                [SQL
+92:536:                              staging_export_002.zip                [archive 2]
+93:537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]
+94:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+95:547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD
+96:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+97:686:  HB-IOC-NEW-005  staged_filename    out_<YYYYMMDDHHMMSS>.csv
+98:687:                  staging_export_<NNN>.zip  in C:\Users\Public\Tmp\
+99:697:            staging archives?  Disk evidence shows the archives
+102:2. DATA STAGING ANALYSIS
+105:25:case (~ 18 GB of recovered files, parsed timelines, registry exports,
+113:180:[D1]  C:\Users\Public\Tmp\staging_export_001.zip   (DELETED)
+115:193:         out_20260508023559.csv   (14 211 304 bytes)
+116:194:         CSV header:         patient_id,first_name,last_name,dob,ssn,
+118:199:         health_records.dbo.patients table.  Schema matches the
+119:203:         patient table, not just a sample.  HIPAA breach scope:
+121:206:         meddefense_asset_inventory.txt lists ~ 47 000 patient
+123:209:[D2]  C:\Users\Public\Tmp\staging_export_002.zip   (DELETED)
+125:220:         out_20260511031408.csv   (11 794 117 bytes)
+128:231:         insurance member records.)
+129:233:[D3]  C:\Users\Public\Tmp\query_results.csv   (DELETED)
+131:244:         AD enumeration export.  Header:
+132:249:         The CSV contains a full Get-ADUser export from SRV-DC-01.
+136:278:         {"sql_host":"SRV-HEALTH-DB","sql_port":1433,
+138:280:          "query_template":"SELECT TOP 100000 patient_id, first_name, ...",
+148:408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip
+149:414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip
+159:508:                              out_20260508023559.csv                [SQL
+160:511:                              staging_export_001.zip                [archive
+161:513:2026-05-08  02:38:14   D     C:\Users\Public\Tmp\out_20260508023559.csv
+162:518:                              staging_export_001.zip                [DELETED]
+163:533:                              out_20260511031408.csv                [SQL
+164:536:                              staging_export_002.zip                [archive 2]
+165:537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]
+166:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+169:547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD
+170:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+177:686:  HB-IOC-NEW-005  staged_filename    out_<YYYYMMDDHHMMSS>.csv
+178:687:                  staging_export_<NNN>.zip  in C:\Users\Public\Tmp\
+181:  The evidence above should be reviewed for database query
+182:  results, patient records, PHI/PII, or exported datasets.
+185:3. ARCHIVE / COMPRESSION ACTIVITY
+188:9:  Image format:          E01 (compressed, verified)
+189:58:                                                archives CONFIRM (NEW)
+190:180:[D1]  C:\Users\Public\Tmp\staging_export_001.zip   (DELETED)
+192:209:[D2]  C:\Users\Public\Tmp\staging_export_002.zip   (DELETED)
+199:408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip
+200:414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip
+203:429:     2026-05-06 02:11:42     (target SRV-HEALTH-DB per H1)
+205:511:                              staging_export_001.zip                [archive
+206:518:                              staging_export_001.zip                [DELETED]
+209:536:                              staging_export_002.zip                [archive 2]
+210:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+213:687:                  staging_export_<NNN>.zip  in C:\Users\Public\Tmp\
+214:697:            staging archives?  Disk evidence shows the archives
+217:  T1560.001 - Archive Collected Data: Archive via Utility
+226:28:recovered staging files, persistence artifacts, prefetch evidence of
+302:35:  Servers          10.10.20.0/24    Domain, file, databases          100
+321:140:  SRV-HEALTH-DB      10.10.20.15   Patient health records DB       Win Srv 2019
+400:25:case (~ 18 GB of recovered files, parsed timelines, registry exports,
+424:180:[D1]  C:\Users\Public\Tmp\staging_export_001.zip   (DELETED)
+428:209:[D2]  C:\Users\Public\Tmp\staging_export_002.zip   (DELETED)
+432:233:[D3]  C:\Users\Public\Tmp\query_results.csv   (DELETED)
+466:513:2026-05-08  02:38:14   D     C:\Users\Public\Tmp\out_20260508023559.csv
+473:547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD
+474:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+495:687:                  staging_export_<NNN>.zip  in C:\Users\Public\Tmp\
+529:180:[D1]  C:\Users\Public\Tmp\staging_export_001.zip   (DELETED)
+532:209:[D2]  C:\Users\Public\Tmp\staging_export_002.zip   (DELETED)
+535:233:[D3]  C:\Users\Public\Tmp\query_results.csv   (DELETED)
+546:518:                              staging_export_001.zip                [DELETED]
+547:537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]
+548:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+549:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+569:T1074.001 - Data Staged: Local Data Staging
+572:T1560.001 - Archive Collected Data: Archive via Utility
+573:  Use when collected data is compressed/archived.
+582:12. STAGING COMPLETION ASSESSMENT
+585:9:  Image format:          E01 (compressed, verified)
+586:25:case (~ 18 GB of recovered files, parsed timelines, registry exports,
+587:28:recovered staging files, persistence artifacts, prefetch evidence of
+589:50:                                            staging files (NEW)
+590:57:   Collection (T1005, T1074.001, T1560.001) : Recovered staging
+591:58:                                                archives CONFIRM (NEW)
+596:169:      LOCAL copy on WS-RECV-03 (the staging point).]
+598:180:[D1]  C:\Users\Public\Tmp\staging_export_001.zip   (DELETED)
+602:202:         exfiltrator queried SRV-HEALTH-DB and received the full
+603:209:[D2]  C:\Users\Public\Tmp\staging_export_002.zip   (DELETED)
+606:233:[D3]  C:\Users\Public\Tmp\query_results.csv   (DELETED)
+607:244:         AD enumeration export.  Header:
+608:249:         The CSV contains a full Get-ADUser export from SRV-DC-01.
+612:288:      identifies the staging directory used for D1, D2, D3.]
+615:366:produced staging output -- the others encountered C2 noop /
+616:408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip
+617:410:                                but exfil staging was 1h later -- consistent
+619:414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip
+620:422:   staging output (D1, D2 above).  Run on 2026-05-13 produced the
+622:492:                                                                    staging]
+623:511:                              staging_export_001.zip                [archive
+625:518:                              staging_export_001.zip                [DELETED]
+626:536:                              staging_export_002.zip                [archive 2]
+627:537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]
+628:538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+629:547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD
+630:550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+635:687:                  staging_export_<NNN>.zip  in C:\Users\Public\Tmp\
+637:697:            staging archives?  Disk evidence shows the archives
+641:  - Created/exported files indicate possible collection.
+642:  - ZIP/7z/RAR/archive files indicate possible compression.
+643:  - Deleted staging files may indicate cleanup after staging.
+644:  - Presence of staging does NOT by itself prove successful exfiltration.
+662:4. Staging:
+678:  - A ZIP file proves patient data was inside it.
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/ir_team_notes.txt ---
+51:[HIGH] Trigger: 4x04 hunt findings R1 (3 PsExec to SRV-HEALTH-DB / SRV-INS-DB
+58:       Diane is the same user whose credentials were phished on 2026-04-14
+60:       her phishing click and this incident yet -- coordinated with HR for
+71:  - Notify Network Engineering for firewall log export.
+98:[HIGH] FTK Imager 4.7.1.4.  E01 verified.  250 GB / 8.6 GB compressed
+155:Subject: FIREWALL EXPORT COMPLETE
+157:[HIGH] Network Engineering exported 14 days of firewall sessions for
+159:       with the IR team; the full 1.8 GB JSON is in IR-FW-EXPORT-2026-05-16.
+160:[HIGH] My first pass through the export turned up an UNEXPECTED finding:
+200:       the attacker grabbed everything (estimated 47k patient records
+201:       with 6 columns ~ 14 MB compressed -- so the FIRST burst could
+202:       very well BE the full patient table after gzip).  Working
+203:       hypothesis: the attacker exfiltrated specific tables, compressed,
+217:are the SAME bytes -- the firewall sees compressed-on-wire size and
+218:the disk artifacts are uncompressed-on-disk-then-recompressed-into-zip
+221:record for staging_export_001.zip -- exact match.  That's a smoking
+222:gun for "this archive was uploaded to this C2 at this time."
+240:A (JC): Disk forensics estimates 47 138 patient records (SRV-HEALTH-DB) and
+241:       51 002 insurance member records (SRV-INS-DB), based on the cluster-carved
+242:       CSVs.  Plus 1184 AD user records (this is reconnaissance, not PHI, but
+247:A (JC): The phishing email reached Diane Marsh on 2026-04-14.  The Stage 2 RAT
+312:       - Multiple file deletions of staging artifacts (T1070.004).
+331:         loaner laptops (no patient-care impact).
+332:       - SRV-HEALTH-DB and SRV-INS-DB are NOT being taken offline; the
+333:         attacker's database access was via SQL queries that are now
+338:       - HIPAA breach notification required.  Affected: 47 138 patients
+339:         (clinical records) + 51 002 members (insurance).  Some overlap
+340:         expected -- many patients are also our insurance members.
+341:         De-duplicated count pending Legal review of cross-database
+374:         - The 4x04 SIEM data still in the Wazuh archive
+415:         Apr 14:  Diane phished, credential captured.  17-min window
+427:                  SRV-HEALTH-DB; recon performed.
+431:         May 08:  First exfil burst (47k patient records).
+433:         May 11:  Second exfil burst (51k insurance records).
+
+--- Relevant file timeline evidence ---
+25:case (~ 18 GB of recovered files, parsed timelines, registry exports,
+28:recovered staging files, persistence artifacts, prefetch evidence of
+48:                                            $MFT timeline (NEW)
+49:   Defense Evasion (T1070.004 File Del)   : Recovered deleted exfil
+57:   Collection (T1005, T1074.001, T1560.001) : Recovered staging
+74:Files in $MFT:         506 884   (24 265 unallocated MFT entries)
+89:SECTION 3 -- RECOVERED MALICIOUS / SUSPICIOUS FILES
+142:                                                 unmodified)
+171:3.2  DELETED / UNALLOCATED FILES (recovered from $MFT residue and
+176:but their MFT entries persist in the unallocated MFT range, and the
+177:file content was successfully recovered from unallocated clusters
+180:[D1]  C:\Users\Public\Tmp\staging_export_001.zip   (DELETED)
+181:      MFT entry:           483 119 (unallocated, RUN list intact)
+182:      Recovery method:     Cluster carving + MFT residue
+183:      Recovered size:      14 219 484 bytes  (14.2 MB)
+193:         out_20260508023559.csv   (14 211 304 bytes)
+209:[D2]  C:\Users\Public\Tmp\staging_export_002.zip   (DELETED)
+210:      MFT entry:           483 422 (unallocated, RUN list intact)
+211:      Recovery method:     Cluster carving + MFT residue
+212:      Recovered size:      11 802 944 bytes  (11.8 MB)
+220:         out_20260511031408.csv   (11 794 117 bytes)
+233:[D3]  C:\Users\Public\Tmp\query_results.csv   (DELETED)
+234:      MFT entry:           483 514 (unallocated, RUN list intact)
+235:      Recovery method:     Cluster carving + MFT residue
+236:      Recovered size:      8 419 232 bytes  (8.4 MB)
+256:[D4]  C:\Windows\Temp\out.dat   (DELETED, partially recovered)
+257:      MFT entry:             482 884 (unallocated, RUN list partial -- only
+260:      Recovered size:        ~ 11 MB of ~ 23 MB original
+262:      The recovered first 11 MB of the file is sufficient to confirm
+265:      including "svc_healthsync" appearing four times in the recovered
+269:[D5]  C:\Users\records03\AppData\Local\Temp\hb_cfg.json (DELETED)
+270:      MFT entry:             483 691 (unallocated)
+272:      Recovered size:        428 bytes
+277:      Recovered content:
+295:docm itself was deleted by Outlook's normal attachment cleanup
+296:(7 days after open); $MFT entry has been overwritten.  No
+298:copy of the dropper (recovered separately from mail-gateway
+359:Author=MEDDEFENSE\records03 confirms the task was created in
+408:     2026-05-11 02:00:11   <-- correlates with staging_export_002.zip
+414:     2026-05-08 02:00:11   <-- correlates with staging_export_001.zip
+432:   from a different copy that was deleted between executions).
+451:   created once, then triggered itself daily.]
+472:SECTION 6 -- $MFT TIMELINE  (relevant entries 2026-05-04 through 2026-05-13)
+475:The full $MFT timeline is large (1.2 GB of CSV).  Below is the
+501:                                                                    CREATED]
+508:                              out_20260508023559.csv                [SQL
+511:                              staging_export_001.zip                [archive
+512:                                                                    created]
+513:2026-05-08  02:38:14   D     C:\Users\Public\Tmp\out_20260508023559.csv
+514:                              [DELETED  (T1070.004)]
+518:                              staging_export_001.zip                [DELETED]
+528:                                                                    created]
+533:                              out_20260511031408.csv                [SQL
+536:                              staging_export_002.zip                [archive 2]
+537:2026-05-11  03:17:01   D     out_20260511031408.csv                  [DELETED]
+538:2026-05-11  03:17:01   D     staging_export_002.zip                  [DELETED]
+547:2026-05-13  02:31:18   B,M,C C:\Users\Public\Tmp\query_results.csv   [AD
+550:2026-05-13  02:34:05   D     C:\Users\Public\Tmp\query_results.csv   [DELETED]
+553:The Security.evtx file was deleted-and-recreated at 2026-05-09
+569:modified between memory capture and disk imaging:
+592:        [ANALYST: not modified.  Time on the host was synchronizing
+610:     these UNC paths -- shellbags entries above were created by
+631:                                          [direct $MFT evidence]
+633:                                          all attacker-created files
+634:                                          deleted on creation+Nmin
+652:                                          the $MFT timeline
+659:  $MFT modification                     $MFT integrity is intact
+667:recovered as much as it did: the attacker assumed deletion was
+679:                  Created 2026-05-07 01:47:33 CDT.  Daily 02:00.
+686:  HB-IOC-NEW-005  staged_filename    out_<YYYYMMDDHHMMSS>.csv
+687:                  staging_export_<NNN>.zip  in C:\Users\Public\Tmp\
+698:            were created and immediately deleted.  Network evidence
+
+Data staging interpretation:
+  1. Identify where each recovered/staged file was located.
+  2. Compare file creation times with lateral movement times.
+  3. Check whether database query results were copied to WS-RECV-03.
+  4. Check whether archives were created after the data files.
+  5. Compare archive sizes with firewall outbound byte counts.
+
+Do not conclude that data was exfiltrated merely because archives
+exist. Confirm whether matching outbound transfers occurred.
+
+============================================================
+5. PERSISTENCE AND OPERATIONAL SECURITY
+============================================================
+--- Scheduled task / persistence evidence ---
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/memory_artifacts.txt ---
+27:findings the 4x05 reconstruction needs:  malware presence, persistence
+330:                                    Microsoft\Windows\CurrentVersion\Run
+335:                                    not stop persistence; the RAT must be
+393:[K1]  HKCU(records03)\Software\Microsoft\Windows\CurrentVersion\Run
+401:        2026-04-22.  Confirms persistence has been established for
+407:        Data:  \HealthSync Update Service
+410:        A scheduled task named "HealthSync Update Service" was
+505:   [4x03 S2]   Run-key persistence (HKCU\...\Run\HealthSync).      CONFIRMED
+519:   [NEW-2]  Scheduled task "HealthSync Update Service" registered
+524:            ATT&CK addition: T1053.005 Scheduled Task (CONFIRMED).
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt ---
+28:recovered staging files, persistence artifacts, prefetch evidence of
+29:execution, scheduled task XML, and anti-forensics indicators.
+39:   Persistence (T1547.001 Run-key)        : ON-DISK FILE + REGISTRY HIVE
+41:   Persistence (T1053.005 Scheduled Task) : ON-DISK Tasks XML CONFIRMS
+123:[F3]  C:\Windows\System32\Tasks\HealthSync Update Service
+302:SECTION 4 -- SCHEDULED TASK XML  (full content of [F3])
+305:The full XML of C:\Windows\System32\Tasks\HealthSync Update Service
+315:    <URI>\HealthSync Update Service</URI>
+353:(memory_artifacts.txt Section 4).  The scheduled task is the
+392:SCHTASKS.EXE-B7E198C4.pf                2026-05-07 01:47:33     1 *          C:\Windows\System32\
+398:  sync_healthdata.ps1 from the scheduled task.
+444:SCHTASKS.EXE-B7E198C4.pf
+448:   Decodes to "schtasks /create /tn 'HealthSync Update Service' /xml ..."
+562:SECTION 7 -- REGISTRY PERSISTENCE EVIDENCE  (cross-reference with memory)
+565:The following Run-key and persistence values were extracted from the
+568:Section 9), confirming the persistence configuration was not
+571:[R1]  HKCU\Software\Microsoft\Windows\CurrentVersion\Run\HealthSync
+575:[R2]  Tasks\HealthSync Update Service  (covered in Section 4)
+619:     schtasks.exe        run count: 1
+678:  HB-IOC-NEW-002  scheduled_task     "HealthSync Update Service"
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task1_output/memory_analysis_report.txt ---
+165:401:        2026-04-22.  Confirms persistence has been established for
+322:6. SCHEDULED TASK PERSISTENCE
+338:407:        Data:  \HealthSync Update Service
+339:410:        A scheduled task named "HealthSync Update Service" was
+342:505:   [4x03 S2]   Run-key persistence (HKCU\...\Run\HealthSync).      CONFIRMED
+344:519:   [NEW-2]  Scheduled task "HealthSync Update Service" registered
+345:524:            ATT&CK addition: T1053.005 Scheduled Task (CONFIRMED).
+349:  T1053.005 - Scheduled Task/Job: Scheduled Task
+352:  Persistence mechanism identified in memory evidence.
+392:407:        Data:  \HealthSync Update Service
+393:410:        A scheduled task named "HealthSync Update Service" was
+397:505:   [4x03 S2]   Run-key persistence (HKCU\...\Run\HealthSync).      CONFIRMED
+400:519:   [NEW-2]  Scheduled task "HealthSync Update Service" registered
+426:T1053.005 - Scheduled Task/Job: Scheduled Task
+428:  Relevance: Possible persistence mechanism
+474:  - Scheduled task evidence should be correlated with disk and
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task2_output/disk_analysis_report.txt ---
+16:28:recovered staging files, persistence artifacts, prefetch evidence of
+60:28:recovered staging files, persistence artifacts, prefetch evidence of
+226:28:recovered staging files, persistence artifacts, prefetch evidence of
+240:392:SCHTASKS.EXE-B7E198C4.pf                2026-05-07 01:47:33     1 *          C:\Windows\System32\
+248:444:SCHTASKS.EXE-B7E198C4.pf
+327:191:  - Remote scheduled task creation (schtasks /S)
+353:6. SCHEDULED TASK XML
+356:29:execution, scheduled task XML, and anti-forensics indicators.
+357:41:   Persistence (T1053.005 Scheduled Task) : ON-DISK Tasks XML CONFIRMS
+359:123:[F3]  C:\Windows\System32\Tasks\HealthSync Update Service
+361:302:SECTION 4 -- SCHEDULED TASK XML  (full content of [F3])
+362:305:The full XML of C:\Windows\System32\Tasks\HealthSync Update Service
+365:315:    <URI>\HealthSync Update Service</URI>
+374:353:(memory_artifacts.txt Section 4).  The scheduled task is the
+377:398:  sync_healthdata.ps1 from the scheduled task.
+378:448:   Decodes to "schtasks /create /tn 'HealthSync Update Service' /xml ..."
+383:571:[R1]  HKCU\Software\Microsoft\Windows\CurrentVersion\Run\HealthSync
+385:575:[R2]  Tasks\HealthSync Update Service  (covered in Section 4)
+387:678:  HB-IOC-NEW-002  scheduled_task     "HealthSync Update Service"
+390:  T1053.005 - Scheduled Task/Job: Scheduled Task
+393:  Compare this task definition with the scheduled task found
+397:7. REGISTRY PERSISTENCE
+401:39:   Persistence (T1547.001 Run-key)        : ON-DISK FILE + REGISTRY HIVE
+404:562:SECTION 7 -- REGISTRY PERSISTENCE EVIDENCE  (cross-reference with memory)
+405:571:[R1]  HKCU\Software\Microsoft\Windows\CurrentVersion\Run\HealthSync
+502:29:execution, scheduled task XML, and anti-forensics indicators.
+566:T1053.005 - Scheduled Task/Job: Scheduled Task
+567:  Use when scheduled-task persistence is supported by evidence.
+587:28:recovered staging files, persistence artifacts, prefetch evidence of
+653:1. Scheduled task:
+665:5. Persistence:
+666:   Compare scheduled task creation time with the attack timeline.
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x04_hunting_report.txt ---
+242:  Persistence:     The hunt did not query for scheduled-task
+243:                   creation events (no schtasks.exe parent in the
+340:  - The hunt deliberately did NOT touch persistence, data staging,
+
+--- Anti-forensics evidence ---
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/disk_forensics_report.txt ---
+29:execution, scheduled task XML, and anti-forensics indicators.
+45:   Defense Evasion (T1070.001 Log Clear)  : 12-min Security event log
+557:evidence of a wevtutil cl Security operation, consistent with the
+559:gap aligns precisely with the second exfil session (T1070.001).
+624:SECTION 9 -- ANTI-FORENSIC INDICATORS SUMMARY
+629:  T1070.001  Clear Windows Event Logs   2026-05-09 03:00-03:12 CDT
+656:                                          advanced anti-forensics
+662:The attacker performed BASIC anti-forensics (file deletion, log
+663:clearing, AV exclusion) but did not perform ADVANCED anti-forensics
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task2_output/disk_analysis_report.txt ---
+356:29:execution, scheduled task XML, and anti-forensics indicators.
+499:9. ANTI-FORENSICS INDICATORS
+502:29:execution, scheduled task XML, and anti-forensics indicators.
+503:45:   Defense Evasion (T1070.001 Log Clear)  : 12-min Security event log
+507:557:evidence of a wevtutil cl Security operation, consistent with the
+508:624:SECTION 9 -- ANTI-FORENSIC INDICATORS SUMMARY
+509:629:  T1070.001  Clear Windows Event Logs   2026-05-09 03:00-03:12 CDT
+511:656:                                          advanced anti-forensics
+512:662:The attacker performed BASIC anti-forensics (file deletion, log
+513:663:clearing, AV exclusion) but did not perform ADVANCED anti-forensics
+516:  T1070.001 - Clear Windows Event Logs
+517:  T1070.006 - Timestomp (only if timestamp manipulation is confirmed)
+520:10. ARTIFACT REMOVAL
+556:662:The attacker performed BASIC anti-forensics (file deletion, log
+575:T1070.001 - Indicator Removal: Clear Windows Event Logs
+578:T1070.006 - Indicator Removal: Timestomp
+579:  Use only when timestamp manipulation is actually identified.
+633:559:gap aligns precisely with the second exfil session (T1070.001).
+679:  - A log gap automatically proves log deletion.
+680:  - A timestamp difference automatically proves timestomping.
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x04_hunting_report.txt ---
+253:  Anti-forensics:  No queries for log gaps or wevtutil cl events.
+341:    or anti-forensics.  Any techniques in those categories that
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/ir_team_notes.txt ---
+308:[HIGH] Anti-forensics indicators:
+
+Operational security assessment:
+  Determine which actions may have blended into normal administration.
+  Use evidence to identify what exposed the attacker: unusual account
+  usage, off-hours execution, unexpected source host, periodic traffic,
+  suspicious files, or other observed anomalies.
+
+Do not claim log clearing or timestamp manipulation unless the
+forensic evidence supports it.
+
+============================================================
+6. CONTAINMENT MOMENT
+============================================================
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/previous_findings/4x04_hunting_report.txt ---
+13:  IR escalation issued:    2026-05-18 17:30 CDT for WS-RECV-03
+22:days.  It is the direct trigger for the 4x05 incident response /
+33:collect after isolation.
+307:HUNT REPORT RECOMMENDATIONS (TRIGGER FOR 4x05)
+310:  R1.  IMMEDIATE: Isolate WS-RECV-03.  Capture volatile memory
+322:R1-R3 were initiated 2026-05-15.  WS-RECV-03 was isolated at
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/ir_evidence/ir_team_notes.txt ---
+5:  Period covered:        2026-05-15 (isolation) through 2026-05-18 (handoff)
+46:Subject: ISOLATION DECISION
+48:[HIGH] WS-RECV-03 (10.10.3.21) isolated at 13:42 CDT.  Network ACL applied
+52:       / SRV-DC-01 from a non-admin host) escalated for executive review.
+53:       Dr. Morales authorized isolation at 13:38 CDT via verbal phone call,
+86:this was a LIVE memory capture of a still-running host (network-isolated
+103:       skew because the host was idle (network-isolated) during
+127:       into the host via console (the only path remaining post-isolation)
+134:       NO FURTHER REMEDIATION is to be performed on WS-RECV-03 until
+149:escalation -- it would change the IR scope.
+233:A (JC): The host is isolated; the C2 traffic is blocked.  But svchost_update.exe
+301:       running a script in Temp that Defender kept quarantining."
+330:       - WS-RECV-03 isolation: 4 records-clerks affected; mitigated with
+356:      isolation by the new HC3 advisory), we might have been
+440:         May 15:  Final exfil attempt at 02:00 CDT; isolation at 13:42 CDT.
+
+--- /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task3_output/firewall_analysis_report.txt ---
+
+Questions to resolve from the evidence:
+  * What was the last confirmed malicious action before containment?
+  * When was the hunt finding escalated to incident response?
+  * When was WS-RECV-03 isolated, if documented?
+  * When were memory and disk evidence collected?
+  * Was staging still in progress at containment?
+
+The hunt detection time is not automatically the containment time.
+Use the actual incident-response notes or timestamps.
+
+============================================================
+7. EXFILTRATION AND FIREWALL CORRELATION
+============================================================
+17:Internal outbound bytes: 1103191 (1.05 MB)
+20:External outbound bytes: 34565405 (32.96 MB)
+
+If original firewall data is available, inspect outbound sessions
+during the staging period and identify the external destinations.
+Compare their byte counts with the actual staged-file sizes.
+
+Do not estimate how many sessions or hours remained before
+exfiltration unless the evidence supports a measurable rate/pattern.
+
+============================================================
+8. CONFIDENCE ASSESSMENT
+============================================================
+CONFIRMED:
+  Direct evidence from at least two independent sources.
+
+PROBABLE:
+  Strong evidence from one source with supporting context.
+
+POSSIBLE:
+  Plausible interpretation with incomplete or ambiguous evidence.
+
+For every pivot and major event, record:
+  Timestamp | Source host | Target host | Tool | Account
+  Evidence sources | ATT&CK technique | Confidence
+
+Record hunt-missed activity only when IR evidence reveals a step
+that is absent from, or not identified by, the 4x04 hunt report.
+
+============================================================
+9. STAGE 4 RECONSTRUCTION CHECKLIST
+============================================================
+[ ] Reconstruct every lateral movement pivot in chronological order.
+[ ] Identify the source host and each target host.
+[ ] Identify the tool and credential for each pivot where evidence exists.
+[ ] Correlate the svc_healthsync LSASS finding with memory evidence.
+[ ] Assess whether other credentials were compromised.
+[ ] Identify the systems and data accessed.
+[ ] Establish whether data moved to WS-RECV-03 before archiving.
+[ ] Correlate the scheduled task with the attack timeline.
+[ ] Document supported anti-forensics findings.
+[ ] Establish the detection, escalation and containment timestamps.
+[ ] Assess exfiltration using actual firewall evidence.
+[ ] Assign confidence and cite source files for every major event.
+
+============================================================
+10. OUTPUT
+============================================================
+Reconstruction evidence saved to:
+  /home/nishat/Desktop/dlh_projects/dlh-cyber_security/threat_detection/4x05_attack_reconstruction/task7_output/stage_4_reconstruction.txt
+
+This is an evidence extraction report, not a final verified narrative.
+Use the extracted evidence to write the chronological Stage 4 account.
+================================================================
