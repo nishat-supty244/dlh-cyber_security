@@ -1,4 +1,4 @@
-**Learning Objectives – Questions & Answers**
+**Learning Objectives**
 
 Topic: Incident Response – Triage, Evidence Preservation, Containment, Eradication, and Recovery
 
