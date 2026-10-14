@@ -10,7 +10,6 @@
 - ir_commander: James Chen, SOC Lead
 - scribe: On-call SOC Analyst (exercise role)
 
-> Exercise assumption: the incident declaration at 02:51:04Z is taken from the assignment's example, not independently evidenced by the supplied alert or proxy log. Replace it with the actual lab declaration time if available. The entries below distinguish observed events from analyst decisions. Append future updates; do not rewrite prior operational entries.
 
 ## Legend
 
