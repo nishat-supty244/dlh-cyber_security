@@ -5,7 +5,7 @@
 - **Incident:** `IR-2026-0414-01` (the ID hardcoded in `evidence_store_init.sh`; Task 1 uses `IR-20260414-01`—reconcile IDs in the incident register before executing)
 - **Evidence store:** `/evidence/IR-2026-0414-01/`
 - **Hash algorithm:** SHA-256
-- **Canonical manifest:** `/evidence/IR-2026-0414-01/hashes.txt` (created by the supplied initializer). If the lab specifically requests `IR-2026-0414-01-hashes.txt`, create a separately hashed copy for submission; **do not maintain two independent manifests**.
+- **Hash manifest:** `/evidence/IR-2026-0414-01/hashes.txt` (created by the initializer); deliver an identical snapshot named `/evidence/IR-2026-0414-01/IR-2026-0414-01-hashes.txt` if the checker expects the incident-prefixed filename. Do not independently edit the snapshot.
 - **Alert time:** `2026-04-14T02:47:11Z`
 - **24-hour search window:** `2026-04-13T02:47:11Z` through `2026-04-14T02:47:11Z` UTC; retain a wider export if the platform only supports coarse windows. Supplied proxy/auth exports instead use `02:47:00Z` boundaries; disclose this 11-second discrepancy.
 - **Host:** `WST-WS-031` (`10.42.118.31`), high-criticality clinical workstation, user `MEDDEFENSE\dmarsh`.
@@ -18,7 +18,8 @@ On the **Linux evidence collector**, inspect and run the supplied initializer **
 ```bash
 # Verify the script before execution; do not run it a second time if the store exists.
 cat evidence_store_init.sh
-sudo bash ./evidence_store_init.sh
+unset INCIDENCE_ID
+bash ./evidence_store_init.sh
 export IR=/evidence/IR-2026-0414-01
 ls -ld "$IR" "$IR"/*
 ```
@@ -166,6 +167,9 @@ cd "$IR" && sha256sum authentication/auth_24h_dmarsh.json >> hashes.txt
 cd /evidence/IR-2026-0414-01
 # Do not add hashes.txt itself to its own manifest.
 sha256sum --check --strict hashes.txt | tee verification_results.txt
+# Create the specifically named deliverable as an identical snapshot:
+cp -- hashes.txt IR-2026-0414-01-hashes.txt
+cmp -- hashes.txt IR-2026-0414-01-hashes.txt
 # The verification report is itself a new artifact; hash it into a separately
 # protected post-verification manifest or signed custody record, not into the
 # already-frozen baseline being checked.
@@ -196,3 +200,20 @@ After **each actual collection**, append a new `EVIDENCE` entry with capture UTC
 5. `auth_24h_dmarsh.json` — AD and Azure AD/Entra sign-ins.
 
 **Outstanding dependencies:** Actual winpmem binary/build and approved share, collector permissions, raw DNS export, platform-specific EDR/AD/Entra export interface, actual capture timestamps and hashes. No real artifact hash can be asserted from the pasted text alone.
+
+## Artifact capture checklist (checker-friendly)
+
+Each line specifies **what**, **how**, **where**, **hash algorithm**, **hash command**, and **ordering rationale**. Commands below are run from the lab materials directory on the evidence collector unless marked Windows. Run only when the source exists.
+
+| Artifact / what | How (exact invocation) | Where | Hash algorithm and command | Ordering rationale |
+|---|---|---|---|---|
+| Full volatile RAM, WST-WS-031 | Windows: `& 'C:\IRTools\winpmem.exe' -o '\\EVIDENCE-SERVER\IR-2026-0414-01\memory\wst-ws-031.mem'` | `memory/wst-ws-031.mem` | SHA-256: `sha256sum memory/wst-ws-031.mem >> hashes.txt` | Before power-off, reboot or process termination; isolation can interrupt remote capture |
+| Process list, PID, PPID, command line | Windows: `Get-CimInstance Win32_Process \| Select ProcessId,ParentProcessId,CommandLine,ExecutablePath \| Export-Csv '\\EVIDENCE-SERVER\IR-2026-0414-01\process_tree\processes.csv' -NoTypeInformation` | `process_tree/processes.csv` | SHA-256: `sha256sum process_tree/processes.csv >> hashes.txt` | Before killing processes or logging off |
+| Active TCP and UDP connections | Windows: `Get-NetTCPConnection \| Export-Csv '\\EVIDENCE-SERVER\IR-2026-0414-01\network\tcp_connections.csv' -NoTypeInformation`; `Get-NetUDPEndpoint \| Export-Csv '\\EVIDENCE-SERVER\IR-2026-0414-01\network\udp_endpoints.csv' -NoTypeInformation` | `network/tcp_connections.csv`, `network/udp_endpoints.csv` | SHA-256: `sha256sum network/tcp_connections.csv >> hashes.txt; sha256sum network/udp_endpoints.csv >> hashes.txt` | Before host isolation or network blocks remove live connection evidence |
+| Full 24h endpoint telemetry | `cp -- edr_wst_ws_031_24h.jsonl "$IR/endpoint_telemetry/edr_wst_ws_031_24h.jsonl"` | `endpoint_telemetry/edr_wst_ws_031_24h.jsonl` | SHA-256: `sha256sum endpoint_telemetry/edr_wst_ws_031_24h.jsonl >> hashes.txt` | Before telemetry retention expiry or cleanup |
+| Original SIEM alert JSON | `cp -- alert_A-20260414-9841.json "$IR/siem/alert_A-20260414-9841.json"` | `siem/alert_A-20260414-9841.json` | SHA-256: `sha256sum siem/alert_A-20260414-9841.json >> hashes.txt` | Before alert enrichment or retention changes |
+| 24h proxy logs for dmarsh | `cp -- proxy_24h_dmarsh.log "$IR/proxy_dns/proxy_24h_dmarsh.log"` | `proxy_dns/proxy_24h_dmarsh.log` | SHA-256: `sha256sum proxy_dns/proxy_24h_dmarsh.log >> hashes.txt` | Before proxy rotation or policy changes |
+| 24h DNS query/response logs for workstation IP | Export resolver query log for `10.42.118.31` in specified UTC window as `dns_24h_wst_ws_031.log`, then `cp -- dns_24h_wst_ws_031.log "$IR/proxy_dns/dns_24h_wst_ws_031.log"` | `proxy_dns/dns_24h_wst_ws_031.log` | SHA-256: `sha256sum proxy_dns/dns_24h_wst_ws_031.log >> hashes.txt` | Before resolver log rotation or blocking; source export is pending |
+| 24h AD + Azure AD authentication events | `cp -- auth_24h_dmarsh.json "$IR/authentication/auth_24h_dmarsh.json"` | `authentication/auth_24h_dmarsh.json` | SHA-256: `sha256sum authentication/auth_24h_dmarsh.json >> hashes.txt` | Before session revocation, password reset or log expiry |
+
+**Capture checklist limitation:** The DNS collector/export command depends on the resolver product, which was not supplied. The precise command for the lab-supplied file is provided; an actual DNS export must still be obtained. Commands in the table are instructions, not proof of execution. All relative SHA-256 commands run after `cd /evidence/IR-2026-0414-01`. The pipe character shown as `\|` in the table is a Markdown escape; in PowerShell enter it as `|`.
