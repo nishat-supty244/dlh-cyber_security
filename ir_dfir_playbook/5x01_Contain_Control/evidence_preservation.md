@@ -24,7 +24,6 @@ export IR=/evidence/IR-2026-0414-01
 ls -ld "$IR" "$IR"/*
 ```
 
-**Caution:** The initializer contains `${INCIDENCE_ID:-${INCIDENT_ID}}` (note `INCIDENCE_ID`, not `INCIDENT_ID`); unset `INCIDENCE_ID` so it uses the intended ID. It creates `/evidence/IR-2026-0414-01/hashes.txt` and subfolders. Running with `sudo` makes the store owned by root unless adjusted; use an authorized evidence-collector account and minimum permissions. `chmod -R 750` does **not** make files immutable or provide tamper-proof storage. Record operator, UTC time, system clock status, tool versions, source, destination, and transfer method in the custody log.
 
 ```bash
 # Run as the evidence-store owner (or through authorized sudo).
