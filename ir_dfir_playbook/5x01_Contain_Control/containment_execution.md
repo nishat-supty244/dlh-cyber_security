@@ -110,7 +110,7 @@ Test-NetConnection 10.42.118.31 -Port <APPROVED_FORENSIC_PORT>
 Retain the original supplied JSON files, the initial alert, and any newly collected switch/firewall/EDR audit exports in the Task 2 evidence store. Record SHA-256 hashes **after the actual files are available**; no hash values are invented here.
 
 ```bash
-# Example after copying the validation JSON files to the evidence store:
+
 cd /evidence/IR-2026-0414-01
 sha256sum network/netflow_validation.json >> hashes.txt
 sha256sum endpoint_telemetry/processtree_validation.json >> hashes.txt
