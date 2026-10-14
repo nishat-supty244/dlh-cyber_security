@@ -1,6 +1,6 @@
 # Containment Execution: IR-2026-0414-01
 
-- Incident alias in Task 1: `IR-20260414-01` (same case; use `IR-2026-0414-01` consistently going forward).
+- Incident alias in Task 1: `IR-20260414-01`.
 - Host: `WST-WS-031` / `10.42.118.31` (West Campus Laboratory).
 - Selected approach: quarantine VLAN 999, permit approved IR jumpbox only, deny other traffic; block `185.220.101.47` at egress.
 - **Status: NOT EXECUTED / NOT VERIFIED.** The supplied artifacts document activity through 02:47:30Z and do not include execution-console outputs, packet capture, netflow, or authorization records. Example times below are **lab scenario targets**, not observed times. Replace them with real UTC times and outputs before claiming execution.
