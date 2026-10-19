@@ -1,4 +1,4 @@
-
+#!/bin/bash
 #!/usr/bin/env bash
 
 # MedDefense - Task 2: Verify All Artifacts
