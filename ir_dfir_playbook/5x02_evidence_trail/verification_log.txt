@@ -1,0 +1,3 @@
+2026-10-19T13:23:08Z | actor=Steve | artifact=ART-001 | result=ERROR | expected=NONE | computed=UNAVAILABLE
+2026-10-19T13:23:08Z | actor=Steve | artifact=ART-002 | result=ERROR | expected=NONE | computed=UNAVAILABLE
+2026-10-19T13:23:08Z | actor=Steve | artifact=ART-003 | result=ERROR | expected=NONE | computed=UNAVAILABLE
