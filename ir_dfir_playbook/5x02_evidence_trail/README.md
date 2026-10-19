@@ -1,4 +1,4 @@
-**Digital Forensics – Learning Objectives (Questions & Answers)**
+**Learning Objectives**
 
 **1\. Technical Learning Objectives**
 
