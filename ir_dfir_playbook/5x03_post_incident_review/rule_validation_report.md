@@ -1,118 +1,222 @@
 
-# Sigma Rule Validation Report
+# Rule Validation Report
 
-**Incident:** IR-2026-0414-01  
-**Organization:** MedDefense  
-**Test samples:** incident_sysmon.jsonl, clean_sysmon.jsonl
+**Organization:** MedDefense
+**Incident ID:** IR-2026-0414-01
+**Forensic Case:** LH-2026-0414-01
+**Validation Date:** 2026-10-20
 
 ## 1. Objective
 
-Validate the Sigma detection rules created in Tasks 3 and 4.
+Validate the Sigma detection rules developed in Tasks 3 and 4
+against the provided incident and clean Sysmon logs.
 
-The rules must detect known malicious activity in the incident logs
-while minimizing false positives in normal workstation activity.
+The purpose is to confirm that the rules:
 
-Target false positive rate: less than 0.1% of clean events.
+- Detect known malicious activity.
+- Produce minimal false positives on legitimate activity.
+- Meet the false positive threshold of less than 0.1%.
+- Can be tuned before production deployment.
 
-## 2. Validation Method
+## 2. Test Data
 
-A Bash script, validate_rules.sh, was used to evaluate the
-Sigma rule conditions against both JSONL log samples.
+Two Sysmon JSONL files were provided:
 
-For each rule, the script calculates:
+| File | Total Events | Description |
+|---|---:|---|
+| incident_sysmon.jsonl | 17 | Sysmon events from compromised workstations WST-WS-031 and WST-WS-017 |
+| clean_sysmon.jsonl | 21 | Normal workstation events, including legitimate development activity |
 
-- Total events processed
-- Number of matching events
-- Match rate
-- Clean-baseline false positive rate
-- Matching clean events requiring review
+The files are small lab samples rather than full production
+log collections.
 
-Match rate = (Matched events / Total events) * 100
+### Validation Formula
 
-The script uses a limited Sigma-compatible matcher.
-Full production compatibility requires validation using
-the target SIEM's Sigma backend.
+Match Rate (%) = (Matched Events / Total Events) × 100
+
+Target false positive rate: less than 0.1%.
 
 ## 3. Rule 1: PowerShell MSBuild LOLBin Execution
 
-**File:** sigma_powershell_msbuild_lolbin.yml  
+**Rule File:** sigma_powershell_msbuild_lolbin.yml
+
 **MITRE ATT&CK:** T1127.001
 
-### Incident Data Results
+**Severity:** High
 
-- Total events: [TO BE FILLED]
-- Matches: [TO BE FILLED]
-- Match rate: [TO BE FILLED]%
-- Did the rule detect the attack? [YES/NO]
-- Verdict: [PASS/FAIL]
+### Detection Purpose
 
-### Clean Data Results
+Detect suspicious process creation when PowerShell or
+Windows script hosts launch MSBuild.exe or other trusted
+developer utilities.
 
-- Total events: [TO BE FILLED]
-- Matches: [TO BE FILLED]
-- False positive rate: [TO BE FILLED]%
-- Verdict: [PASS/REVIEW]
-
-### False Positive Analysis
-
-[Describe legitimate PowerShell, Visual Studio, or
-MSBuild activity matched by the rule, if any.]
-
-### Tuning Decisions
-
-[Document each change, the reason, and the results
-after retesting. Write "No changes required" if
-the rule meets the acceptance criteria.]
-
-## 4. Rule 2: MSBuild Network/C2 Detection
-
-**File:** sigma_msbuild_c2_network.yml  
-**MITRE ATT&CK:** [FROM TASK 4]
+This behavior was observed during the MedDefense incident.
 
 ### Incident Data Results
 
-- Total events: [TO BE FILLED]
-- Matches: [TO BE FILLED]
-- Match rate: [TO BE FILLED]%
-- Did the rule detect the attack? [YES/NO]
-- Verdict: [PASS/FAIL]
+| Metric | Result |
+|---|---|
+| Total events | 17 |
+| Matched events | 2 |
+| Match rate | 11.765% |
+| Verdict | PASS |
 
-### Clean Data Results
+### Matched Incident Events
 
-- Total events: [TO BE FILLED]
-- Matches: [TO BE FILLED]
-- False positive rate: [TO BE FILLED]%
-- Verdict: [PASS/REVIEW]
+**Match 1**
+
+- Timestamp: 2026-04-14T02:46:58Z
+- Host: WST-WS-031
+- Parent process: powershell.exe
+- Child process: MSBuild.exe
+- Child PID: 8104
+- Behavior: Suspicious PowerShell-to-MSBuild execution
+
+**Match 2**
+
+- Timestamp: 2026-04-14T03:27:13Z
+- Host: WST-WS-017
+- Parent process: powershell.exe
+- Child process: MSBuild.exe
+- Child PID: 5108
+- Behavior: Suspicious PowerShell-to-MSBuild execution
+
+### Incident Detection Verdict
+
+PASS
+
+The rule matched both expected PowerShell-to-MSBuild
+execution events in the incident sample.
+
+## 4. Rule 1: Clean Baseline Validation
+
+| Metric | Result |
+|---|---|
+| Total events | 21 |
+| Matched events | 0 |
+| False positive rate | 0.000% |
+| Target | Below 0.1% |
+| Verdict | PASS |
 
 ### False Positive Analysis
 
-[Describe matched legitimate network connections,
-including any NuGet or approved build traffic.]
+No events matched the rule in the clean sample.
 
-### Tuning Decisions
+The clean data includes legitimate developer activity:
 
-[Document filters added or modified, why they were
-needed, and the result after retesting.]
+- Visual Studio launching MSBuild.exe.
+- PowerShell launching dotnet.exe.
+- Normal software build operations.
 
-## 5. Final Validation Summary
+These activities did not satisfy the rule's combined
+parent-child process conditions.
 
-| Rule | Incident Detection | Clean FP Rate | Verdict |
+### Tuning Decision
+
+No changes were required for Rule 1.
+
+Reason:
+
+- Both known attack process-creation events were detected.
+- No matching events occurred in the clean baseline.
+- The measured false positive rate was 0.000%.
+
+The original Sigma rule was retained.
+
+## 5. Rule 2: MSBuild Network/C2 Detection
+
+**Rule File:** Task 4 Sigma rule (not yet supplied)
+
+**Validation Status:** PENDING
+
+### Detection Purpose
+
+Detect suspicious outbound network connections associated
+with MSBuild.exe and potential command-and-control activity.
+
+### Relevant Incident Evidence
+
+The incident sample includes MSBuild connections to:
+
+- 185.220.101.47:443
+- 91.234.99.107:443
+
+These connections are associated with the MedDefense attack.
+
+### Relevant Clean Baseline Evidence
+
+The clean sample contains 14 legitimate MSBuild
+connections to:
+
+- api.nuget.org:443
+
+These represent normal software development traffic.
+
+### Validation Results
+
+| Sample | Total Events | Matches | Match Rate | Verdict |
+|---|---:|---:|---|---|
+| Incident | 17 | Not measured | Pending | PENDING |
+| Clean | 21 | Not measured | Pending | PENDING |
+
+The Task 4 Sigma rule must be supplied before its
+actual match counts can be determined.
+
+### Potential False Positive Pattern
+
+A broadly written MSBuild network detection rule
+may match legitimate connections to api.nuget.org.
+
+If confirmed during testing, consider excluding
+approved NuGet traffic using a destination hostname
+filter, then rerun validation.
+
+No tuning has been applied without the actual rule.
+
+## 6. Rule Changes and Retesting
+
+| Rule | Change | Reason | Retest Result |
 |---|---|---|---|
-| PowerShell MSBuild LOLBin | TBD | TBD | TBD |
-| MSBuild Network/C2 | TBD | TBD | TBD |
+| Rule 1 | No changes | Incident detected; clean rate 0.000% | PASS |
+| Rule 2 | Pending | Rule not supplied | PENDING |
 
-## 6. Acceptance Criteria
+## 7. Final Validation Summary
 
-A rule passes when:
+| Rule | Incident Detection | Clean FP Rate | Status |
+|---|---|---|---|
+| PowerShell MSBuild LOLBin | 2 matches | 0.000% | PASS |
+| MSBuild Network/C2 | Not measured | Not measured | PENDING |
 
-1. It matches the expected incident behavior.
-2. Its clean-baseline match rate is below 0.1%.
-3. Any legitimate matches have been reviewed.
-4. All rule changes are documented.
-5. The final tuned rule has been retested.
+## 8. Limitations
 
-## 7. Conclusion
+The provided incident and clean samples contain only
+17 and 21 events respectively.
 
-[Complete after running the tests. State whether
-each rule passed, what was changed, and whether
-further validation is required before deployment.]
+Therefore, the results demonstrate detection behavior
+on these lab samples but do not establish production
+false positive performance.
+
+With 21 clean events, a single match would represent
+a 4.762% match rate.
+
+The validation script supports basic Sigma conditions
+and selected field modifiers. Production deployment
+requires testing through a compatible Sigma backend
+and the target SIEM.
+
+## 9. Conclusion
+
+The PowerShell MSBuild LOLBin rule successfully detected
+both expected suspicious execution events in the incident
+sample and generated zero matches in the clean baseline.
+
+Its observed false positive rate was 0.000%, meeting the
+lab's threshold of less than 0.1%.
+
+No tuning was required for Rule 1.
+
+Rule 2 remains pending until the Task 4 Sigma file is
+available for testing.
+
+Both rules should undergo additional validation with
+larger representative datasets before production use.
