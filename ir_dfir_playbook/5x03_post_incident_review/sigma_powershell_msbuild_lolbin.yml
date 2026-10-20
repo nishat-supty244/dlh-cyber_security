@@ -1,0 +1,61 @@
+
+title: PowerShell Spawning Trusted Developer Utility (LOLBin Proxy Execution)
+id: 23234ce6-a092-4b3d-95c8-9f826964a7d2
+status: test
+description: >
+  Detects PowerShell or Windows script host processes spawning
+  trusted developer utilities such as MSBuild.exe, csc.exe,
+  vbc.exe, or jsc.exe. These utilities can be abused to execute
+  malicious code through trusted Windows binaries.
+  This behavior was observed during the MedDefense incident
+  IR-2026-0414-01, where PowerShell launched MSBuild.exe
+  to execute a malicious inline task from update.xml.
+
+references:
+  - https://attack.mitre.org/techniques/T1127/001/
+  - https://lolbas-project.github.io/
+  - https://lolbas-project.github.io/lolbas/Binaries/Msbuild/
+
+author: MedDefense SOC
+date: 2026-10-20
+
+tags:
+  - attack.defense-evasion
+  - attack.execution
+  - attack.t1127.001
+
+logsource:
+  category: process_creation
+  product: windows
+
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\wscript.exe'
+      - '\cscript.exe'
+
+  selection_child:
+    Image|endswith:
+      - '\MSBuild.exe'
+      - '\csc.exe'
+      - '\vbc.exe'
+      - '\jsc.exe'
+
+  condition: selection_parent and selection_child
+
+falsepositives:
+  - >
+    Legitimate software build or deployment scripts using
+    PowerShell to launch MSBuild.exe during scheduled
+    application compilation or CI/CD operations.
+  - >
+    Authorized IT administrators running PowerShell
+    automation scripts that invoke .NET compilers
+    such as csc.exe or vbc.exe for maintenance tasks.
+  - >
+    Developer workstations executing approved build
+    scripts through PowerShell or Windows Script Host.
+
+level: high
