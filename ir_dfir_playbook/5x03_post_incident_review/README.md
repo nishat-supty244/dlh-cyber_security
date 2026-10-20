@@ -1,4 +1,4 @@
-**Learning Objectives – Questions & Answers (Q&A)**
+**Learning Objectives**
 
 **Technical Learning Objectives**
 
