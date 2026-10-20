@@ -462,19 +462,9 @@ Before production deployment:
 ## Conclusion
 
 The proposed controls address weaknesses identified
-during the MedDefense incident.
-
-PowerShell restrictions and AppLocker reduce
-opportunities for malicious LOLBin execution.
-
-Conditional Access improvements reduce exposure
-to suspicious remote authentication.
-
-Credential Guard strengthens protection of
-Windows authentication secrets.
-
-Each change is linked to a documented gap and
-includes a validation procedure.
-
-Production implementation remains subject to
+during the MedDefense incident. PowerShell restrictions and AppLocker reduce
+opportunities for malicious LOLBin execution. Conditional Access improvements reduce exposure
+to suspicious remote authentication. Credential Guard strengthens protection of
+Windows authentication secrets. Each change is linked to a documented gap and
+includes a validation procedure. Production implementation remains subject to
 compatibility testing and change approval.
