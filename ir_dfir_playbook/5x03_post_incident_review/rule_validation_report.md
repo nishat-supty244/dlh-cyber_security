@@ -1,9 +1,13 @@
 # Rule Validation Report
 
 **Organization:** MedDefense
+
 **Incident ID:** IR-2026-0414-01
+
 **Forensic Case:** LH-2026-0414-01
+
 **Validation Date:** 2026-10-20
+
 
 ## 1. Objective
 
