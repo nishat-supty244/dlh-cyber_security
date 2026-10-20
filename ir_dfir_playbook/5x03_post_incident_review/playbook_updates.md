@@ -347,4 +347,4 @@ The exercise should confirm that the updated triggers,
 escalation paths, containment steps, and decision points
 are clear and operationally practical.
 
-**Status:** Pending review, testing, and approval.
+
