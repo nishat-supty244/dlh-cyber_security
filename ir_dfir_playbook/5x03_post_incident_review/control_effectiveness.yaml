@@ -1,0 +1,109 @@
+
+# MedDefense - Task 1: Audit Control Effectiveness
+# Incident: IR-2026-0414-01
+# Source: Available incident timeline and forensic handoff
+# Note: Validate against forensic_findings_summary.md
+
+- phase: "Credential phishing and submission"
+  att_ck_technique: "T1566.002, T1078"
+  controls_expected:
+    - "Email security gateway with phishing URL detection"
+    - "DNS and web filtering for malicious domains"
+    - "Phishing-resistant multi-factor authentication"
+    - "SIEM alerting for suspicious credential submission"
+  controls_fired:
+    - "Proxy logging recorded access to the fake Microsoft 365 login page"
+    - "Proxy logging recorded an HTTP POST to /auth/submit"
+  controls_missed:
+    - "Phishing URL blocking was not effective or was absent"
+    - "No confirmed preventive action before credential submission"
+    - "MFA effectiveness requires verification"
+  gap_severity: "high"
+  gap_reason: "The phishing site was accessible and a credential-submission request was recorded without confirmed prevention."
+
+- phase: "VPN access using stolen credentials from a foreign IP"
+  att_ck_technique: "T1078"
+  controls_expected:
+    - "Phishing-resistant MFA for VPN authentication"
+    - "Geo-location and impossible-travel detection"
+    - "VPN access restrictions based on location and device"
+    - "SIEM correlation of unusual authentication activity"
+  controls_fired:
+    - "Authentication logging recorded suspicious account activity"
+  controls_missed:
+    - "No confirmed VPN access prevention"
+    - "MFA enforcement and bypass status require verification"
+    - "Foreign IP detection and alerting require verification"
+  gap_severity: "critical"
+  gap_reason: "Suspected stolen-account access presents a critical risk; the foreign-IP VPN sequence and control failures require source verification."
+
+- phase: "PowerShell to MSBuild LOLBin execution"
+  att_ck_technique: "T1127.001"
+  controls_expected:
+    - "EDR monitoring of suspicious process execution"
+    - "Application control restricting unauthorized MSBuild execution"
+    - "PowerShell script block and process logging"
+    - "SIEM detection of PowerShell spawning MSBuild"
+  controls_fired:
+    - "Wazuh EDR recorded suspicious PowerShell execution"
+    - "Wazuh EDR detected PowerShell spawning MSBuild.exe"
+    - "Wazuh rule wz-edr-100041 generated alert A-20260414-9841"
+  controls_missed:
+    - "No confirmed prevention of malicious MSBuild execution"
+    - "Application control enforcement was not demonstrated"
+    - "Execution continued until the detection alert was generated"
+  gap_severity: "high"
+  gap_reason: "EDR detected the malicious process chain, but no preventive control was confirmed to have blocked execution."
+
+- phase: "C2 beaconing to external IPs"
+  att_ck_technique: "T1071.001"
+  controls_expected:
+    - "Firewall restrictions on unauthorized outbound connections"
+    - "Proxy filtering of suspicious external destinations"
+    - "Network detection for command-and-control traffic"
+    - "Threat intelligence enrichment of destination IPs"
+  controls_fired:
+    - "Wazuh EDR recorded an outbound connection to 185.220.101.47:443"
+    - "Proxy logging recorded suspicious outbound traffic"
+    - "Wazuh enrichment identified the destination as high risk"
+    - "EDR generated an alert correlating execution and network activity"
+  controls_missed:
+    - "No confirmed outbound firewall block before connection"
+    - "No confirmed automatic containment of the compromised host"
+    - "Effectiveness of C2 beacon-pattern detection remains unverified"
+  gap_severity: "high"
+  gap_reason: "Suspicious outbound communication was established before the alert, with no confirmed preventive network block."
+
+- phase: "LSASS credential access and Kerberos ticket extraction"
+  att_ck_technique: "T1003.001, T1558.003"
+  controls_expected:
+    - "Windows Credential Guard and LSASS protection"
+    - "EDR detection of suspicious LSASS memory access"
+    - "Kerberos authentication anomaly monitoring"
+    - "SIEM correlation of credential dumping and ticket activity"
+  controls_fired: []
+  controls_missed:
+    - "LSASS access prevention effectiveness requires verification"
+    - "Credential dumping alert coverage requires verification"
+    - "Kerberos ticket extraction detection requires verification"
+  gap_severity: "critical"
+  gap_reason: "Credential theft could enable wider compromise; LSASS and Kerberos evidence and associated control outcomes require confirmation."
+
+- phase: "Lateral movement and PHI access"
+  att_ck_technique: "T1550.003, T1078"
+  controls_expected:
+    - "Network segmentation between workstations and clinical systems"
+    - "Least-privilege access to sensitive patient information"
+    - "SIEM detection of abnormal cross-host authentication"
+    - "Monitoring of privileged and sensitive file access"
+    - "EDR detection of suspicious lateral movement"
+  controls_fired:
+    - "Authentication logs recorded account activity across multiple hosts"
+    - "Available investigation records identified access to 14 patient-report PDFs"
+    - "Endpoint and network evidence supported lateral movement investigation"
+  controls_missed:
+    - "No confirmed prevention of suspicious cross-host access"
+    - "No confirmed restriction preventing access to sensitive reports"
+    - "Real-time detection of abnormal patient-report access was not established"
+  gap_severity: "critical"
+  gap_reason: "Suspicious authentication reached additional hosts and sensitive clinical reports were accessed without confirmed preventive enforcement."
