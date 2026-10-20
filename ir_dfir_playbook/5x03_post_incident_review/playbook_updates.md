@@ -12,9 +12,6 @@
 
 ## Objective
 
-Update the credential exposure playbook to address weaknesses
-identified during the MedDefense incident.
-
 The updates cover:
 - Suspicious VPN authentication and impossible travel
 - Scope expansion after lateral movement
