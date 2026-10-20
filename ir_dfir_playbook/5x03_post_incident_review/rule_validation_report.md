@@ -1,4 +1,3 @@
-
 # Rule Validation Report
 
 **Organization:** MedDefense
