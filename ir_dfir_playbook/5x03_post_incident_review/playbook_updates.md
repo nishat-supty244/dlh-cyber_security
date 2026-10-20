@@ -2,9 +2,13 @@
 # Playbook Updates: IR-2026-0414-01
 
 **Organization:** MedDefense
+
 **Incident ID:** IR-2026-0414-01
+
 **Playbook:** playbook_credential_exposure.yaml
+
 **Status:** Proposed updates following incident review
+
 
 ## Objective
 
