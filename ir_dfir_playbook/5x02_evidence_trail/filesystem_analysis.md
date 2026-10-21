@@ -543,23 +543,3 @@ not a genuine NTFS image.
 As a result, partition layout, filesystem metadata,
 MAC timestamps, inode numbers, extracted file contents,
 and file-specific SHA-256 hashes remain unverified.
-
-**Final Status: PARTIAL — further NTFS forensic evidence
-is required to complete Task 3.**
-
-### Required Follow-up
-
-Obtain a genuine NTFS disk image or authenticated TSK
-outputs, verify its baseline SHA-256, mount it read-only,
-and complete the following:
-
-- `mmls` partition analysis
-- `fsstat` filesystem metadata examination
-- `fls` recursive file listing
-- `mactime` MAC timeline generation
-- `icat` extraction of suspicious files
-- File-level SHA-256 calculations
-- Chain-of-custody updates
-
-Only after these steps can the filesystem findings be
-classified as independently verified.
