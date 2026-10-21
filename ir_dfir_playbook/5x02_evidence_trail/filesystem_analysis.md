@@ -11,7 +11,7 @@
 - **Operating System:** Windows 10 Pro 22H2
 - **Location:** West Campus
 - **User:** MEDDEFENSE\dmarsh
-- **Investigator:** Steve, Cybersecurity Engineer
+- **Investigator:** Nishat Sultana Supty
 - **Tools:** The Sleuth Kit (TSK), SHA-256
 - **Analysis Status:** PARTIAL
 
