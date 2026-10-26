@@ -2,10 +2,15 @@
 # Tabletop Exercise: Nexus Supply Chain Compromise
 
 **Date:** 2026-10-26
+
 **Classification:** Internal - Exercise Use Only  
+
 **Facilitator:** Nishat Sultana Supty
+
 **Scenario Version:** 1.1  
+
 **Organization:** MedDefense Health Systems  
+
 **Exercise Type:** Cybersecurity Tabletop Exercise (TTX)
 
 ---
