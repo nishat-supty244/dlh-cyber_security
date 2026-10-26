@@ -1,0 +1,96 @@
+injects:
+  - id: INJ-00
+    time_minutes: 0
+    delivery: facilitator reads aloud
+    situation: >-
+      Forty-five minutes ago, the SOC detected unusual outbound traffic from
+      SCHED-SVR-01, the Main Campus server running the Nexus scheduling agent.
+      EDR telemetry shows connections to an unfamiliar external IP approximately
+      every four hours. Nexus scheduling remains operational across West Campus,
+      Main Campus and North Site. No data theft or appointment changes are confirmed.
+    capability_tested: [CAP-01]
+    decision_point: >-
+      Will you declare an incident, at what provisional severity, and who will
+      lead triage and preserve evidence in the first 15 minutes?
+    roles_challenged:
+      - James Chen (SOC Lead / IR Commander)
+      - Sarah Park (IT Director)
+    expected_response: >-
+      Declare and document a provisional incident severity based on the available
+      facts; assign an incident commander, preserve EDR/network evidence, check
+      Nexus agent update history and notify relevant technical and clinical
+      stakeholders without assuming a confirmed breach.
+
+  - id: INJ-01
+    time_minutes: 20
+    delivery: facilitator reads aloud
+    situation: >-
+      Nexus SecOps issues an urgent advisory: an attacker accessed the vendor's
+      build infrastructure three days ago. A malicious update was signed with
+      the Nexus Health Technologies certificate and automatically distributed.
+      The update version installed on SCHED-SVR-01 matches the affected release.
+      Nexus has not yet supplied a clean replacement. MedDefense's last vendor
+      review noted that the agent validates the signing certificate but does not
+      independently pin update hashes.
+    capability_tested: [CAP-01, CAP-02]
+    decision_point: >-
+      How will you validate and scope the trusted-update compromise, contact
+      Nexus and establish a joint response channel?
+    roles_challenged:
+      - Robert Kim (Technical Lead)
+      - James Chen (IR Commander)
+      - Sarah Park (IT Director)
+    expected_response: >-
+      Treat the signed update as a credible supply-chain vector; preserve
+      affected binaries and installation logs; identify versions and possible
+      installations at all sites; contact Nexus 24x7 SecOps at
+      soc@nexushealth.io or +1 512 555 0184; request indicators, timeline,
+      containment guidance and evidence; record owners and response deadlines.
+
+  - id: INJ-02
+    time_minutes: 40
+    delivery: facilitator reads aloud
+    situation: >-
+      Technical analysis confirms the affected Nexus agent is making periodic
+      external connections. Robert Kim recommends isolating SCHED-SVR-01 and
+      suspending Nexus FHIR traffic. The Clinical Director objects: the three
+      sites rely on Nexus for approximately 3,500 patient-facing interactions
+      weekly, and abruptly stopping automated confirmations and updates may
+      cause missed or delayed appointments. No clean vendor patch is available.
+    capability_tested: [CAP-03]
+    decision_point: >-
+      Do you isolate the agent, restrict selected traffic, or continue operation
+      under monitoring? Who authorizes the choice, and how will patient
+      scheduling continue safely?
+    roles_challenged:
+      - Robert Kim (Technical Lead)
+      - Clinical Director representative
+      - Sarah Park (IT Director)
+      - James Chen (IR Commander)
+    expected_response: >-
+      Make and document an authorized, time-bound containment decision with
+      clinical input; compare full isolation, selective network restriction and
+      monitored operation; activate or explicitly prepare manual scheduling,
+      patient-priority triage and reconciliation; assign owners and reassessment
+      triggers. Do not treat technical isolation as automatically risk-free.
+
+  - id: INJ-03
+    time_minutes: 60
+    delivery: facilitator reads aloud
+    situation: >-
+      Nexus reports that the compromised build pipeline served multiple
+      customers. MedDefense's investigation identifies suspicious access to
+      appointment-related API records through the Nexus integration service
+      principal svc-nexus-prod. The available logs cannot yet distinguish
+      legitimate synchronization from unauthorized retrieval. Nexus processes
+      patient demographics, insurance information and appointment details.
+    capability_tested: [CAP-04, CAP-05]
+    decision_point: >-
+      How will you define the possible ePHI exposure scope and begin the HIPAA
+      and BAA assessment without claiming a breach is already proven?
+    roles_challenged:
+      - Helena Reyes (Legal Liaison)
+      - James Chen (IR Commander)
+      - Robert Kim (Technical Lead)
+    expected_response: >-
+      Preserve FHIR, OAuth2, Nexus and Epic audit evidence; establish the
