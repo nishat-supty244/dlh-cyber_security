@@ -1,0 +1,130 @@
+criteria:
+  - inject_id: INJ-00
+    capability_tested: [CAP-01]
+    pass_criteria:
+      - "Within five exercise minutes, James Chen or a delegate declares an incident and states a provisional severity with a reason."
+      - "Names an incident commander and at least two stakeholders to notify, including IT and clinical operations."
+      - "Orders preservation of SCHED-SVR-01 EDR and network logs before disruptive containment, and requests Nexus agent version/update history."
+    fail_indicators:
+      - "No incident declaration or documented severity rationale by minute five."
+      - "No evidence-preservation action is named before proposing disruptive containment."
+      - "No one requests Nexus agent/update information during this inject."
+    finding_if_fail: >-
+      Initial vendor-origin traffic triage did not consistently trigger incident declaration,
+      evidence preservation, and Nexus update-history review. Owner: James Chen, SOC Lead.
+      Due: 14 days after exercise. Update the SOC escalation matrix and initial triage
+      checklist; validate by replaying INJ-00 and observing all three actions within five minutes.
+
+  - inject_id: INJ-01
+    capability_tested: [CAP-01, CAP-02]
+    pass_criteria:
+      - "Explicitly states that a valid vendor code signature does not rule out malicious content and cites the lack of independent client-side hash pinning."
+      - "Requests preservation of signed binaries, install logs, and version inventory across the three sites."
+      - "Names Nexus 24x7 SecOps as the contact, using soc@nexushealth.io or +1 512 555 0184, and requests indicators, scope, remediation guidance, and an update cadence."
+      - "Assigns a MedDefense owner to record vendor responses and follow-up deadlines."
+    fail_indicators:
+      - "Team dismisses compromise because the package is signed or fails to investigate the update channel."
+      - "No request is made for affected-version inventory or signed-update evidence."
+      - "No named person initiates or assigns Nexus SecOps contact during the inject window."
+      - "Vendor communication is left without a recorded owner or next update time."
+    finding_if_fail: >-
+      Vendor update-channel trust and joint incident communication controls were not
+      exercised effectively; the signed-update validation weakness and untested escalation
+      path remain operational gaps. Owner: Sarah Park, IT Director, with Vendor Risk.
+      Due: 21 days after exercise. Add update provenance checks and a tested Nexus
+      escalation runbook; validate through a mock signed-update alert and timed vendor call drill.
+
+  - inject_id: INJ-02
+    capability_tested: [CAP-03]
+    pass_criteria:
+      - "Records a containment choice or a time-bounded escalation to a named decision authority during the inject."
+      - "Obtains and records input from the Clinical Director before finalizing a disruptive isolation choice."
+      - "Compares full isolation, selective restriction, and monitored operation with explicit patient-safety consequences."
+      - "Names a manual scheduling fallback or accountable owner and activation deadline, plus a reassessment trigger."
+    fail_indicators:
+      - "No decision or named escalation authority and deadline is recorded."
+      - "A disruptive isolation decision is made without clinical consultation."
+      - "No patient-safety impact or manual scheduling fallback is discussed."
+      - "The team does not assign an owner or trigger for reassessment."
+    finding_if_fail: >-
+      Nexus containment decisions lacked documented clinical authorization, patient-safety
+      trade-off assessment, or an actionable scheduling fallback. Owner: Sarah Park,
+      IT Director, jointly with Clinical Director. Due: 30 days after exercise.
+      Publish a clinical-security isolation decision tree and manual scheduling procedure;
+      validate in a repeat drill with an authorized decision and named fallback owner.
+
+  - inject_id: INJ-03
+    capability_tested: [CAP-04, CAP-05]
+    pass_criteria:
+      - "Legal/privacy and technical leads jointly define the affected data categories, systems, sites, and exposure window to investigate."
+      - "Requests Nexus access evidence and MedDefense FHIR logs, distinguishing possible PHI access from proven exfiltration."
+      - "Explicitly cites the BAA's 24-hour Nexus-to-MedDefense breach notice requirement and asks for the vendor discovery timestamp."
+      - "Assigns legal/privacy ownership of HIPAA breach-risk assessment and records a notification decision checkpoint without prematurely declaring reportability."
+    fail_indicators:
+      - "No scoped evidence request or exposure-window investigation is assigned."
+      - "The team states PHI exfiltration is confirmed solely from the vendor warning."
+      - "The 24-hour BAA notice term or vendor discovery timestamp is not addressed."
+      - "No legal/privacy owner or notification assessment checkpoint is identified."
+    finding_if_fail: >-
+      Business Associate compromise handling did not establish a defensible PHI scope,
+      evidence-based breach assessment, or contractual notification clock. Owner:
+      Helena Reyes, Legal Liaison, with Privacy Officer. Due: 21 days after exercise.
+      Add a BA breach-intake worksheet covering discovery time, FHIR log requests,
+      PHI categories, and notification decisions; validate with a timed mock BA report.
+
+  - inject_id: INJ-04
+    capability_tested: [CAP-06, CAP-03]
+    pass_criteria:
+      - "Declares appointment discrepancies a potential patient-safety issue and involves the Clinical Director."
+      - "Requests preservation and comparison of Nexus and Epic audit trails before bulk edits or overwrites."
+      - "Names a process and owner to verify urgent and near-term appointments and contact affected patients when needed."
+      - "Records whether to continue, restrict, or replace automated scheduling, with a reconciliation deadline."
+    fail_indicators:
+      - "Appointment discrepancies are treated only as an IT data-quality issue without clinical escalation."
+      - "Bulk corrections are proposed without preserving source records or audit trails."
+      - "No named owner or prioritization process exists for near-term patient appointments."
+      - "No decision on scheduling operations or reconciliation deadline is documented."
+    finding_if_fail: >-
+      Appointment integrity response lacked clinical prioritization, audit-preserving
+      reconciliation, or a controlled scheduling fallback. Owner: Clinical Director,
+      with Robert Kim, Technical Lead. Due: 30 days after exercise. Create a
+      Nexus-Epic discrepancy triage and correction workflow; validate against seeded
+      mismatched appointments with evidence preserved and urgent visits checked first.
+
+  - inject_id: INJ-05
+    capability_tested: [CAP-07]
+    pass_criteria:
+      - "Identifies Marcus Webb as communications lead and a legal/privacy approval path before responding to the journalist."
+      - "Drafts or verbally approves a holding statement within the 30-minute media window."
+      - "Separates verified facts from unknowns, avoids unsupported claims of theft or harm, and does not disclose PHI."
+      - "Names an external update owner and next review time, including staff/patient messaging if warranted."
+    fail_indicators:
+      - "An unapproved spokesperson commits to a public statement or multiple inconsistent responses."
+      - "The proposed statement asserts unconfirmed exfiltration or reveals patient information."
+      - "No approved holding statement or response decision is made within 30 minutes."
+      - "No owner or timing for subsequent communications is established."
+    finding_if_fail: >-
+      External incident communications lacked a single approved spokesperson, a
+      verified-facts holding statement, or timely decision-making under media pressure.
+      Owner: Marcus Webb, Communications Lead, with Helena Reyes. Due: 14 days
+      after exercise. Update the crisis communications approval matrix and templates;
+      validate with a timed 30-minute media-inquiry simulation.
+
+  - inject_id: INJ-06
+    capability_tested: [CAP-08, CAP-04, CAP-05, CAP-06]
+    pass_criteria:
+      - "Assigns a briefing owner and a delivery deadline exactly 90 minutes after INJ-06."
+      - "Delivers a board-ready summary within that window covering operations, patient safety, vendor status, containment, PHI assessment, and notification posture."
+      - "Explicitly separates confirmed compromise from unresolved exfiltration and appointment-modification questions."
+      - "Records an operational recommendation and a named owner, next action, and deadline for each major unresolved issue."
+    fail_indicators:
+      - "No briefing owner or 90-minute deadline is assigned, or the brief misses that deadline."
+      - "The brief omits patient safety, vendor status, PHI/BAA posture, or an actionable operational recommendation."
+      - "The brief presents uncertain exfiltration or malicious appointment changes as established fact."
+      - "Open questions have no named owner, next evidence step, or follow-up deadline."
+    finding_if_fail: >-
+      Executive incident reporting was not decision-ready within the required 90 minutes
+      and did not reliably distinguish verified impact from open investigative questions.
+      Owner: James Chen, IR Commander, with Sarah Park, IT Director. Due: 21 days
+      after exercise. Adopt a board incident-brief template and open-issues register;
+      validate through a repeat timed briefing containing evidence gaps and assigned follow-ups.
