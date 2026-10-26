@@ -1,0 +1,114 @@
+
+capabilities:
+  - capability_id: CAP-01
+    name: supply_chain_detection
+    expected_behavior: >-
+      Correlate the four-hour outbound connections from SCHED-SVR-01
+      with Nexus agent version and update history. Consider a signed
+      vendor update as a possible compromise vector despite valid
+      certificate validation. Preserve evidence and review the
+      previous finding that client-side hash pinning is absent.
+    gap_hypothesis: >-
+      Responders assume a valid Nexus code signature proves the
+      update is safe and investigate only external network intrusion.
+    tested_by_inject: [INJ-00, INJ-01]
+    evaluation_owner: Technical evaluator (SOC / incident response)
+
+  - capability_id: CAP-02
+    name: vendor_communication
+    expected_behavior: >-
+      Contact Nexus 24x7 SecOps through the documented channel,
+      establish a joint incident contact and escalation cadence,
+      request update provenance, affected versions and indicators,
+      and log requests, responses and times.
+    gap_hypothesis: >-
+      The vendor communication path, documented but not jointly
+      exercised, results in delays, unclear ownership or
+      unverified assurances.
+    tested_by_inject: [INJ-02]
+    evaluation_owner: Vendor coordination evaluator
+
+  - capability_id: CAP-03
+    name: business_continuity_decision
+    expected_behavior: >-
+      Weigh containment of nexus-agent and related FHIR connectivity
+      against outpatient scheduling at three sites and roughly
+      3500 weekly patient interactions. Consult clinical leadership,
+      consider restricted operation and manual fallback, and document
+      the decision owner, rationale and triggers.
+    gap_hypothesis: >-
+      Security isolates the system without clinical coordination,
+      or operations refuses containment without a documented risk
+      decision and fallback.
+    tested_by_inject: [INJ-03, INJ-06]
+    evaluation_owner: Clinical continuity evaluator
+
+  - capability_id: CAP-04
+    name: phi_exposure_assessment
+    expected_behavior: >-
+      Scope possible access to demographics, insurance and appointment
+      data, relevant time window, affected sites and records, vendor
+      and MedDefense logs, and distinguish potential exposure from
+      confirmed exfiltration.
+    gap_hypothesis: >-
+      Teams cannot reconcile Nexus SaaS and MedDefense FHIR evidence
+      or prematurely equate suspicious traffic with confirmed PHI theft.
+    tested_by_inject: [INJ-04]
+    evaluation_owner: Privacy and forensic evaluation lead
+
+  - capability_id: CAP-05
+    name: hipaa_notification_posture
+    expected_behavior: >-
+      Engage privacy and legal counsel, apply the BAA requirement for
+      Nexus to notify MedDefense within 24 hours of discovering a
+      breach, document the vendor discovery time, assess whether a
+      HIPAA breach occurred, and distinguish BA-to-covered-entity
+      notice from any subsequent individual, regulator or media
+      notification duties and timelines.
+    gap_hypothesis: >-
+      Participants assume the BA alone owns all notification duties,
+      or treat the BAA's 24-hour deadline as the deadline for all
+      HIPAA notices.
+    tested_by_inject: [INJ-04, INJ-05]
+    evaluation_owner: Legal and privacy evaluator
+
+  - capability_id: CAP-06
+    name: data_integrity_response
+    expected_behavior: >-
+      Treat suspected appointment modifications as a patient-safety
+      risk. Preserve audit logs, compare Nexus and Epic appointment
+      records, prioritize near-term visits, coordinate clinical
+      validation and establish a controlled correction and
+      patient-contact workflow.
+    gap_hypothesis: >-
+      Teams focus on malware removal and confidentiality while
+      failing to detect, validate or correct altered appointments.
+    tested_by_inject: [INJ-06]
+    evaluation_owner: Clinical data integrity evaluator
+
+  - capability_id: CAP-07
+    name: crisis_communications
+    expected_behavior: >-
+      Route media inquiries to the communications lead, coordinate
+      statements with legal, privacy and incident command, use
+      verified facts only, protect patient privacy and establish
+      an approval and update process.
+    gap_hypothesis: >-
+      Conflicting spokespeople, premature breach claims or
+      unapproved statements create avoidable public and legal risk.
+    tested_by_inject: [INJ-07]
+    evaluation_owner: Communications evaluator
+
+  - capability_id: CAP-08
+    name: executive_briefing_under_pressure
+    expected_behavior: >-
+      Deliver a concise board-quality brief within 90 minutes
+      that separates known facts from uncertainties and covers
+      patient safety, affected services, PHI risk, vendor status,
+      decisions, accountable owners and immediate next steps.
+    gap_hypothesis: >-
+      Teams provide technical details without a decision-ready
+      executive summary, overstate certainty or miss the
+      90-minute deadline.
+    tested_by_inject: [INJ-08]
+    evaluation_owner: Executive exercise evaluator
