@@ -1,96 +1,251 @@
+
 injects:
   - id: INJ-00
     time_minutes: 0
     delivery: facilitator reads aloud
     situation: >-
-      Forty-five minutes ago, the SOC detected unusual outbound traffic from
-      SCHED-SVR-01, the Main Campus server running the Nexus scheduling agent.
-      EDR telemetry shows connections to an unfamiliar external IP approximately
-      every four hours. Nexus scheduling remains operational across West Campus,
-      Main Campus and North Site. No data theft or appointment changes are confirmed.
-    capability_tested: [CAP-01]
+      Forty-five minutes ago, the SOC detected unusual outbound
+      traffic from SCHED-SVR-01, the Main Campus server running
+      the Nexus scheduling agent. EDR telemetry shows connections
+      to an unfamiliar external IP approximately every four hours.
+      Nexus scheduling remains operational across West Campus,
+      Main Campus and North Site. No data theft or appointment
+      changes are confirmed.
+    capability_tested:
+      - CAP-01
     decision_point: >-
-      Will you declare an incident, at what provisional severity, and who will
-      lead triage and preserve evidence in the first 15 minutes?
+      Will you declare an incident, at what provisional severity,
+      and who will lead triage and preserve evidence in the first
+      15 minutes?
     roles_challenged:
       - James Chen (SOC Lead / IR Commander)
       - Sarah Park (IT Director)
     expected_response: >-
-      Declare and document a provisional incident severity based on the available
-      facts; assign an incident commander, preserve EDR/network evidence, check
-      Nexus agent update history and notify relevant technical and clinical
-      stakeholders without assuming a confirmed breach.
+      Declare and document a provisional incident severity based
+      on available facts; assign an incident commander; preserve
+      EDR and network evidence; review Nexus agent update history;
+      notify relevant technical and clinical stakeholders without
+      assuming a confirmed breach.
 
   - id: INJ-01
     time_minutes: 20
     delivery: facilitator reads aloud
     situation: >-
-      Nexus SecOps issues an urgent advisory: an attacker accessed the vendor's
-      build infrastructure three days ago. A malicious update was signed with
-      the Nexus Health Technologies certificate and automatically distributed.
-      The update version installed on SCHED-SVR-01 matches the affected release.
-      Nexus has not yet supplied a clean replacement. MedDefense's last vendor
-      review noted that the agent validates the signing certificate but does not
-      independently pin update hashes.
-    capability_tested: [CAP-01, CAP-02]
+      Nexus SecOps issues an urgent security advisory. An attacker
+      accessed the vendor's software build infrastructure three
+      days ago. A malicious update was signed with the Nexus Health
+      Technologies certificate and automatically distributed.
+      The update installed on SCHED-SVR-01 matches the affected
+      release. Nexus has not yet supplied a clean replacement.
+      MedDefense's previous vendor review identified that the
+      agent validates the signing certificate but does not
+      independently verify a pinned update hash.
+    capability_tested:
+      - CAP-01
+      - CAP-02
     decision_point: >-
-      How will you validate and scope the trusted-update compromise, contact
-      Nexus and establish a joint response channel?
+      How will you confirm the supply chain compromise, identify
+      affected systems, contact Nexus and establish a coordinated
+      incident response process?
     roles_challenged:
       - Robert Kim (Technical Lead)
       - James Chen (IR Commander)
       - Sarah Park (IT Director)
     expected_response: >-
-      Treat the signed update as a credible supply-chain vector; preserve
-      affected binaries and installation logs; identify versions and possible
-      installations at all sites; contact Nexus 24x7 SecOps at
-      soc@nexushealth.io or +1 512 555 0184; request indicators, timeline,
-      containment guidance and evidence; record owners and response deadlines.
+      Recognize the signed update as a credible supply chain
+      compromise; preserve affected binaries and installation
+      logs; identify potentially affected versions and hosts;
+      contact Nexus SecOps at soc@nexushealth.io or
+      +1 512 555 0184; request indicators of compromise,
+      technical evidence, containment guidance and a timeline;
+      document communication owners and response deadlines.
 
   - id: INJ-02
     time_minutes: 40
     delivery: facilitator reads aloud
     situation: >-
-      Technical analysis confirms the affected Nexus agent is making periodic
-      external connections. Robert Kim recommends isolating SCHED-SVR-01 and
-      suspending Nexus FHIR traffic. The Clinical Director objects: the three
-      sites rely on Nexus for approximately 3,500 patient-facing interactions
-      weekly, and abruptly stopping automated confirmations and updates may
-      cause missed or delayed appointments. No clean vendor patch is available.
-    capability_tested: [CAP-03]
+      Technical analysis confirms that the affected Nexus agent
+      is making periodic external connections. Robert Kim
+      recommends isolating SCHED-SVR-01 and suspending Nexus FHIR
+      traffic. The Clinical Director objects because all three
+      sites depend on Nexus for approximately 3500 patient-facing
+      interactions each week. Abruptly stopping appointment
+      confirmations and scheduling updates could cause missed
+      or delayed patient appointments. No clean vendor patch
+      is currently available.
+    capability_tested:
+      - CAP-03
     decision_point: >-
-      Do you isolate the agent, restrict selected traffic, or continue operation
-      under monitoring? Who authorizes the choice, and how will patient
-      scheduling continue safely?
+      Will you fully isolate the server, selectively restrict
+      suspicious traffic, or continue operations under increased
+      monitoring? Who authorizes the decision and how will
+      patient scheduling continue safely?
     roles_challenged:
       - Robert Kim (Technical Lead)
       - Clinical Director representative
       - Sarah Park (IT Director)
       - James Chen (IR Commander)
     expected_response: >-
-      Make and document an authorized, time-bound containment decision with
-      clinical input; compare full isolation, selective network restriction and
-      monitored operation; activate or explicitly prepare manual scheduling,
-      patient-priority triage and reconciliation; assign owners and reassessment
-      triggers. Do not treat technical isolation as automatically risk-free.
+      Make an authorized and documented containment decision
+      with clinical leadership input. Compare full isolation,
+      selective network restrictions and monitored operation.
+      Assess patient safety and operational consequences.
+      Activate or prepare manual scheduling procedures,
+      prioritize urgent patients, assign responsible owners
+      and establish reassessment deadlines. Document the
+      decision and its justification.
 
   - id: INJ-03
     time_minutes: 60
     delivery: facilitator reads aloud
     situation: >-
-      Nexus reports that the compromised build pipeline served multiple
-      customers. MedDefense's investigation identifies suspicious access to
-      appointment-related API records through the Nexus integration service
-      principal svc-nexus-prod. The available logs cannot yet distinguish
-      legitimate synchronization from unauthorized retrieval. Nexus processes
-      patient demographics, insurance information and appointment details.
-    capability_tested: [CAP-04, CAP-05]
+      Nexus reports that the compromised build infrastructure
+      distributed the affected software update to multiple
+      customers. Its investigation indicates that the malicious
+      component may have accessed patient demographic,
+      appointment and insurance information. Nexus cannot yet
+      determine whether protected health information was
+      transferred outside its environment. The vendor confirms
+      that its security team discovered the compromise earlier
+      today but has not established the full exposure window.
+      MedDefense must determine whether its own patient data
+      was affected.
+    capability_tested:
+      - CAP-04
+      - CAP-05
     decision_point: >-
-      How will you define the possible ePHI exposure scope and begin the HIPAA
-      and BAA assessment without claiming a breach is already proven?
+      How will MedDefense assess possible PHI exposure, determine
+      the affected records and time window, and establish its
+      HIPAA and BAA notification posture while evidence remains
+      incomplete?
     roles_challenged:
       - Helena Reyes (Legal Liaison)
       - James Chen (IR Commander)
       - Robert Kim (Technical Lead)
+      - Sarah Park (IT Director)
     expected_response: >-
-      Preserve FHIR, OAuth2, Nexus and Epic audit evidence; establish the
+      Initiate a documented PHI exposure and breach-risk
+      assessment with legal and privacy involvement. Request
+      Nexus access logs, affected data categories, evidence
+      of unauthorized access and the vendor discovery time.
+      Correlate Nexus findings with MedDefense FHIR logs.
+      Distinguish possible exposure from confirmed exfiltration.
+      Review the BAA requirement for Nexus to notify MedDefense
+      within 24 hours of discovering a breach. Assess separate
+      HIPAA notification obligations and deadlines without
+      prematurely declaring the event reportable.
+
+  - id: INJ-04
+    time_minutes: 80
+    delivery: facilitator reads aloud
+    situation: >-
+      A comparison between Nexus scheduling records and Epic
+      appointment data reveals discrepancies affecting several
+      upcoming outpatient appointments. Some appointment times
+      appear different between the two systems, and staff cannot
+      immediately determine which records are correct. The
+      Clinical Director warns that incorrect appointments may
+      delay necessary care. It is not yet confirmed whether
+      these differences resulted from malicious modification,
+      synchronization failures or ordinary administrative
+      changes.
+    capability_tested:
+      - CAP-06
+      - CAP-03
+    decision_point: >-
+      How will MedDefense verify appointment accuracy, protect
+      patients from scheduling errors and determine whether
+      Nexus data can still be trusted for clinical operations?
+    roles_challenged:
+      - Clinical Director representative
+      - Robert Kim (Technical Lead)
+      - Sarah Park (IT Director)
+      - James Chen (IR Commander)
+    expected_response: >-
+      Treat the discrepancies as a potential patient safety
+      issue. Preserve Nexus and Epic audit records and identify
+      affected appointments. Prioritize urgent and near-term
+      patient visits. Coordinate clinical verification and
+      controlled correction of inaccurate records. Consider
+      manual scheduling and patient contact procedures.
+      Avoid overwriting evidence or assuming that every
+      discrepancy was caused by the attacker. Assign owners
+      and deadlines for reconciliation.
+
+  - id: INJ-05
+    time_minutes: 100
+    delivery: facilitator reads aloud
+    situation: >-
+      A local journalist contacts MedDefense after receiving
+      information about a possible cybersecurity incident
+      involving Nexus Patient Scheduling. The journalist asks
+      whether patient information has been stolen and whether
+      hospital appointments have been affected. They request
+      an official statement within 30 minutes and indicate
+      that a story may be published regardless of whether
+      MedDefense responds. Social media posts are beginning
+      to speculate about the incident.
+    capability_tested:
+      - CAP-07
+    decision_point: >-
+      Who is authorized to respond publicly, what information
+      can be confirmed, and how will MedDefense communicate
+      without exposing patient information or making unsupported
+      claims?
+    roles_challenged:
+      - Marcus Webb (Communications Lead)
+      - Helena Reyes (Legal Liaison)
+      - James Chen (IR Commander)
+      - Sarah Park (IT Director)
+    expected_response: >-
+      Direct external inquiries to the designated Communications
+      Lead. Coordinate a factual holding statement with legal,
+      privacy and incident command. Acknowledge the ongoing
+      investigation without confirming unverified data theft
+      or patient harm. Protect patient confidentiality, establish
+      an approval process and record the communication decision.
+      Prepare updates for patients, staff and media if needed.
+
+  - id: INJ-06
+    time_minutes: 120
+    delivery: facilitator reads aloud
+    situation: >-
+      MedDefense executive leadership requests a board-quality
+      incident briefing within 90 minutes. The briefing must
+      explain the confirmed supply chain compromise, affected
+      systems, operational decisions, patient safety concerns,
+      possible PHI exposure, vendor coordination and legal
+      notification posture. Nexus still cannot confirm whether
+      MedDefense patient information was exfiltrated. The cause
+      of the appointment discrepancies also remains unresolved.
+      No clean Nexus agent update is available, and leadership
+      needs a recommendation for continued operations.
+    capability_tested:
+      - CAP-08
+      - CAP-04
+      - CAP-05
+      - CAP-06
+    decision_point: >-
+      What will leadership be told within 90 minutes? Which
+      facts are confirmed, which questions remain unanswered,
+      what operational recommendation will be made, and who
+      owns each outstanding investigation and decision?
+    roles_challenged:
+      - James Chen (IR Commander)
+      - Sarah Park (IT Director)
+      - Dr. Patricia Morales (Executive Sponsor)
+      - Helena Reyes (Legal Liaison)
+      - Marcus Webb (Communications Lead)
+      - Clinical Director representative
+    expected_response: >-
+      Produce a concise executive briefing within the requested
+      90-minute deadline. Separate confirmed facts from
+      assumptions and unresolved questions. Summarize the
+      supply chain compromise, affected services, patient
+      safety implications, PHI exposure assessment, vendor
+      status, containment decisions and legal notification
+      posture. Provide a justified operational recommendation,
+      identify accountable owners and deadlines, and document
+      the remaining uncertainties. Do not claim that data
+      exfiltration or malicious appointment modification has
+      been confirmed without supporting evidence.
