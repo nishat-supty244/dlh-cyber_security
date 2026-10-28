@@ -1,4 +1,4 @@
-
+#!/bin/bash
 #!/usr/bin/env bash
 
 # MedDefense - Task 7 Recovery Validation
