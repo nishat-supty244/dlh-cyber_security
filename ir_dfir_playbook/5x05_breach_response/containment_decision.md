@@ -2,9 +2,13 @@
 # MedDefense Health Systems — Containment Decision
 
 **Incident ID:** IR-2026-0420-01  
+
 **Severity:** SEV1 — Critical  
+
 **Incident date:** 2026-04-20  
+
 **Prepared by:** Nishat Sultana Supty 
+
 **Status:** Strategy selected for exercise; operational authorization pending
 
 ## 1. Situation and Scope
