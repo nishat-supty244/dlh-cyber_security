@@ -88,13 +88,6 @@ sha256sum *.md *.json *.jsonl
 | `proxy_72h.sample.jsonl` | `1c82b57868333bdc40516c20fed99e24e41dd3fbb052e8cd27b67f34dd208e3a` |
 | `sysmon_multihost.sample.jsonl` | `0fc34f78e86a403e9e262cad7b621713a464eae18d1bb70d5f743a7f32e49099` |
 
-Additional investigation documents were also hashed:
-
-| Document | SHA-256 |
-|---|---|
-| `incident_timeline.md` | `78369b40edfa42b84de88e666c940067a2c323b7ae6303d4e46fa1a7ccf4f824` |
-| `ir_activation.md` | `579dd71e67aab92f59ca343282b527bc3ea4264ebd99b58d255f61b40ce3dc5c` |
-| `README.md` | `c6e3ca18a0aca0bfde2fc5ce0a95d8ed1dd579804cfa02bb0e98fbe68c1c1adf` |
 
 These hashes were obtained from actual Kali command output.
 
