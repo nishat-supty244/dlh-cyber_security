@@ -1,0 +1,514 @@
+
+incident_id: IR-2026-0420-01
+title: MedDefense Eradication Checklist
+classification: Confidential
+status: pending_verification
+
+primary_hosts:
+  - CS-WS-101
+  - CS-WS-104
+  - CS-WS-107
+  - CS-WS-112
+  - FILE-SVR-01
+
+additional_host_under_investigation:
+  - SCHED-SVR-01
+
+indicators:
+  malicious_process: 'C:\ProgramData\Microsoft\svchost32.exe'
+  malicious_service: WinHealthSvc
+  ransomware_script: 'C:\Windows\System32\encryption_staging.ps1'
+  c2_domain: staging.office365-cdn.net
+  c2_ip: 45.152.66.114
+  exposed_account: 'MEDDEFENSE\jdoe'
+
+notes:
+  - Preserve forensic evidence before deleting malicious artifacts.
+  - Execute actions only in authorized MedDefense systems.
+  - Do not mark complete without saved verification output.
+  - Historical sample logs do not prove eradication.
+  - Coordinate file-server changes with clinical operations.
+  - Investigate SCHED-SVR-01 before final recovery approval.
+
+checklist:
+
+  - id: ERAD-001
+    category: beacon_process
+    target_host: CS-WS-101
+    description: Remove malicious beacon process and executable.
+    command_or_action: >-
+      Preserve evidence, then use authorized EDR to terminate
+      and quarantine C:\ProgramData\Microsoft\svchost32.exe.
+    verification_command: >-
+      Get-Process svchost32 -ErrorAction SilentlyContinue;
+      Test-Path 'C:\ProgramData\Microsoft\svchost32.exe';
+      review EDR process history for the last 24 hours.
+    expected_verification_result: >-
+      No malicious process, no executable, and no related
+      malicious process tree in the last 24 hours.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-002
+    category: beacon_process
+    target_host: CS-WS-104
+    description: Remove malicious beacon process and executable.
+    command_or_action: >-
+      Preserve evidence and remove confirmed malicious process
+      and executable using EDR.
+    verification_command: >-
+      Get-Process svchost32 -ErrorAction SilentlyContinue;
+      Test-Path 'C:\ProgramData\Microsoft\svchost32.exe';
+      review EDR process history.
+    expected_verification_result: >-
+      No malicious process or executable; no recurrence
+      during the verified 24-hour observation period.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-003
+    category: beacon_process
+    target_host: CS-WS-107
+    description: Remove malicious beacon process and executable.
+    command_or_action: >-
+      Preserve evidence and remove confirmed malicious process
+      and executable using EDR.
+    verification_command: >-
+      Get-Process svchost32 -ErrorAction SilentlyContinue;
+      Test-Path 'C:\ProgramData\Microsoft\svchost32.exe';
+      review EDR process history.
+    expected_verification_result: >-
+      No malicious process or executable; no recurrence
+      during the verified 24-hour observation period.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-004
+    category: beacon_process
+    target_host: CS-WS-112
+    description: Remove malicious beacon process and executable.
+    command_or_action: >-
+      Preserve evidence and remove confirmed malicious process
+      and executable using EDR.
+    verification_command: >-
+      Get-Process svchost32 -ErrorAction SilentlyContinue;
+      Test-Path 'C:\ProgramData\Microsoft\svchost32.exe';
+      review EDR process history.
+    expected_verification_result: >-
+      No malicious process or executable; no recurrence
+      during the verified 24-hour observation period.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-005
+    category: beacon_process
+    target_host: FILE-SVR-01
+    description: Remove malicious executable without disrupting clinical services.
+    command_or_action: >-
+      Coordinate with clinical operations, preserve evidence,
+      and quarantine confirmed malicious components using EDR.
+    verification_command: >-
+      Get-Process svchost32 -ErrorAction SilentlyContinue;
+      Test-Path 'C:\ProgramData\Microsoft\svchost32.exe';
+      review EDR process history and clinical service health.
+    expected_verification_result: >-
+      Malicious executable absent, no recurrence,
+      and essential clinical services remain operational.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-006
+    category: persistence
+    target_host: CS-WS-101
+    description: Remove malicious WinHealthSvc Windows service.
+    command_or_action: >-
+      After evidence preservation, remove the confirmed
+      malicious WinHealthSvc service using approved endpoint tooling.
+    verification_command: >-
+      Get-Service WinHealthSvc -ErrorAction SilentlyContinue;
+      Test-Path 'HKLM:\SYSTEM\CurrentControlSet\Services\WinHealthSvc'
+    expected_verification_result: >-
+      Service and associated malicious registry configuration absent.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-007
+    category: persistence
+    target_host: CS-WS-104
+    description: Remove malicious service created during lateral movement.
+    command_or_action: >-
+      Preserve evidence and remove the confirmed malicious
+      WinHealthSvc service and associated configuration.
+    verification_command: >-
+      Get-Service WinHealthSvc -ErrorAction SilentlyContinue;
+      Test-Path 'HKLM:\SYSTEM\CurrentControlSet\Services\WinHealthSvc'
+    expected_verification_result: >-
+      Malicious service and registry configuration absent.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-008
+    category: persistence
+    target_host: ALL_PRIMARY_HOSTS
+    description: Inspect registry Run keys for malicious persistence.
+    command_or_action: >-
+      Review HKLM and HKCU Run and RunOnce keys for unauthorized
+      entries referencing svchost32.exe or related payloads.
+      Remove only confirmed malicious entries.
+    verification_command: >-
+      Get-ItemProperty
+      'HKLM:\Software\Microsoft\Windows\CurrentVersion\Run';
+      Get-ItemProperty
+      'HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce';
+      review per-user Run and RunOnce keys.
+    expected_verification_result: >-
+      No unauthorized startup entry remains on any affected host.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-009
+    category: persistence
+    target_host: ALL_PRIMARY_HOSTS
+    description: Inspect and remove malicious scheduled tasks.
+    command_or_action: >-
+      Export scheduled task definitions, identify malicious
+      tasks referencing attack payloads, and remove confirmed
+      malicious tasks after evidence preservation.
+    verification_command: >-
+      Get-ScheduledTask | Select-Object TaskName, TaskPath, Actions;
+      compare against approved task baseline and EDR telemetry.
+    expected_verification_result: >-
+      No malicious scheduled tasks or related persistence remain.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-010
+    category: persistence
+    target_host: ALL_PRIMARY_HOSTS
+    description: Review all Windows services for additional persistence.
+    command_or_action: >-
+      Compare service definitions and binary paths with trusted
+      baselines, then remove confirmed malicious services.
+    verification_command: >-
+      Get-CimInstance Win32_Service |
+      Select-Object Name, State, PathName;
+      compare results with trusted service baseline.
+    expected_verification_result: >-
+      No unauthorized services or malicious service binaries.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-011
+    category: staged_payload
+    target_host: CS-WS-101
+    description: Remove ransomware staging script.
+    command_or_action: >-
+      Preserve and hash encryption_staging.ps1, then
+      quarantine or remove it using authorized tooling.
+    verification_command: >-
+      Test-Path 'C:\Windows\System32\encryption_staging.ps1';
+      review endpoint file inventory and EDR events.
+    expected_verification_result: >-
+      Script absent and no related staging files remain.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-012
+    category: staged_payload
+    target_host: CS-WS-104
+    description: Remove ransomware staging script.
+    command_or_action: >-
+      Preserve and hash the script, then quarantine or remove it.
+    verification_command: >-
+      Test-Path 'C:\Windows\System32\encryption_staging.ps1';
+      review endpoint file inventory.
+    expected_verification_result: >-
+      Script absent and no related staging files remain.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-013
+    category: staged_payload
+    target_host: CS-WS-107
+    description: Remove ransomware staging script.
+    command_or_action: >-
+      Preserve and hash the script, then quarantine or remove it.
+    verification_command: >-
+      Test-Path 'C:\Windows\System32\encryption_staging.ps1';
+      review endpoint file inventory.
+    expected_verification_result: >-
+      Script absent and no related staging files remain.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-014
+    category: staged_payload
+    target_host: CS-WS-112
+    description: Remove ransomware staging script.
+    command_or_action: >-
+      Preserve and hash the script, then quarantine or remove it.
+    verification_command: >-
+      Test-Path 'C:\Windows\System32\encryption_staging.ps1';
+      review endpoint file inventory.
+    expected_verification_result: >-
+      Script absent and no related staging files remain.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-015
+    category: staged_payload
+    target_host: ALL_PRIMARY_HOSTS
+    description: Search system directories for additional malicious scripts.
+    command_or_action: >-
+      Search System32, ProgramData, Temp and scheduled-task
+      locations for attack-related .ps1 and .bat files.
+      Preserve and remove confirmed malicious artifacts.
+    verification_command: >-
+      Review complete EDR file inventory for suspicious .ps1
+      and .bat files in monitored system directories.
+    expected_verification_result: >-
+      No known malicious staging scripts or related payloads.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-016
+    category: credential
+    target_host: ACTIVE_DIRECTORY
+    description: Reset the exposed jdoe account credentials.
+    command_or_action: >-
+      Revoke active sessions, reset credentials for
+      MEDDEFENSE\jdoe, and review account permissions.
+    verification_command: >-
+      Review directory audit records for successful password
+      reset, session revocation and subsequent authentication.
+    expected_verification_result: >-
+      Credential reset verified; old sessions revoked;
+      no unauthorized authentication continues.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-017
+    category: credential
+    target_host: ACTIVE_DIRECTORY
+    description: Review every account exposed during the 72-hour dwell period.
+    command_or_action: >-
+      Correlate authentication, LSASS access, service execution
+      and EDR records. Reset or rotate credentials for every
+      confirmed or reasonably suspected exposed account.
+    verification_command: >-
+      Compare full dwell-period account inventory against
+      directory password-change and session-revocation audits.
+    expected_verification_result: >-
+      All exposed accounts accounted for, remediated and verified.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-018
+    category: credential
+    target_host: ACTIVE_DIRECTORY
+    description: Review privileged and service accounts.
+    command_or_action: >-
+      Investigate privileged logons, service accounts and
+      delegated credentials associated with affected hosts.
+      Rotate credentials where exposure is established.
+    verification_command: >-
+      Review privileged account audit trail, rotation records
+      and post-reset authentication activity.
+    expected_verification_result: >-
+      No unresolved privileged or service-account exposure.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-019
+    category: kerberos
+    target_host: ACTIVE_DIRECTORY
+    description: Invalidate exposed Kerberos authentication sessions.
+    command_or_action: >-
+      Coordinate account resets, session termination and
+      ticket invalidation for exposed users and services.
+    verification_command: >-
+      Review Kerberos authentication events and endpoint
+      ticket/session inventory after remediation.
+    expected_verification_result: >-
+      No exposed session remains valid; fresh authentication
+      is required using rotated credentials.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-020
+    category: kerberos
+    target_host: ALL_PRIMARY_HOSTS
+    description: Clear potentially exposed endpoint ticket caches.
+    command_or_action: >-
+      After preserving evidence, invalidate affected user
+      sessions and purge relevant Kerberos tickets using
+      approved endpoint and identity procedures.
+    verification_command: >-
+      Review endpoint ticket inventory and identity logs
+      for old-session invalidation and new authentication.
+    expected_verification_result: >-
+      Exposed tickets are no longer usable.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-021
+    category: network
+    target_host: NETWORK_FIREWALL
+    description: Block outbound connections to the C2 IP.
+    command_or_action: >-
+      Apply approved egress deny rule for 45.152.66.114
+      and preserve firewall change records.
+    verification_command: >-
+      Review active firewall policy and traffic logs for
+      denied connections to 45.152.66.114.
+    expected_verification_result: >-
+      Deny rule active and effective across all affected networks.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-022
+    category: network
+    target_host: DNS_SECURITY
+    description: Sinkhole the suspicious C2 domain.
+    command_or_action: >-
+      Add staging.office365-cdn.net to the approved DNS
+      sinkhole policy and block equivalent domain-based
+      egress through the secure web gateway.
+    verification_command: >-
+      Review DNS policy, test resolution from each affected
+      network and inspect DNS query logs.
+    expected_verification_result: >-
+      Domain resolves only to the approved sinkhole or is
+      blocked, with no successful C2 connection.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-023
+    category: network
+    target_host: ALL_PRIMARY_HOSTS
+    description: Verify C2 communication has stopped.
+    command_or_action: >-
+      Maintain isolation until network monitoring confirms
+      the absence of successful malicious outbound traffic.
+    verification_command: >-
+      Review 24-hour firewall, proxy and DNS telemetry
+      for staging.office365-cdn.net and 45.152.66.114.
+    expected_verification_result: >-
+      No successful C2 traffic and complete telemetry coverage.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-024
+    category: machine_account
+    target_host: CS-WS-101
+    description: Rotate compromised computer-account password.
+    command_or_action: >-
+      Coordinate secure computer-account password rotation
+      and re-establish trusted domain communication.
+    verification_command: >-
+      Test-ComputerSecureChannel and review directory
+      computer-account password-change audit.
+    expected_verification_result: >-
+      Password rotation recorded and secure channel healthy.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-025
+    category: machine_account
+    target_host: CS-WS-104
+    description: Rotate compromised computer-account password.
+    command_or_action: >-
+      Rotate computer-account password using approved procedure.
+    verification_command: >-
+      Test-ComputerSecureChannel and review directory audit.
+    expected_verification_result: >-
+      Password rotated and domain trust verified.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-026
+    category: machine_account
+    target_host: CS-WS-107
+    description: Rotate compromised computer-account password.
+    command_or_action: >-
+      Rotate computer-account password using approved procedure.
+    verification_command: >-
+      Test-ComputerSecureChannel and review directory audit.
+    expected_verification_result: >-
+      Password rotated and domain trust verified.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-027
+    category: machine_account
+    target_host: CS-WS-112
+    description: Rotate compromised computer-account password.
+    command_or_action: >-
+      Rotate computer-account password using approved procedure.
+    verification_command: >-
+      Test-ComputerSecureChannel and review directory audit.
+    expected_verification_result: >-
+      Password rotated and domain trust verified.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-028
+    category: machine_account
+    target_host: FILE-SVR-01
+    description: Rotate file-server computer-account password.
+    command_or_action: >-
+      Coordinate with clinical operations, rotate the
+      computer-account password and verify domain trust.
+    verification_command: >-
+      Test-ComputerSecureChannel; review directory audit
+      and clinical application authentication results.
+    expected_verification_result: >-
+      Password rotated, trust healthy and clinical access operational.
+    status: pending
+    executed_at: null
+    executed_by: null
+
+  - id: ERAD-029
+    category: beacon_process
+    target_host: SCHED-SVR-01
+    description: Investigate additional suspicious executable activity.
+    command_or_action: >-
+      Preserve evidence, investigate svchost32.exe and determine
+      whether SCHED-SVR-01 requires full eradication and recovery.
+    verification_command: >-
+      Review EDR process history, binary hash, persistence,
+      authentication events and network connections.
+    expected_verification_result: >-
+      Host compromise status established; malicious components
+      removed and verified if compromise is confirmed.
+    status: pending
+    executed_at: null
+    executed_by: null
+
