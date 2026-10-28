@@ -15,7 +15,7 @@
 
 **Classification:** Confidential — Incident Response
 
-**Report status:** Preliminary — Sample-log analysis completed; full forensic artifacts pending
+
 
 ---
 
