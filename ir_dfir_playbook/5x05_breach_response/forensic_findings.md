@@ -2,12 +2,19 @@
 # Forensic Findings: IR-2026-0420-01
 
 **Organization:** MedDefense Health Systems  
+
 **Incident ID:** IR-2026-0420-01  
+
 **Severity:** SEV1 — Critical  
+
 **Incident date:** 2026-04-20  
+
 **Analyst:** Nishat Sultana Supty
+
 **Analysis environment:** Kali Linux  
-**Classification:** Confidential — Incident Response  
+
+**Classification:** Confidential — Incident Response
+
 **Report status:** Preliminary — Sample-log analysis completed; full forensic artifacts pending
 
 ---
