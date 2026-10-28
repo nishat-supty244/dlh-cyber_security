@@ -5,6 +5,7 @@
 **Severity:** SEV1 — Critical  
 **Incident date:** 2026-04-20  
 **Prepared by:** Nishat Sultana Supty
+
 **Analysis environment:** Kali Linux  
 **Strategy:** Selective host isolation, C2 egress blocking and credential containment  
 **Authorization:** IR Commander approval required  
