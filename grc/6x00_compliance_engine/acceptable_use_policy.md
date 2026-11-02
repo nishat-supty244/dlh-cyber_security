@@ -349,11 +349,11 @@ This document is intended to replace that outdated draft following CISO approval
 
 I acknowledge that I have read, understood and agree to comply with this policy.
 
-**Employee name:** ______________________________
+**Employee name:** Nishat Sultana
 
-**Signature:** ___________________________________
+**Signature:** Supty
 
-**Date:** ________________________________________
+**Date:** 2026-11-02
 
 ---
 
