@@ -1,0 +1,9 @@
+Condition 1: Path mismatch
+Old runbook path: /recovery/lis_dump.sql
+Correct lab path: /tmp/meddefense-dr-test/recovery/lis_dump.sql
+Resolution: Use the correct lab staging path.
+
+Condition 2: Configuration artifact
+Production DB_HOST: lis-db-prod.meddefense.internal
+Local override: /tmp/meddefense-dr-test/recovery/lis_recovered.db
+Resolution: Validate the local SQLite database directly.
