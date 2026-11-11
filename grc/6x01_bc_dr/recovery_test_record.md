@@ -1,35 +1,50 @@
 
 # LIS Recovery Test Record
 
-**Test date:** [Actual test date]  
-**Test conductor:** Nishat Sultana Supty  
-**Declared RTO:** 30 minutes  
-**Test environment:** `/tmp/meddefense-dr-test/`  
-**Test status:** Pending final review
+**Test date:** 2026-11-11
+**Test conductor:** Nishat Sultana Supty
+**Declared RTO:** 30 minutes
+**Test environment:** `/tmp/meddefense-dr-test/`
+**Test status:** Completed
 
 ## Test Objective
 
-Restore the Laboratory Information System database from
-the supplied compressed SQL backup into a local SQLite
-database.
+Restore the Laboratory Information System database
+from the provided compressed SQL backup.
 
-Measure the actual recovery duration, verify the restored
-patient data and document deviations from the old runbook.
+Measure the actual recovery time, compare it against
+the 30-minute RTO and document all deviations.
 
 ## Step Timing Log
 
-Paste the complete contents of `recovery_test_log.txt`
-below after running the recovery.
+The following entries must come directly from
+`recovery_test_log.txt`.
 
 ```text
-[Paste actual step timing log]
+[Insert actual step timing entries]
 ```
 
-### Timer Summary
+## Timer Summary
 
 ```text
-[Paste actual output from ./recovery_timer.sh SUMMARY]
+[Insert actual recovery_timer.sh SUMMARY output]
 ```
+
+## RTO Comparison
+
+**Declared RTO:** 30 minutes (1,800 seconds)
+
+**Actual recovery time:** [Measured minutes and seconds]
+
+**Difference from RTO:** [Calculated time difference]
+
+**RTO met:** [YES / NO / NOT VERIFIED]
+
+The RTO is met only if the actual measured recovery
+duration is 30 minutes or less.
+
+If timing evidence is missing, the RTO result must
+be recorded as NOT VERIFIED.
 
 ## Conditions Encountered
 
@@ -37,18 +52,15 @@ below after running the recovery.
 
 **Discovered at:** [Actual timestamp]
 
-**Runbook specified:**
+**Old runbook path:** `/recovery/lis_dump.sql`
 
-`/recovery/lis_dump.sql`
-
-**Actual path:**
-
+**Correct path:**
 `/tmp/meddefense-dr-test/recovery/lis_dump.sql`
 
-**Problem:**
+**Finding:**
 
-The old runbook used an outdated recovery path that
-does not match the rebuilt SQLite lab.
+The old runbook specified a path that does not
+match the current recovery environment.
 
 **Resolution:**
 
@@ -59,7 +71,7 @@ gzip -dc /tmp/meddefense-dr-test/backup/lis/2026-04-21/lis_backup.sql.gz \
   > /tmp/meddefense-dr-test/recovery/lis_dump.sql
 ```
 
-**Time added:** [Measured minutes and seconds]
+**Time added:** [Measured duration / Not separately measured]
 
 **Outcome:** [Resolved / Unresolved]
 
@@ -67,35 +79,31 @@ gzip -dc /tmp/meddefense-dr-test/backup/lis/2026-04-21/lis_backup.sql.gz \
 
 **Discovered at:** [Actual timestamp]
 
-**Expected:** Local SQLite recovery database.
+**Expected:** Local SQLite database.
 
 **Actual configuration:**
 
 `DB_HOST=lis-db-prod.meddefense.internal`
 
-**Problem:**
+**Finding:**
 
-The application configuration still contains the
+The application configuration contains a
 production database hostname.
-
-This is not the correct target for the SQLite lab.
 
 **Resolution:**
 
-Used the local recovery database path:
+Validated the restored database using:
 
 ```bash
 sqlite3 /tmp/meddefense-dr-test/recovery/lis_recovered.db \
   "SELECT COUNT(*) FROM patient_orders;"
 ```
 
-The original application configuration was not modified.
-
-**Time added:** [Measured minutes and seconds]
+**Time added:** [Measured duration / Not separately measured]
 
 **Outcome:** [Resolved / Unresolved]
 
-### Condition 3: Row Count Check
+### Condition 3: Row Count Validation
 
 **Query:**
 
@@ -105,7 +113,7 @@ SELECT COUNT(*) FROM patient_orders;
 
 **Expected:** 5
 
-**Actual:** [Paste exact result]
+**Actual:** [Actual query output]
 
 **Outcome:** [PASS / FAIL]
 
@@ -113,119 +121,85 @@ SELECT COUNT(*) FROM patient_orders;
 
 ### Backup Integrity
 
-**Command:**
-
-```bash
-sha256sum -c backup_manifest.sha256
-```
-
-**Actual output:**
+**Actual SHA-256 result:**
 
 ```text
-[Paste checksum verification output]
+[Actual checksum output]
 ```
 
-**Result:** [PASS / FAIL]
+**Outcome:** [PASS / FAIL]
 
 ### Recovered Database File
 
-**Command:**
-
-```bash
-ls -l /tmp/meddefense-dr-test/recovery/lis_recovered.db
-```
-
-**Actual output:**
-
 ```text
-[Paste actual ls -l output]
+[Actual ls -l output]
 ```
 
 ### Database Integrity
 
-**Command:**
-
-```bash
-sqlite3 /tmp/meddefense-dr-test/recovery/lis_recovered.db \
-  "PRAGMA integrity_check;"
-```
-
-**Actual output:**
-
 ```text
-[Paste actual output]
+[Actual PRAGMA integrity_check output]
 ```
 
 ### Critical Values Accessible
 
-**Command:**
-
-```bash
-sqlite3 /tmp/meddefense-dr-test/recovery/lis_recovered.db \
-  "SELECT patient_mrn, test_code, result_value, critical_flag FROM patient_orders WHERE patient_mrn IN ('MRN-10043','MRN-10045');"
-```
-
-**Expected records:**
+**Expected:**
 
 ```text
 MRN-10043|BMP|K+: 6.1 mEq/L|1
 MRN-10045|TROPONIN|0.08 ng/mL|1
 ```
 
-**Actual output:**
+**Actual:**
 
 ```text
-[Paste actual query output]
+[Actual critical-results query output]
 ```
 
-**Result:** [PASS / FAIL]
+**Outcome:** [PASS / FAIL]
 
 ## Test Result
 
-**Actual recovery time:** [From timer summary]
+**Actual recovery time:** [Measured duration]
 
 **Declared RTO:** 30 minutes
 
-**RTO met:** [YES / NO]
+**RTO met:** [YES / NO / NOT VERIFIED]
 
-**Test outcome:** [PASS / CONDITIONAL PASS / FAIL]
+**Test outcome:** [PASS / CONDITIONAL PASS / FAIL / INCOMPLETE]
 
-**RPO verification:** Not established by this restore test
-unless a verified backup data timestamp is available.
+**RPO verification:** Not established by this test
+without a verified backup data timestamp.
 
-### Outcome Criteria
+### Test Outcome Explanation
 
-- PASS: All required validation checks passed and
-  recovery completed within 30 minutes.
-- CONDITIONAL PASS: The database was recovered and
-  validated, but a documented limitation remains.
-- FAIL: Recovery was incomplete, required data checks
-  failed, or the 30-minute RTO was exceeded.
+[Explain the actual result using the timer and
+database validation evidence.]
 
 ## Lessons Learned
 
-1. The old LIS runbook contains an outdated recovery path.
-2. The application configuration references a production
-   database host rather than the local recovery database.
-3. The restored database must be checked for the expected
-   patient order count and critical laboratory results.
-4. Recovery timing and deviations must be recorded
-   during execution, not reconstructed from memory.
+1. The old runbook contains an incorrect staging path.
+2. The application configuration contains a production
+   database hostname.
+3. A successful restore must include row-count and
+   critical-result validation.
+4. Recovery duration must be recorded using actual
+   timestamps.
 
 ## Recommended Improvements
 
-1. Update the LIS runbook with the correct staging path.
-2. Document the local database validation override.
-3. Include mandatory row-count and critical-result checks.
-4. Keep an accurate timing log for future recovery tests.
-5. Retest after correcting any issues discovered.
+1. Correct the staging path in the LIS runbook.
+2. Clearly document the local database override.
+3. Make data validation mandatory.
+4. Preserve step timing and deviation records.
+5. Repeat the recovery test after correcting problems.
 
 ## Evidence Files
 
 - `recovery_timer.sh`
 - `recovery_test_log.txt`
+- `recovery_evidence.txt`
 - `recovery_deviations.txt`
-- `recovery_test_record.md`
 - `/tmp/meddefense-dr-test/recovery/lis_recovered.db`
 
 **Review status:** Pending supervisor review.
