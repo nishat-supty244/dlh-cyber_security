@@ -1,4 +1,4 @@
-# Identity and Access Management (IAM) – Learning Objectives Q&A
+# Identity and Access Management (IAM) – Learning Objectives
 
 ## Part 1: Technical Learning Objectives
 
